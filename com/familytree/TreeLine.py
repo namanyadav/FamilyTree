@@ -1,3 +1,5 @@
+from prettytable import PrettyTable
+
 from com.familytree.Individual import Individual
 from com.familytree.Family import Family
 
@@ -145,10 +147,10 @@ class TreeLine:
             curr_obj_map = {}
             processed_obj_map = {}
             for treeline in treeline_list:
-                print(f'reading treeline: {treeline.get_tag_name()}|{treeline.get_arguments()}|{treeline.is_valid}')
+                # print(f'reading treeline: {treeline.get_tag_name()}|{treeline.get_arguments()}|{treeline.is_valid}')
                 # if the treeline is not valid, skip to the next treeline
                 if treeline.is_valid == 'N':
-                    print('treeline not valid, moving to next')
+                    # print('treeline not valid, moving to next')
                     continue
 
                 if treeline.get_level() == '0':
@@ -182,54 +184,6 @@ class TreeLine:
                     # indi_object_list.append(curr_obj_map[curr_zero_tag])
                     processed_obj = curr_obj_map[curr_zero_tag]
                     processed_obj_map[processed_obj.id] = processed_obj
-
-
-
-            #     # set of actions if the current level is 0
-            #     if treeline.get_level() == '0':
-            #         # if current reading level is 0 and reading level one is true, that means the on-going description is over.
-            #         # Reset read level one flag to false and store the current object in indi list
-            #         if reading_level_one:
-            #             reading_level_one = False
-            #             if curr_indi_object:
-            #                 indi_object_list.append(curr_indi_object)
-            #                 curr_indi_object = None
-            #         reading_level_zero = True
-            #
-            #         # if level 0 instantiate a new INDI or FAM object
-            #         if treeline.get_tag_name() == 'INDI':
-            #             curr_indi_object = Individual(treeline.get_arguments())
-            #         if treeline.get_tag_name() == 'FAM':
-            #             curr_fam_object = Family(treeline.get_arguments())
-            #
-            #     # set of actions if the current level is 1
-            #     if treeline.get_level() == '1':
-            #         if reading_level_zero:
-            #             reading_level_one = True
-            #             if curr_indi_object:
-            #                 if not (treeline.get_tag_name() == 'BIRT' or treeline.get_tag_name() == 'DEAT'):
-            #                     curr_indi_object.set_attr(treeline.get_tag_name(), treeline)
-            #                 else:
-            #                     date_type_to_set = treeline.get_tag_name()
-            #         else:
-            #             continue
-            #     if treeline.get_level() == '2':
-            #         if reading_level_one:
-            #             reading_level_two = True
-            #             print(f'reading level 2, date type should be set {date_type_to_set}')
-            #             if curr_indi_object:
-            #                 if date_type_to_set:
-            #                     curr_indi_object.set_attr(date_type_to_set, treeline)
-            #         else:
-            #             continue
-            #
-            # if reading_level_zero:
-            #     print('reading indi flag was true but reached end of file, so setting reading indi flag to False')
-            #     if curr_indi_object:
-            #         indi_object_list.append(curr_indi_object)
-            #     reading_indi_data = False
-            #     curr_indi_object = None
-            #     # print(len(indi_object_list))
 
         return processed_obj_map
 
@@ -303,6 +257,60 @@ class TreeLine:
     def splitandprint(self, line):
         print(line)
 
+    @staticmethod
+    def table_printer(table_name, heading_list):
+        x = PrettyTable(heading_list)
+        x.align[0] = "1"
+        x.padding_width = 1
+        x.table_name = table_name
+        return x
+
+    @staticmethod
+    def print_table(heading_list, data_list):
+        x = PrettyTable(heading_list)
+        x.align["ID"] = "1"
+        x.padding_width = 1
+        for data in data_list:
+            x.add_row(data)
+        print(x)
+
+
+    @staticmethod
+    def print_fam_table(fam_list):
+        heading_list = ["ID", "Married", "Divorced", "Husband ID", "Husband Namw", "Wife ID", "Wife Name", "Children"]
+        table_printer = TreeLine.table_printer("Family", heading_list)
+        for fam in fam_list:
+            table_printer.add_row([fam.id, fam.marr, fam.div, fam.husb, "husby", fam.wife, "wifey", fam.chil])
+
+        print(f'Families\n{table_printer}')
+
+        # heading_list = ["ID", "Married", "Divorced", "Husband ID", "Husband Namw", "Wife ID", "Wife Name", "Children"]
+        # data_list = []
+        # TreeLine.print_table(heading_list, fam_list)
+        # x = PrettyTable(["ID", "Married", "Divorced", "Husband ID", "Husband Namw", "Wife ID", "Wife Name", "Children"])
+        # x.align["ID"] = "1"
+        # x.padding_width = 1
+        # for fam in fam_list:
+        #     x.add_row([fam.id, fam.marr, fam.div, fam.husb, "husby", fam.wife, "wifey", fam.chil])
+        # print(x)
+
+    @staticmethod
+    def print_indi_table(indi_list):
+        heading_list = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"]
+        table_printer = TreeLine.table_printer("Indi", heading_list)
+        for indi in indi_list:
+            table_printer.add_row([indi.id, indi.name, indi.sex, indi.birt, 50, True, indi.deat, indi.famc, indi.fams])
+        print(f'Individuals\n{table_printer}')
+
+    @staticmethod
+    def pretty_print_table(table_name, data_list):
+        if table_name == 'INDI':
+            TreeLine.print_indi_table(data_list)
+        if table_name == 'FAM':
+            TreeLine.print_fam_table(data_list)
+
+# @staticmethod
+# def get_obj_of_type(treelist)
 
 # TreeLine.process_data = staticmethod(TreeLine.process_data)
 # TreeLine.generate_indi_objects = staticmethod(TreeLine.generate_indi_objects)
@@ -314,12 +322,16 @@ if __name__ == '__main__':
     # input_line = '1 NAME Terry /Bull/ its a beautiful day'
     TreeLine.process_data('./data/Familytree_test_file.ged')
     processed_map = TreeLine.generate_indi_objects()
+    indi_list = []
+    fam_list = []
     for key in processed_map:
-        print(processed_map[key])
-    # for indi in indi_list:
-    #     print(indi)
-    # print(indi_list.pop())
+        if processed_map[key].tag_name == 'INDI':
+            indi_list.append(processed_map[key])
+        else:
+            fam_list.append(processed_map[key])
 
-    # tl = TreeLine(input_line)
-    # tl.print_line(input_line)
-    # tl.print_line_info(input_line)
+
+    # TreeLine.print_indi_table(indi_list)
+    # TreeLine.print_fam_table(fam_list)
+    TreeLine.pretty_print_table('INDI', indi_list)
+    TreeLine.pretty_print_table('FAM', fam_list)
