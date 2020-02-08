@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 class Individual:
 
     def __init__(self, id):
@@ -28,18 +31,18 @@ class Individual:
     def set_spouse_family(self, family_id):
         self.fams = family_id
 
+    def get_age(self):
+        today = datetime.today()
+        birth_date = datetime.strptime(self.birt, '%d %b %Y')
+        age = today.year - birth_date.year -((today.month, today.day) <(birth_date.month, birth_date.day))
+        return age
+
+    def get_alive(self):
+        if not self.deat:
+            return True
+        return False
+
     def set_attr(self, prop_name, treeline):
-        # print(f'{self.id} setting attribute {prop_name} to {treeline.get_arguments()}')
-        # switcher = {
-        #     'NAME': self.set_name(treeline.get_arguments()),
-        #     'SEX': self.set_sex(treeline.get_arguments()),
-        #     'BIRT': self.set_birth_date(treeline.get_arguments()),
-        #     'DEAT': self.set_death_date(treeline.get_arguments()),
-        #     'FAMC': self.set_parent_family(treeline.get_arguments()),
-        #     'FAMS': self.set_spouse_family(treeline.get_arguments())
-        # }
-        #
-        # switcher.get(prop_name)
 
         if prop_name == 'NAME':
             self.set_name(treeline.get_arguments())
@@ -53,8 +56,6 @@ class Individual:
             self.set_parent_family(treeline.get_arguments())
         if prop_name == 'FAMS':
             self.set_spouse_family(treeline.get_arguments())
-
-        # print(self)
 
     def __str__(self):
         return f'{self.tag_name}|{self.id}|{self.name}|{self.sex}|{self.birt}|{self.deat}|{self.famc}|{self.fams}'
