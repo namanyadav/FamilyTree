@@ -16,13 +16,14 @@ class TreeLine:
     }
     all_tags = zero_tags + one_tags + two_tags
 
-    def __init__(self, input_line):
-        split_text = input_line.strip().split(' ', maxsplit=2)
-        # print(split_text)
-        self.level = split_text[0]
-        self.tag_name = self.extract_tag_name(input_line)
-        self.arguments = self.extract_arguments(input_line)
-        self.is_valid = 'Y' if self.is_valid(input_line) else 'N'
+    def __init__(self, input_line = None):
+        if input_line:
+            split_text = input_line.strip().split(' ', maxsplit=2)
+            # print(split_text)
+            self.level = split_text[0]
+            self.tag_name = self.extract_tag_name(input_line)
+            self.arguments = self.extract_arguments(input_line)
+            self.is_valid = 'Y' if self.is_valid(input_line) else 'N'
 
     def is_valid(self, input_line):
         if not input_line:
@@ -111,17 +112,16 @@ class TreeLine:
             if treeline.get_tag_name() == 'INDI':
                 print('start to create Individual object')
 
-    @staticmethod
-    def process_data(file_path):
+    def process_data(self, file_path):
         file = open(file_path, 'r')
         for line in file:
             tl = TreeLine(line)
             # tl.print_line(line)
             # tl.print_line_info(line)
             treeline_list.append(tl)
+        return self.generate_indi_objects()
 
-    @staticmethod
-    def generate_indi_objects():
+    def generate_indi_objects(self):
         if treeline_list:
             curr_zero_tag = None
             curr_one_tag = None
@@ -166,25 +166,14 @@ class TreeLine:
 
         return processed_obj_map
 
-    @staticmethod
-    def table_printer(table_name, heading_list):
+    def table_printer(self, table_name, heading_list):
         x = PrettyTable(heading_list)
         x.align[0] = "1"
         x.padding_width = 1
         x.table_name = table_name
         return x
 
-    @staticmethod
-    def print_table(heading_list, data_list):
-        x = PrettyTable(heading_list)
-        x.align["ID"] = "1"
-        x.padding_width = 1
-        for data in data_list:
-            x.add_row(data)
-        print(x)
-
-    @staticmethod
-    def process_for_pretty_table(type, type_obj, processed_obj_map):
+    def process_for_pretty_table(self, type, type_obj, processed_obj_map):
         if type == 'FAM':
             family = processed_obj_map[type_obj.id]
             husb_id = family.husb
@@ -201,48 +190,61 @@ class TreeLine:
             else:
                 type_obj.husb_name = 'NA'
 
+            type_obj.marr_disp = type_obj.marr if type_obj.marr else 'NA'
+            type_obj.div_disp = type_obj.div if type_obj.div else 'NA'
+
         if type == 'INDI':
             indi = processed_map[type_obj.id]
             type_obj.age = indi.get_age()
             type_obj.alive = indi.get_alive()
+            type_obj.deat_disp = type_obj.deat if type_obj.deat else 'NA'
+            type_obj.famc_disp = type_obj.famc if type_obj.famc else 'NA'
+            type_obj.fams_disp = type_obj.fams if type_obj.fams else 'NA'
+            type_obj.birt_disp = type_obj.birt if type_obj.birt else 'NA'
 
-    @staticmethod
-    def print_fam_table(fam_list, processed_map):
+    def print_fam_table(self, fam_list, processed_map):
         heading_list = ["ID", "Married", "Divorced", "Husband ID", "Husband Namw", "Wife ID", "Wife Name", "Children"]
-        table_printer = TreeLine.table_printer("Family", heading_list)
+        table_printer = self.table_printer("Family", heading_list)
         for fam in fam_list:
-            table_printer.add_row([fam.id, fam.marr, fam.div, fam.husb, "husby", fam.wife, "wifey", fam.chil])
+            self.process_for_pretty_table('FAM', fam, processed_map)
+            table_printer.add_row([fam.id, fam.marr_disp, fam.div_disp, fam.husb, fam.husb_name, fam.wife, fam.wife_name, fam.chil])
 
         print(f'Families\n{table_printer}')
 
-    @staticmethod
-    def print_indi_table(indi_list, processed_map):
+    def print_indi_table(self, indi_list, processed_map):
         heading_list = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"]
-        table_printer = TreeLine.table_printer("Indi", heading_list)
+        table_printer = self.table_printer("Indi", heading_list)
         for indi in indi_list:
-            TreeLine.process_for_pretty_table('INDI', indi, processed_map)
-            table_printer.add_row([indi.id, indi.name, indi.sex, indi.birt, indi.age, indi.alive, indi.deat, indi.famc, indi.fams])
+            self.process_for_pretty_table('INDI', indi, processed_map)
+            table_printer.add_row([indi.id, indi.name, indi.sex, indi.birt_disp, indi.age, indi.alive, indi.deat_disp, indi.famc_disp, indi.fams_disp])
         print(f'Individuals\n{table_printer}')
 
-    @staticmethod
-    def pretty_print_table(table_name, data_list, processed_map):
+    def pretty_print_table(self, table_name, data_list, processed_map):
         if table_name == 'INDI':
-            TreeLine.print_indi_table(data_list, processed_map)
+            self.print_indi_table(data_list, processed_map)
         if table_name == 'FAM':
-            TreeLine.print_fam_table(data_list, processed_map)
+            self.print_fam_table(data_list, processed_map)
+
+    def get_sep_obj_list(self, processed_map):
+        indi_list = []
+        fam_list = []
+        for key in processed_map:
+            if processed_map[key].tag_name == 'INDI':
+                indi_list.append(processed_map[key])
+            else:
+                fam_list.append(processed_map[key])
+
+        return [indi_list, fam_list]
+
+    def tabulate(self, processed_map):
+        indi_list, fam_list = self.get_sep_obj_list(processed_map)
+        self.pretty_print_table('INDI', indi_list, processed_map)
+        self.pretty_print_table('FAM', fam_list, processed_map)
 
 
 treeline_list = []
 if __name__ == '__main__':
-    TreeLine.process_data('./data/Familytree_test_file.ged')
-    processed_map = TreeLine.generate_indi_objects()
-    indi_list = []
-    fam_list = []
-    for key in processed_map:
-        if processed_map[key].tag_name == 'INDI':
-            indi_list.append(processed_map[key])
-        else:
-            fam_list.append(processed_map[key])
+    tree_line = TreeLine()
+    processed_map = tree_line.process_data('./data/Familytree_test_file.ged')
+    tree_line.tabulate(processed_map)
 
-    TreeLine.pretty_print_table('INDI', indi_list, processed_map)
-    TreeLine.pretty_print_table('FAM', fam_list, processed_map)
