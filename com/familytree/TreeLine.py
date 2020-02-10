@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from prettytable import PrettyTable
 
 from com.familytree.Individual import Individual
@@ -16,6 +18,7 @@ class TreeLine:
         '2': two_tags
     }
     all_tags = zero_tags + one_tags + two_tags
+    date_print_format = '%Y-%m-%d'
 
     def __init__(self, input_line=None):
         if input_line:
@@ -182,8 +185,8 @@ class TreeLine:
         family = processed_tree.get(type_obj.id)
         type_obj.husb_name = processed_tree.get(family.husb).name if processed_tree.contains(family.husb) else 'NA'
         type_obj.wife_name = processed_tree.get(family.wife).name if processed_tree.contains(family.wife) else 'NA'
-        type_obj.marr_disp = type_obj.marr if type_obj.marr else 'NA'
-        type_obj.div_disp = type_obj.div if type_obj.div else 'NA'
+        type_obj.marr_disp = datetime.strptime(type_obj.marr, Individual.date_format).strftime(TreeLine.date_print_format) if type_obj.marr else 'NA'
+        type_obj.div_disp = datetime.strptime(type_obj.div, Individual.date_format).strftime(TreeLine.date_print_format) if type_obj.div else 'NA'
         type_obj.chil_disp = type_obj.chil if type_obj.chil else 'NA'
         type_obj.marr = type_obj.marr if type_obj.marr else 'NA'
         type_obj.div = type_obj.div if type_obj.div else 'NA'
@@ -197,10 +200,10 @@ class TreeLine:
         type_obj.alive_disp = indi.is_alive()
         type_obj.name_disp = type_obj.name if type_obj.name else 'NA'
         type_obj.sex_disp = type_obj.sex if type_obj.sex else 'NA'
-        type_obj.deat_disp = type_obj.deat if type_obj.deat else 'NA'
+        type_obj.deat_disp = datetime.strptime(type_obj.deat, Individual.date_format).strftime(TreeLine.date_print_format) if type_obj.deat else 'NA'
         type_obj.famc_disp = type_obj.famc if type_obj.famc else 'NA'
         type_obj.fams_disp = type_obj.fams if type_obj.fams else 'NA'
-        type_obj.birt_disp = type_obj.birt if type_obj.birt else 'NA'
+        type_obj.birt_disp = datetime.strptime(type_obj.birt, Individual.date_format).strftime(TreeLine.date_print_format) if type_obj.birt else 'NA'
         return type_obj
 
     def print_fam_table(self, fam_list, processed_tree):
