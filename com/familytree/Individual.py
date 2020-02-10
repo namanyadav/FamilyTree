@@ -3,6 +3,8 @@ from datetime import datetime
 
 class Individual:
 
+    date_format = '%d %b %Y'
+
     def __init__(self, id):
         self.id = id
         self.name = None
@@ -10,7 +12,7 @@ class Individual:
         self.birt = None
         self.deat = None
         self.famc = None
-        self.fams = None
+        self.fams = []
         self.tag_name = 'INDI'
 
     def set_name(self, name):
@@ -29,18 +31,23 @@ class Individual:
         self.famc = family_id
 
     def set_spouse_family(self, family_id):
-        self.fams = family_id
+        self.fams.append(family_id)
 
     def get_age(self):
-        today = datetime.today()
-        birth_date = datetime.strptime(self.birt, '%d %b %Y')
-        age = today.year - birth_date.year -((today.month, today.day) <(birth_date.month, birth_date.day))
+        # If indi does not have a birth date, return -1
+        if not self.birt:
+            return None
+        # if individual is alive, return his current age.
+        # If indi dead, return his age at death.
+        ref_date = datetime.today() if self.is_alive() else datetime.strptime(self.deat, Individual.date_format)
+        birth_date = datetime.strptime(self.birt, Individual.date_format)
+        age = ref_date.year - birth_date.year - ((ref_date.month, ref_date.day) < (birth_date.month, birth_date.day))
         return age
 
-    def get_alive(self):
-        if not self.deat:
-            return True
-        return False
+    def is_alive(self):
+        if self.deat:
+            return False
+        return True
 
     def set_attr(self, prop_name, treeline):
 

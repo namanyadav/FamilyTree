@@ -2,6 +2,7 @@ from prettytable import PrettyTable
 
 from com.familytree.Individual import Individual
 from com.familytree.Family import Family
+from com.familytree.Tree import Tree
 
 
 class TreeLine:
@@ -16,14 +17,16 @@ class TreeLine:
     }
     all_tags = zero_tags + one_tags + two_tags
 
-    def __init__(self, input_line = None):
+    def __init__(self, input_line=None):
         if input_line:
             split_text = input_line.strip().split(' ', maxsplit=2)
-            # print(split_text)
             self.level = split_text[0]
             self.tag_name = self.extract_tag_name(input_line)
             self.arguments = self.extract_arguments(input_line)
-            self.is_valid = 'Y' if self.is_valid(input_line) else 'N'
+            self.is_valid = self.is_valid(input_line)
+
+    def __str__(self):
+        return f'<-- {self.level}|{self.tag_name}|{"Y" if self.is_valid else "N"}|{self.arguments}'
 
     def is_valid(self, input_line):
         if not input_line:
@@ -88,8 +91,7 @@ class TreeLine:
             return
         if len(input_line.strip()) == 0:
             return
-        info_string = self.generate_info_string(input_line)
-        print(info_string)
+        print(self)
 
     def generate_info_string(self, input_line):
         if not input_line:
@@ -126,18 +128,16 @@ class TreeLine:
             curr_zero_tag = None
             curr_one_tag = None
             curr_obj_map = {}
-            processed_obj_map = {}
+            processed_tree = Tree()
             for treeline in treeline_list:
-                # print(f'reading treeline: {treeline.get_tag_name()}|{treeline.get_arguments()}|{treeline.is_valid}')
                 # if the treeline is not valid, skip to the next treeline
-                if treeline.is_valid == 'N':
+                if not treeline.is_valid:
                     # print('treeline not valid, moving to next')
                     continue
-
                 if treeline.get_level() == '0':
                     if curr_zero_tag in curr_obj_map:
                         processed_obj = curr_obj_map[curr_zero_tag]
-                        processed_obj_map[processed_obj.id] = processed_obj
+                        processed_tree.put(processed_obj.id, processed_obj)
                     curr_zero_tag = treeline.get_tag_name()
                     if curr_zero_tag == 'INDI':
                         curr_indi_object = Individual(treeline.get_arguments())
@@ -150,7 +150,6 @@ class TreeLine:
                     if not curr_zero_tag:
                         continue
                     curr_one_tag = treeline.get_tag_name()
-                    # if treeline.get_tag_name() not in ['BIRT', 'DEAT', 'MARR']:
                     curr_obj_map[curr_zero_tag].set_attr(treeline.get_tag_name(), treeline)
 
                 if treeline.get_level() == '2':
@@ -162,72 +161,75 @@ class TreeLine:
             if curr_zero_tag in ['INDI', 'FAM']:
                 if curr_obj_map[curr_zero_tag]:
                     processed_obj = curr_obj_map[curr_zero_tag]
-                    processed_obj_map[processed_obj.id] = processed_obj
+                    processed_tree.put(processed_obj.id, processed_obj)
 
-        return processed_obj_map
+        return processed_tree
 
-    def table_printer(self, table_name, heading_list):
+    def get_table_printer(self, table_name, heading_list):
         x = PrettyTable(heading_list)
         x.align[0] = "1"
         x.padding_width = 1
         x.table_name = table_name
         return x
 
-    def process_for_pretty_table(self, type, type_obj, processed_obj_map):
+    def process_for_pretty_table(self, type, type_obj, processed_tree):
         if type == 'FAM':
-            family = processed_obj_map[type_obj.id]
-            husb_id = family.husb
-            wife_id = family.wife
-            if wife_id in processed_map:
-                wife_indi = processed_map[wife_id]
-                type_obj.wife_name = wife_indi.name
-            else:
-                type_obj.wife_name = 'NA'
-
-            if husb_id in processed_map:
-                husb_indi = processed_map[husb_id]
-                type_obj.husb_name = husb_indi.name
-            else:
-                type_obj.husb_name = 'NA'
-
-            type_obj.marr_disp = type_obj.marr if type_obj.marr else 'NA'
-            type_obj.div_disp = type_obj.div if type_obj.div else 'NA'
-
+            return self.process_fam_for_table(type_obj, processed_tree)
         if type == 'INDI':
-            indi = processed_map[type_obj.id]
-            type_obj.age = indi.get_age()
-            type_obj.alive = indi.get_alive()
-            type_obj.deat_disp = type_obj.deat if type_obj.deat else 'NA'
-            type_obj.famc_disp = type_obj.famc if type_obj.famc else 'NA'
-            type_obj.fams_disp = type_obj.fams if type_obj.fams else 'NA'
-            type_obj.birt_disp = type_obj.birt if type_obj.birt else 'NA'
+            return self.process_indi_for_table(type_obj, processed_tree)
 
-    def print_fam_table(self, fam_list, processed_map):
+    def process_fam_for_table(self, type_obj, processed_tree):
+        family = processed_tree.get(type_obj.id)
+        type_obj.husb_name = processed_tree.get(family.husb).name if processed_tree.contains(family.husb) else 'NA'
+        type_obj.wife_name = processed_tree.get(family.wife).name if processed_tree.contains(family.wife) else 'NA'
+        type_obj.marr_disp = type_obj.marr if type_obj.marr else 'NA'
+        type_obj.div_disp = type_obj.div if type_obj.div else 'NA'
+        type_obj.chil_disp = type_obj.chil if type_obj.chil else 'NA'
+        type_obj.marr = type_obj.marr if type_obj.marr else 'NA'
+        type_obj.div = type_obj.div if type_obj.div else 'NA'
+        return type_obj
+
+    def process_indi_for_table(self, type_obj, processed_tree):
+        indi = processed_tree.get(type_obj.id)
+        if not indi:
+            return type_obj
+        type_obj.age_disp = indi.get_age() if indi.get_age() else 'NA'
+        type_obj.alive_disp = indi.is_alive()
+        type_obj.name_disp = type_obj.name if type_obj.name else 'NA'
+        type_obj.sex_disp = type_obj.sex if type_obj.sex else 'NA'
+        type_obj.deat_disp = type_obj.deat if type_obj.deat else 'NA'
+        type_obj.famc_disp = type_obj.famc if type_obj.famc else 'NA'
+        type_obj.fams_disp = type_obj.fams if type_obj.fams else 'NA'
+        type_obj.birt_disp = type_obj.birt if type_obj.birt else 'NA'
+        return type_obj
+
+    def print_fam_table(self, fam_list, processed_tree):
         heading_list = ["ID", "Married", "Divorced", "Husband ID", "Husband Namw", "Wife ID", "Wife Name", "Children"]
-        table_printer = self.table_printer("Family", heading_list)
+        table_printer = self.get_table_printer("Family", heading_list)
         for fam in fam_list:
-            self.process_for_pretty_table('FAM', fam, processed_map)
+            self.process_for_pretty_table('FAM', fam, processed_tree)
             table_printer.add_row([fam.id, fam.marr_disp, fam.div_disp, fam.husb, fam.husb_name, fam.wife, fam.wife_name, fam.chil])
 
         print(f'Families\n{table_printer}')
 
     def print_indi_table(self, indi_list, processed_map):
         heading_list = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"]
-        table_printer = self.table_printer("Indi", heading_list)
+        table_printer = self.get_table_printer("Indi", heading_list)
         for indi in indi_list:
             self.process_for_pretty_table('INDI', indi, processed_map)
-            table_printer.add_row([indi.id, indi.name, indi.sex, indi.birt_disp, indi.age, indi.alive, indi.deat_disp, indi.famc_disp, indi.fams_disp])
+            table_printer.add_row([indi.id, indi.name, indi.sex, indi.birt_disp, indi.age_disp, indi.alive_disp, indi.deat_disp, indi.famc_disp, indi.fams_disp])
         print(f'Individuals\n{table_printer}')
 
-    def pretty_print_table(self, table_name, data_list, processed_map):
+    def pretty_print_table(self, table_name, data_list, processed_tree):
         if table_name == 'INDI':
-            self.print_indi_table(data_list, processed_map)
+            self.print_indi_table(data_list, processed_tree)
         if table_name == 'FAM':
-            self.print_fam_table(data_list, processed_map)
+            self.print_fam_table(data_list, processed_tree)
 
-    def get_sep_obj_list(self, processed_map):
+    def get_sep_obj_list(self, processed_tree):
         indi_list = []
         fam_list = []
+        processed_map = processed_tree.get_tree_map()
         for key in processed_map:
             if processed_map[key].tag_name == 'INDI':
                 indi_list.append(processed_map[key])
@@ -236,15 +238,15 @@ class TreeLine:
 
         return [indi_list, fam_list]
 
-    def tabulate(self, processed_map):
-        indi_list, fam_list = self.get_sep_obj_list(processed_map)
-        self.pretty_print_table('INDI', indi_list, processed_map)
-        self.pretty_print_table('FAM', fam_list, processed_map)
+    def tabulate(self, processed_tree):
+        indi_list, fam_list = self.get_sep_obj_list(processed_tree)
+        self.pretty_print_table('INDI', indi_list, processed_tree)
+        self.pretty_print_table('FAM', fam_list, processed_tree)
 
 
 treeline_list = []
 if __name__ == '__main__':
     tree_line = TreeLine()
-    processed_map = tree_line.process_data('./data/Familytree_test_file.ged')
-    tree_line.tabulate(processed_map)
+    processed_tree = tree_line.process_data('./data/Familytree_test_file.ged')
+    tree_line.tabulate(processed_tree)
 
