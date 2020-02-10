@@ -16,5 +16,12 @@ class Tree:
             return True
         return False
 
+    def get_obj_list(self, list_type):
+        obj_list = []
+        for key in self.treemap:
+            if self.treemap[key].tag_name == list_type:
+                obj_list.append(self.treemap[key])
+        return obj_list
+
     def get_tree_map(self):
         return self.treemap

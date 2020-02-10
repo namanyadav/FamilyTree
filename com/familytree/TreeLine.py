@@ -190,9 +190,9 @@ class TreeLine:
         return type_obj
 
     def process_indi_for_table(self, type_obj, processed_tree):
-        indi = processed_tree.get(type_obj.id)
-        if not indi:
+        if not processed_tree.get(type_obj.id):
             return type_obj
+        indi = processed_tree.get(type_obj.id)
         type_obj.age_disp = indi.get_age() if indi.get_age() else 'NA'
         type_obj.alive_disp = indi.is_alive()
         type_obj.name_disp = type_obj.name if type_obj.name else 'NA'
@@ -205,7 +205,7 @@ class TreeLine:
 
     def print_fam_table(self, fam_list, processed_tree):
         heading_list = ["ID", "Married", "Divorced", "Husband ID", "Husband Namw", "Wife ID", "Wife Name", "Children"]
-        table_printer = self.get_table_printer("Family", heading_list)
+        table_printer = self.get_table_printer("FAM", heading_list)
         for fam in fam_list:
             self.process_for_pretty_table('FAM', fam, processed_tree)
             table_printer.add_row([fam.id, fam.marr_disp, fam.div_disp, fam.husb, fam.husb_name, fam.wife, fam.wife_name, fam.chil])
@@ -214,7 +214,7 @@ class TreeLine:
 
     def print_indi_table(self, indi_list, processed_map):
         heading_list = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"]
-        table_printer = self.get_table_printer("Indi", heading_list)
+        table_printer = self.get_table_printer("INDI", heading_list)
         for indi in indi_list:
             self.process_for_pretty_table('INDI', indi, processed_map)
             table_printer.add_row([indi.id, indi.name, indi.sex, indi.birt_disp, indi.age_disp, indi.alive_disp, indi.deat_disp, indi.famc_disp, indi.fams_disp])
@@ -238,10 +238,12 @@ class TreeLine:
 
         return [indi_list, fam_list]
 
+    def process_and_print(self, obj_type, processed_tree):
+        self.pretty_print_table(obj_type, processed_tree.get_obj_list(obj_type), processed_tree)
+
     def tabulate(self, processed_tree):
-        indi_list, fam_list = self.get_sep_obj_list(processed_tree)
-        self.pretty_print_table('INDI', indi_list, processed_tree)
-        self.pretty_print_table('FAM', fam_list, processed_tree)
+        self.process_and_print('INDI', processed_tree)
+        self.process_and_print('FAM', processed_tree)
 
 
 treeline_list = []
