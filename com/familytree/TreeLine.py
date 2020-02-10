@@ -166,45 +166,45 @@ class TreeLine:
 
         return processed_obj_map
 
-    def table_printer(self, table_name, heading_list):
+    def get_table_printer(self, table_name, heading_list):
         x = PrettyTable(heading_list)
         x.align[0] = "1"
         x.padding_width = 1
         x.table_name = table_name
         return x
 
-    def process_for_pretty_table(self, type, type_obj, processed_obj_map):
+    def process_for_pretty_table(self, type, type_obj, processed_map):
         if type == 'FAM':
-            family = processed_obj_map[type_obj.id]
-            husb_id = family.husb
-            wife_id = family.wife
-            if wife_id in processed_map:
-                wife_indi = processed_map[wife_id]
-                type_obj.wife_name = wife_indi.name
-            else:
-                type_obj.wife_name = 'NA'
-
-            if husb_id in processed_map:
-                husb_indi = processed_map[husb_id]
-                type_obj.husb_name = husb_indi.name
-            else:
-                type_obj.husb_name = 'NA'
-
-            type_obj.marr_disp = type_obj.marr if type_obj.marr else 'NA'
-            type_obj.div_disp = type_obj.div if type_obj.div else 'NA'
-
+            return self.process_fam_for_table(type_obj, processed_map)
         if type == 'INDI':
-            indi = processed_map[type_obj.id]
-            type_obj.age = indi.get_age()
-            type_obj.alive = indi.get_alive()
-            type_obj.deat_disp = type_obj.deat if type_obj.deat else 'NA'
-            type_obj.famc_disp = type_obj.famc if type_obj.famc else 'NA'
-            type_obj.fams_disp = type_obj.fams if type_obj.fams else 'NA'
-            type_obj.birt_disp = type_obj.birt if type_obj.birt else 'NA'
+            return self.process_indi_for_table(type_obj, processed_map)
+
+    def process_fam_for_table(self, type_obj, processed_obj_map):
+        family = processed_obj_map[type_obj.id]
+        type_obj.husb_name = processed_obj_map[family.husb].name if family.husb in processed_obj_map else 'NA'
+        type_obj.wife_name = processed_obj_map[family.wife].name if family.wife in processed_obj_map else 'NA'
+        type_obj.marr_disp = type_obj.marr if type_obj.marr else 'NA'
+        type_obj.div_disp = type_obj.div if type_obj.div else 'NA'
+        type_obj.chil_disp = type_obj.chil if type_obj.chil else 'NA'
+        type_obj.marr = type_obj.marr if type_obj.marr else 'NA'
+        type_obj.div = type_obj.div if type_obj.div else 'NA'
+        return type_obj
+
+    def process_indi_for_table(self, type_obj, processed_obj_map):
+        indi = processed_obj_map[type_obj.id]
+        type_obj.age_disp = indi.get_age() if indi.get_age() else 'NA'
+        type_obj.alive_disp = indi.is_alive()
+        type_obj.name_disp = type_obj.name if type_obj.name else 'NA'
+        type_obj.sex_disp = type_obj.sex if type_obj.sex else 'NA'
+        type_obj.deat_disp = type_obj.deat if type_obj.deat else 'NA'
+        type_obj.famc_disp = type_obj.famc if type_obj.famc else 'NA'
+        type_obj.fams_disp = type_obj.fams if type_obj.fams else 'NA'
+        type_obj.birt_disp = type_obj.birt if type_obj.birt else 'NA'
+        return type_obj
 
     def print_fam_table(self, fam_list, processed_map):
         heading_list = ["ID", "Married", "Divorced", "Husband ID", "Husband Namw", "Wife ID", "Wife Name", "Children"]
-        table_printer = self.table_printer("Family", heading_list)
+        table_printer = self.get_table_printer("Family", heading_list)
         for fam in fam_list:
             self.process_for_pretty_table('FAM', fam, processed_map)
             table_printer.add_row([fam.id, fam.marr_disp, fam.div_disp, fam.husb, fam.husb_name, fam.wife, fam.wife_name, fam.chil])
@@ -213,10 +213,10 @@ class TreeLine:
 
     def print_indi_table(self, indi_list, processed_map):
         heading_list = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"]
-        table_printer = self.table_printer("Indi", heading_list)
+        table_printer = self.get_table_printer("Indi", heading_list)
         for indi in indi_list:
             self.process_for_pretty_table('INDI', indi, processed_map)
-            table_printer.add_row([indi.id, indi.name, indi.sex, indi.birt_disp, indi.age, indi.alive, indi.deat_disp, indi.famc_disp, indi.fams_disp])
+            table_printer.add_row([indi.id, indi.name, indi.sex, indi.birt_disp, indi.age_disp, indi.alive_disp, indi.deat_disp, indi.famc_disp, indi.fams_disp])
         print(f'Individuals\n{table_printer}')
 
     def pretty_print_table(self, table_name, data_list, processed_map):
