@@ -207,7 +207,7 @@ class TreeLine:
         return type_obj
 
     def print_fam_table(self, fam_list, processed_tree):
-        heading_list = ["ID", "Married", "Divorced", "Husband ID", "Husband Namw", "Wife ID", "Wife Name", "Children"]
+        heading_list = ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"]
         table_printer = self.get_table_printer("FAM", heading_list)
         for fam in fam_list:
             self.process_for_pretty_table('FAM', fam, processed_tree)

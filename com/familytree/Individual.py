@@ -6,7 +6,7 @@ class Individual:
     date_format = '%d %b %Y'
 
     def __init__(self, id):
-        self.id = id
+        self.id = self.get_clean_id(id)
         self.name = None
         self.sex = None
         self.birt = None
@@ -14,6 +14,11 @@ class Individual:
         self.famc = None
         self.fams = []
         self.tag_name = 'INDI'
+
+    def get_clean_id(self, id):
+        if '@' in id:
+            return id.replace('@', '')
+        return id
 
     def set_name(self, name):
         self.name = name
@@ -28,10 +33,10 @@ class Individual:
         self.deat = date
 
     def set_parent_family(self, family_id):
-        self.famc = family_id
+        self.famc = self.get_clean_id(family_id)
 
     def set_spouse_family(self, family_id):
-        self.fams.append(family_id)
+        self.fams.append(self.get_clean_id(family_id))
 
     def get_age(self):
         # If indi does not have a birth date, return -1
