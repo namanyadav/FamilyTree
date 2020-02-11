@@ -15,6 +15,7 @@ class Individual:
         self.fams = []
         self.tag_name = 'INDI'
 
+    # get a cleaned up version of the id
     def get_clean_id(self, id):
         if '@' in id:
             return id.replace('@', '')
