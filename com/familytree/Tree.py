@@ -21,7 +21,7 @@ class Tree:
         for key in self.treemap:
             if self.treemap[key].tag_name == list_type:
                 obj_list.append(self.treemap[key])
-        obj_list.sort(key=lambda x: int(x.id.replace('I','').replace('F','')))
+        obj_list.sort(key=lambda x: x.id)
         return obj_list
 
     def get_tree_map(self):
