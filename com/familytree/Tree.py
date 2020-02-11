@@ -16,11 +16,12 @@ class Tree:
             return True
         return False
 
-    def get_obj_list(self, list_type):
+    def get_sorted_list(self, list_type):
         obj_list = []
         for key in self.treemap:
             if self.treemap[key].tag_name == list_type:
                 obj_list.append(self.treemap[key])
+        obj_list.sort(key=lambda x: int(x.id.replace('I','').replace('F','')))
         return obj_list
 
     def get_tree_map(self):
