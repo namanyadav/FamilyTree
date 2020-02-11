@@ -242,7 +242,7 @@ class TreeLine:
         return [indi_list, fam_list]
 
     def process_and_print(self, obj_type, processed_tree):
-        self.pretty_print_table(obj_type, processed_tree.get_obj_list(obj_type), processed_tree)
+        self.pretty_print_table(obj_type, processed_tree.get_sorted_list(obj_type), processed_tree)
 
     def tabulate(self, processed_tree):
         self.process_and_print('INDI', processed_tree)
@@ -254,4 +254,3 @@ if __name__ == '__main__':
     tree_line = TreeLine()
     processed_tree = tree_line.process_data('./data/Familytree_test_file.ged')
     tree_line.tabulate(processed_tree)
-
