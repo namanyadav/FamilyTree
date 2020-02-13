@@ -21,6 +21,12 @@ class TreeLine:
     date_print_format = '%Y-%m-%d'
 
     def __init__(self, input_line=None):
+        """
+        TreeLine object takes a line of gedcome file as input like "0 @I1@ INDI"
+        the constructor extracts the level, tag name and arguments from the line
+        an is_valid flag is set on the current object based on whether the line is valid
+        :param input_line: the line from gedcom file which will be translated into TreeLine object
+        """
         if input_line:
             split_text = input_line.strip().split(' ', maxsplit=2)
             self.level = split_text[0]
@@ -29,32 +35,10 @@ class TreeLine:
             self.is_valid = self.is_valid(input_line)
 
     def __str__(self):
+        """
+        :return: a string representation of values contained inside the treeline object
+        """
         return f'<-- {self.level}|{self.tag_name}|{"Y" if self.is_valid else "N"}|{self.arguments}'
-
-    def is_valid(self, input_line):
-        if not input_line:
-            return False
-        if len(input_line.strip()) == 0:
-            return False
-        split_text = self.split_to_list(input_line)
-        if len(split_text) < 2:
-            return False
-        tag_name = self.get_tag_name()
-        level = self.get_level()
-        return True if tag_name in self.allowed_tags_on_level.get(level, 'False') else False
-
-    def extract_arguments(self, input_line):
-        if not input_line:
-            return ''
-        if len(input_line) == 0:
-            return ''
-        split_text = self.split_to_list(input_line)
-        tag_name = self.get_tag_name()
-        if len(split_text) < 3:
-            return ''
-        if tag_name in ['FAM', 'INDI']:
-            return split_text[1]
-        return split_text[2]
 
     def get_level(self):
         return self.level
@@ -70,7 +54,47 @@ class TreeLine:
             return
         return input_line.strip().split(' ', maxsplit=2)
 
+    def is_valid(self, input_line):
+        """
+        validates whether the input_line in gedcom file is valid or not
+        :param input_line: the line that has to be validated
+        :return: true if the line is valid, false otherwise
+        """
+        if not input_line:
+            return False
+        if len(input_line.strip()) == 0:
+            return False
+        split_text = self.split_to_list(input_line)
+        if len(split_text) < 2:
+            return False
+        tag_name = self.get_tag_name()
+        level = self.get_level()
+        return True if tag_name in self.allowed_tags_on_level.get(level, 'False') else False
+
+    def extract_arguments(self, input_line):
+        """
+        extracts the argument text from input_line
+        :param input_line: the line as string which contains the arguments
+        :return: the arguments in the input line if found or an empty string if not found
+        """
+        if not input_line:
+            return ''
+        if len(input_line) == 0:
+            return ''
+        split_text = self.split_to_list(input_line)
+        tag_name = self.get_tag_name()
+        if len(split_text) < 3:
+            return ''
+        if tag_name in ['FAM', 'INDI']:
+            return split_text[1]
+        return split_text[2]
+
     def extract_tag_name(self, input_line):
+        """
+        extracts the tag name from input_line
+        :param input_line: the line containing tag name
+        :return: the tag name from the input line if found or
+        """
         if not input_line.strip():
             return ''
         split_text = self.split_to_list(input_line)
@@ -83,6 +107,11 @@ class TreeLine:
         return split_text[1] if split_text[1] in ['NAME', 'SEX', 'BIRT', 'DEAT', 'FAMC', 'FAMS', 'MARR', 'HUSB', 'WIFE', 'CHIL', 'DIV', 'DATE', 'HEAD', 'TRLR', 'NOTE'] else ''
 
     def print_line(self, input_line):
+        """
+        prints the input_line as it is from the gedcom
+        :param input_line: the line to be printed
+        :return: a string if line found, None otherwise
+        """
         if not input_line:
             return
         if len(input_line.strip()) == 0:
@@ -90,20 +119,23 @@ class TreeLine:
         print(f'--> {input_line.strip()}')
 
     def print_line_info(self, input_line):
+        """
+        prints the input line from the TreeLine object (self)
+        :param input_line: the line to be printed
+        :return: a formatted string if input_line not empty or None otherwise
+        """
         if not input_line:
             return
         if len(input_line.strip()) == 0:
             return
         print(self)
 
-    def generate_info_string(self, input_line):
-        if not input_line:
-            return ''
-        if len(input_line.strip()) == 0:
-            return ''
-        return f'<-- {self.level}|{self.tag_name}|{self.is_valid}|{self.arguments}'
-
     def get_tags_of_type(self, tag_name):
+        """
+        internal method used to segregate all treeline objects of a particular type
+        :param tag_name: the type of tag requested (to be passed as 'FAM' or 'INDI' tags
+        :return: a list of treeline objects of the type tag_name, None otherwise
+        """
         if tag_name and treeline_list:
             tag_list = []
             for treeline in treeline_list:
@@ -113,11 +145,21 @@ class TreeLine:
         return
 
     def print_indi(self):
+        """
+        prints all the treeline objects with tag name INDI
+        :return:
+        """
         for treeline in treeline_list:
             if treeline.get_tag_name() == 'INDI':
                 print('start to create Individual object')
 
     def process_data(self, file_path):
+        """
+        opens the gedcom file, reads each line, creates treeline object for each line
+        and returns a list of all treeline objects
+        :param file_path: location of gedcom file to be used as input
+        :return: list of all treeline objects created from the supplied gedcom file
+        """
         file = open(file_path, 'r')
         for line in file:
             tl = TreeLine(line)
@@ -127,17 +169,23 @@ class TreeLine:
         return self.generate_indi_objects()
 
     def generate_indi_objects(self):
+        """
+        iterates over a list of treeline objects and creates appropriate data objects such as Family, Individual, Tree
+        :return: a Tree data object which contains information about all Family and Individual in the family tree
+        """
         if treeline_list:
             curr_zero_tag = None
             curr_one_tag = None
             curr_obj_map = {}
             processed_tree = Tree()
+            # iterate over all treeline objects
             for treeline in treeline_list:
                 # if the treeline is not valid, skip to the next treeline
                 if not treeline.is_valid:
                     # print('treeline not valid, moving to next')
                     continue
                 if treeline.get_level() == '0':
+                    # if current line level is 0 and if code was already reading something
                     if curr_zero_tag in curr_obj_map:
                         processed_obj = curr_obj_map[curr_zero_tag]
                         processed_tree.put(processed_obj.id, processed_obj)
@@ -169,6 +217,12 @@ class TreeLine:
         return processed_tree
 
     def get_table_printer(self, table_name, heading_list):
+        """
+        method to generate a PrettyTable object which can be used to print data in tabulated form
+        :param table_name: used as the name of the table to be generated
+        :param heading_list: list containing the headers of the table
+        :return: preconfigured PrettyTable object
+        """
         x = PrettyTable(heading_list)
         x.align[0] = "1"
         x.padding_width = 1
@@ -176,12 +230,25 @@ class TreeLine:
         return x
 
     def process_for_pretty_table(self, type, type_obj, processed_tree):
+        """
+        helper method to call the corresponding table processing method for FAM or INDI
+        :param type: string denoting the type of object to be printed
+        :param type_obj: the actual data object to be printed
+        :param processed_tree: the Tree object containing the complete family tree
+        :return: not required at the moment, doesn't get used right now
+        """
         if type == 'FAM':
             return self.process_fam_for_table(type_obj, processed_tree)
         if type == 'INDI':
             return self.process_indi_for_table(type_obj, processed_tree)
 
     def process_fam_for_table(self, type_obj, processed_tree):
+        """
+        helper method to process Family object for displaying in table
+        :param type_obj: the actual data object to be printed
+        :param processed_tree: the Tree object containing the complete family tree
+        :return: not required at the moment
+        """
         family = processed_tree.get(type_obj.id)
         type_obj.husb_name = processed_tree.get(family.husb).name if processed_tree.contains(family.husb) else 'NA'
         type_obj.wife_name = processed_tree.get(family.wife).name if processed_tree.contains(family.wife) else 'NA'
@@ -193,6 +260,12 @@ class TreeLine:
         return type_obj
 
     def process_indi_for_table(self, type_obj, processed_tree):
+        """
+        helper method to process Individual object for displaying in table
+        :param type_obj: the actual data object to be printed
+        :param processed_tree: the Tree object containing the complete family tree
+        :return: not required at the moment
+        """
         if not processed_tree.get(type_obj.id):
             return type_obj
         indi = processed_tree.get(type_obj.id)
@@ -207,6 +280,11 @@ class TreeLine:
         return type_obj
 
     def print_fam_table(self, fam_list, processed_tree):
+        """
+        generates and prints the table printer object and adds all the rows and columns
+        :param fam_list: list of all Family objects
+        :param processed_tree: Tree object containing the whole tree
+        """
         heading_list = ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"]
         table_printer = self.get_table_printer("FAM", heading_list)
         for fam in fam_list:
@@ -216,6 +294,11 @@ class TreeLine:
         print(f'Families\n{table_printer}')
 
     def print_indi_table(self, indi_list, processed_map):
+        """
+        generates and prints the table printer object and adds rows and columns to it
+        :param indi_list: list of all Individual objects
+        :param processed_map: Tree object containing the whole tree
+        """
         heading_list = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"]
         table_printer = self.get_table_printer("INDI", heading_list)
         for indi in indi_list:
@@ -224,6 +307,12 @@ class TreeLine:
         print(f'Individuals\n{table_printer}')
 
     def pretty_print_table(self, table_name, data_list, processed_tree):
+        """
+        call the corresponding print method for INDI or FAM
+        :param table_name: used as name of table
+        :param data_list: list containing all the data objects
+        :param processed_tree: Tree object containing the whole family tree
+        """
         if table_name == 'INDI':
             self.print_indi_table(data_list, processed_tree)
         if table_name == 'FAM':
@@ -245,6 +334,10 @@ class TreeLine:
         self.pretty_print_table(obj_type, processed_tree.get_sorted_list(obj_type), processed_tree)
 
     def tabulate(self, processed_tree):
+        """
+        tabulates the whole tree separated as Individual and Family table
+        :param processed_tree: Tree object containing the whole tree
+        """
         self.process_and_print('INDI', processed_tree)
         self.process_and_print('FAM', processed_tree)
 
