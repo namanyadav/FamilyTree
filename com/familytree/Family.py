@@ -1,3 +1,7 @@
+from datetime import datetime
+from com.familytree.Tree import Tree
+
+
 class Family:
 
     def __init__(self, id):
@@ -13,6 +17,16 @@ class Family:
         if '@' in id:
             return id.replace('@', '')
         return id
+
+    def get_marr_date(self):
+        if not self.marr:
+            return None
+        return datetime.strptime(self.marr, Tree.INPUT_DATE_FORMAT)
+
+    def get_div_date(self):
+        if not self.div:
+            return None
+        return datetime.strptime(self.div, Tree.INPUT_DATE_FORMAT)
 
     def set_marr(self, date):
         self.marr = date
