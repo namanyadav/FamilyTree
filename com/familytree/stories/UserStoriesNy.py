@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from com.familytree.TreeLine import TreeLine
+from com.familytree.Tree import Tree
 import calendar
 
 
@@ -8,58 +9,61 @@ class UserStoriesNy:
     FILE_PATH = '../data/Familytree_test_file.ged'
     INDI_TAG = 'INDI'
     FAM_TAG = 'FAM'
+    REPORT_NAMES = {
+        'us01': 'US01 Dates before current date',
+        'us08': 'US08 Birth before marriage of parents'
+    }
 
-    def __init__(self):
-        self.indi_failed = []
-        self.fam_failed = []
-
-    def us01(self):
+    def us01(self, file_path=None):
+        """ returns a list of objects containing dates after current date
         """
-        returns a list of objects containing dates after current date
-        :return:
-        """
-        file_path = self.get_file_path('us01')
-        family_tree = TreeLine().process_data(file_path)
+        print("\n********************* Starting User Story 1 *********************")
+        file_path = file_path if file_path else self.get_file_path('us01')
+        tree_line = TreeLine()
+        family_tree = tree_line.process_data(file_path)
         indi_list = family_tree.get_sorted_list(UserStoriesNy.INDI_TAG)
         fam_list = family_tree.get_sorted_list(UserStoriesNy.FAM_TAG)
         today_date = datetime.today()
+        today_date_formatted = today_date.strftime(Tree.OUTPUT_DATE_FORMAT)
         indi_list_us01 = []
         fam_list_us01 = []
         for indi in indi_list:
             if indi.get_birth_date() and indi.get_birth_date() > today_date:
-                indi.warn_msg = f'Birth date {indi.get_birth_date()} is after current date {today_date}'
+                indi.warn_msg = f'Birth date {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} ' \
+                    f'is after current date {today_date_formatted}'
                 indi_list_us01.append(indi)
                 continue
             if indi.get_death_date() and indi.get_death_date() > today_date:
-                indi.warn_msg = f'Death date {indi.get_death_date()} is after current date {today_date}'
+                indi.warn_msg = f'Death date {indi.get_death_date(Tree.OUTPUT_DATE_FORMAT)} ' \
+                    f'is after current date {today_date_formatted}'
                 indi_list_us01.append(indi)
                 # continue
 
         for fam in fam_list:
             if fam.get_marr_date() and fam.get_marr_date() > today_date:
-                fam.warn_msg = f'Marriage date {fam.get_marr_date()} is after current date {today_date}'
+                fam.warn_msg = f'Marriage date {fam.get_marr_date(Tree.OUTPUT_DATE_FORMAT)} ' \
+                    f'is after current date {today_date_formatted}'
                 fam_list_us01.append(fam)
                 continue
             if fam.get_div_date() and fam.get_div_date() > today_date:
-                fam.warn_msg = f'Divorce date {fam.get_div_date()} is after current date {today_date}'
+                fam.warn_msg = f'Divorce date {fam.get_div_date().strftime(Tree.OUTPUT_DATE_FORMAT)} ' \
+                    f'is after current date {today_date_formatted}'
                 fam_list_us01.append(fam)
                 # continue
 
-        # self.print_list('US 01', indi_list_us01 + fam_list_us01)
-        # self.indi_failed.append(indi_list_us01)
-        # self.fam_failed.append(fam_list_us01)
-        self.print_report('INDI', indi_list_us01, family_tree)
-        self.print_report('FAM', fam_list_us01, family_tree)
+        tree_line.tabulate(family_tree)
+        self.print_report(self.REPORT_NAMES['us01'], indi_list_us01 + fam_list_us01)
+        print('********************* Ending User Story 1 *********************')
         return indi_list_us01 + fam_list_us01
-        # return "naman"
 
     def us08(self):
-        """
-        returns a list of individuals whose birth date is before parent's marriage date
+        """ returns a list of individuals whose birth date is before parent's marriage date
         or nine months after parent's divorce date
         """
+        print('\n********************* Starting User Story 8 *********************')
         file_path = self.get_file_path('us08')
-        family_tree = TreeLine().process_data(file_path)
+        tree_line = TreeLine()
+        family_tree = tree_line.process_data(file_path)
         indi_list = family_tree.get_sorted_list(UserStoriesNy.INDI_TAG)
         indi_list_us08_fail = []
         for indi in indi_list:
@@ -67,51 +71,32 @@ class UserStoriesNy:
             parent_marr_date = family_tree.get(indi.famc).get_marr_date() if family_tree.get(indi.famc) else None
             parent_div_date = family_tree.get(indi.famc).get_div_date() if family_tree.get(indi.famc) else None
             if birth_date and parent_marr_date and birth_date < parent_marr_date:
-                indi.warn_msg = f'Birth date {birth_date} is before parent\'s marriage date {parent_marr_date}'
+                indi.warn_msg = f'Birth date {birth_date.strftime(Tree.OUTPUT_DATE_FORMAT)} ' \
+                    f'is before parent\'s marriage date {parent_marr_date.strftime(Tree.OUTPUT_DATE_FORMAT)}'
                 indi_list_us08_fail.append(indi)
                 continue
             if birth_date and parent_div_date:
                 days_in_month = calendar.monthrange(parent_div_date.year, parent_div_date.month)[1]
                 max_birth_date = parent_div_date + timedelta(days=days_in_month)
                 if birth_date > max_birth_date:
-                    indi.warn_msg = f'Birth date {birth_date} is 9 months after parent\'s divorce date {parent_div_date}'
+                    indi.warn_msg = f'Birth date {birth_date.strftime(Tree.OUTPUT_DATE_FORMAT)} ' \
+                        f'is 9 months after parent\'s divorce date {parent_div_date.strftime(Tree.OUTPUT_DATE_FORMAT)}'
                     indi_list_us08_fail.append(indi)
 
-        # self.print_list('US08', indi_list_us08_fail)
-        # self.indi_failed(indi_list_us08_fail)
-        self.print_report('INDI', indi_list_us08_fail, family_tree)
+        tree_line.tabulate(family_tree)
+        self.print_report(self.REPORT_NAMES['us08'], indi_list_us08_fail)
+        print('********************* Ending User Story 8 *********************')
         return indi_list_us08_fail
 
-    # @staticmethod
-    # def generate_warning_msg(obj, msg):
-
     @staticmethod
-    def print_report(obj_type, obj_list, family_tree):
-        indi_heading_list = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse", "Warning"]
-        fam_heading_list = ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name",
-                            "Children", "Warning"]
+    def print_report(report_name,  obj_list):
+        heading_list = ["ID", "Type", "Warning Message"]
+        table_printer = TreeLine().get_table_printer(report_name, heading_list)
+        print(f'\n********************* Report - {report_name} *********************')
+        for obj in obj_list:
+            table_printer.add_row([obj.id, obj.tag_name, obj.warn_msg])
 
-        treeline = TreeLine()
-
-        if obj_type == 'INDI':
-            indi_printer = treeline.get_table_printer('INDI', indi_heading_list)
-            for indi in obj_list:
-                treeline.process_for_pretty_table('INDI', indi, family_tree)
-                indi_printer.add_row(
-                    [indi.id, indi.name, indi.sex, indi.birt_disp, indi.age_disp, indi.alive_disp, indi.deat_disp,
-                     indi.famc_disp, indi.fams_disp, indi.warn_msg])
-
-            if obj_list:
-                print(indi_printer)
-
-        if obj_type == 'FAM':
-            fam_printer = treeline.get_table_printer('FAM', fam_heading_list)
-            for fam in obj_list:
-                treeline.process_for_pretty_table('FAM', fam, family_tree)
-                fam_printer.add_row([fam.id, fam.marr_disp, fam.div_disp, fam.husb, fam.husb_name, fam.wife, fam.wife_name, fam.chil, fam.warn_msg])
-
-            if obj_list:
-                print(fam_printer)
+        print(table_printer)
 
     @staticmethod
     def print_list(list_name, obj_list):
