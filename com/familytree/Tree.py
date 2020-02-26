@@ -1,6 +1,7 @@
 class Tree:
 
     INPUT_DATE_FORMAT = '%d %b %Y'
+    OUTPUT_DATE_FORMAT = '%m/%d/%Y'
 
     def __init__(self):
         self.treemap = {}

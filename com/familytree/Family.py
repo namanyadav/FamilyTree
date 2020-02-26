@@ -22,15 +22,21 @@ class Family:
     def get_id(self):
         return id
 
-    def get_marr_date(self):
+    def get_marr_date(self, output_format=None):
         if not self.marr:
             return None
-        return datetime.strptime(self.marr, Tree.INPUT_DATE_FORMAT)
+        date = datetime.strptime(self.marr, Tree.INPUT_DATE_FORMAT)
+        if output_format:
+            return date.strftime(output_format)
+        return date
 
-    def get_div_date(self):
+    def get_div_date(self, output_format=None):
         if not self.div:
             return None
-        return datetime.strptime(self.div, Tree.INPUT_DATE_FORMAT)
+        date = datetime.strptime(self.div, Tree.INPUT_DATE_FORMAT)
+        if output_format:
+            date.strftime(output_format)
+        return date
 
     def set_marr(self, date):
         self.marr = date
