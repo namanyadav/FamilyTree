@@ -7,12 +7,7 @@ class UserStoriesNyTest(unittest.TestCase):
     def setUp(self) -> None:
         """Call before every test case"""
         # print("inside setup")
-        fam_heading_list = ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name",
-                            "Children", "Warning"]
-        indi_heading_list = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse", "Warning"]
         self.stories = UserStoriesNy()
-        self.fam_table_printer = TreeLine().get_table_printer('FAM', fam_heading_list)
-        self.indi_table_printer = TreeLine().get_table_printer('INDI', indi_heading_list)
 
     def tearDown(self) -> None:
         """"Call after every test case"""
