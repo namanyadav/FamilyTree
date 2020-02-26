@@ -9,8 +9,10 @@ class Tree:
         self.treemap[key] = val
 
     def get(self, key):
-        if self.contains(key):
-            return self.treemap[key]
+        if not key:
+            return None
+        if self.contains(key.upper()):
+            return self.treemap[key.upper()]
         return None
 
     def contains(self, key):

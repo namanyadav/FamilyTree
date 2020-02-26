@@ -166,6 +166,7 @@ class TreeLine:
             # tl.print_line(line)
             # tl.print_line_info(line)
             treeline_list.append(tl)
+        file.close()
         return self.generate_indi_objects()
 
     def generate_indi_objects(self):

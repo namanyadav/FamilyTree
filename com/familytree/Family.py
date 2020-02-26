@@ -13,9 +13,13 @@ class Family:
         self.div = None
         self.tag_name = 'FAM'
 
-    def get_clean_id(self, id):
+    @staticmethod
+    def get_clean_id(id):
         if '@' in id:
             return id.replace('@', '')
+        return id
+
+    def get_id(self):
         return id
 
     def get_marr_date(self):
