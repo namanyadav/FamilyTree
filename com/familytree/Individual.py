@@ -15,6 +15,9 @@ class Individual:
         self.fams = []
         self.tag_name = 'INDI'
 
+    def get_id(self):
+        return self.id
+
     def get_birth_date(self):
         if not self.birt:
             return None
