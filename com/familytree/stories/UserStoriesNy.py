@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from com.familytree.TreeLine import TreeLine
 from com.familytree.Tree import Tree
+from com.familytree.TreeUtils import TreeUtils
 import calendar
 
 
@@ -17,8 +18,8 @@ class UserStoriesNy:
     def us01(self, file_path=None):
         """ returns a list of objects containing dates after current date
         """
-        print("\n##################### Starting User Story 1 #####################")
-        file_path = file_path if file_path else self.get_file_path('us01')
+        print(f'\n{TreeUtils.form_heading("Starting User Story 1", "#")}')
+        file_path = file_path if file_path else TreeUtils.get_file_path('us01')
         tree_line = TreeLine()
         family_tree = tree_line.process_data(file_path)
         indi_list = family_tree.get_sorted_list(UserStoriesNy.INDI_TAG)
@@ -52,16 +53,16 @@ class UserStoriesNy:
                 # continue
 
         tree_line.tabulate(family_tree)
-        self.print_report(self.REPORT_NAMES['us01'], indi_list_us01 + fam_list_us01)
-        print('##################### Ending User Story 1 #####################')
+        TreeUtils.print_report(self.REPORT_NAMES['us01'], indi_list_us01 + fam_list_us01)
+        print(TreeUtils.form_heading('Ending User Story 1', '#'))
         return indi_list_us01 + fam_list_us01
 
     def us08(self, file_path=None):
         """ returns a list of individuals whose birth date is before parent's marriage date
         or nine months after parent's divorce date
         """
-        print('\n##################### Starting User Story 8 #####################')
-        file_path = file_path if file_path else self.get_file_path('us08')
+        print(TreeUtils.form_heading('Starting User Story 8', '#'))
+        file_path = file_path if file_path else TreeUtils.get_file_path('us08')
         tree_line = TreeLine()
         family_tree = tree_line.process_data(file_path)
         indi_list = family_tree.get_sorted_list(UserStoriesNy.INDI_TAG)
@@ -84,29 +85,9 @@ class UserStoriesNy:
                     indi_list_us08_fail.append(indi)
 
         tree_line.tabulate(family_tree)
-        self.print_report(self.REPORT_NAMES['us08'], indi_list_us08_fail)
-        print('##################### Ending User Story 8 #####################')
+        TreeUtils.print_report(self.REPORT_NAMES['us08'], indi_list_us08_fail)
+        print(TreeUtils.form_heading('Ending User Story 8', '#'))
         return indi_list_us08_fail
-
-    @staticmethod
-    def print_report(report_name,  obj_list):
-        heading_list = ["ID", "Type", "Warning Message"]
-        table_printer = TreeLine().get_table_printer(report_name, heading_list)
-        print(f'\n********************* Report - {report_name} *********************')
-        for obj in obj_list:
-            table_printer.add_row([obj.id, obj.tag_name, obj.warn_msg])
-
-        print(table_printer)
-
-    @staticmethod
-    def print_list(list_name, obj_list):
-        print(f'\n******************** {list_name} ********************')
-        for item in obj_list:
-            print(item)
-
-    @staticmethod
-    def get_file_path(user_story):
-        return f'../data/{user_story}.ged'
 
 
 # if __name__ == '__main__':
