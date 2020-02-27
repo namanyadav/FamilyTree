@@ -1,6 +1,5 @@
 import unittest
 from com.familytree.stories.UserStoriesNy import UserStoriesNy
-from com.familytree.TreeLine import TreeLine
 
 
 class UserStoriesNyTest(unittest.TestCase):
@@ -19,7 +18,7 @@ class UserStoriesNyTest(unittest.TestCase):
         # self.stories.us01('../data/Family-3-single.ged')
 
     def test_us08(self):
-        """ I6, I7, I8 have failing criteria in us08.ged """
+        """ I5, I6, I7, I8 have failing criteria in us08.ged """
         self.assertEqual(['I5', 'I6', 'I7', 'I8'], self.get_id_list(self.stories.us08()))
 
     @staticmethod
@@ -30,5 +29,5 @@ class UserStoriesNyTest(unittest.TestCase):
         return id_list
 
 
-if __name__ == "__main__":
-    unittest.main()
+# if __name__ == "__main__":
+#     unittest.main()
