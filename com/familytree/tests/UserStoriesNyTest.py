@@ -29,5 +29,5 @@ class UserStoriesNyTest(unittest.TestCase):
         return id_list
 
 
-# if __name__ == "__main__":
-#     unittest.main()
+if __name__ == "__main__":
+    unittest.main()
