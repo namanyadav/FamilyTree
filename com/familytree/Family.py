@@ -1,5 +1,5 @@
 from datetime import datetime
-from com.familytree.Tree import Tree
+from Tree import Tree
 
 
 class Family:

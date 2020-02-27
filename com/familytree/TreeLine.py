@@ -2,9 +2,9 @@ from datetime import datetime
 
 from prettytable import PrettyTable
 
-from com.familytree.Individual import Individual
-from com.familytree.Family import Family
-from com.familytree.Tree import Tree
+from Individual import Individual
+from Family import Family
+from Tree import Tree
 
 
 class TreeLine:
