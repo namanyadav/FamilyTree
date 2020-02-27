@@ -2,9 +2,9 @@ from datetime import datetime
 
 from prettytable import PrettyTable
 
-from com.familytree.Individual import Individual
-from com.familytree.Family import Family
-from com.familytree.Tree import Tree
+from Individual import Individual
+from Family import Family
+from Tree import Tree
 
 
 class TreeLine:
@@ -160,13 +160,18 @@ class TreeLine:
         :param file_path: location of gedcom file to be used as input
         :return: list of all treeline objects created from the supplied gedcom file
         """
-        file = open(file_path, 'r')
-        for line in file:
-            tl = TreeLine(line)
-            # tl.print_line(line)
-            # tl.print_line_info(line)
-            treeline_list.append(tl)
-        return self.generate_indi_objects()
+        try:
+            file = open(file_path, 'r')
+        except FileNotFoundError:
+            raise FileNotFoundError(f"{file_path} path doesnot exist")
+        else:
+            with file:
+                for line in file:
+                    tl = TreeLine(line)
+                    # tl.print_line(line)
+                    # tl.print_line_info(line)
+                    treeline_list.append(tl)
+                return self.generate_indi_objects()
 
     def generate_indi_objects(self):
         """
