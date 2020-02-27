@@ -291,7 +291,7 @@ class TreeLine:
             self.process_for_pretty_table('FAM', fam, processed_tree)
             table_printer.add_row([fam.id, fam.marr_disp, fam.div_disp, fam.husb, fam.husb_name, fam.wife, fam.wife_name, fam.chil])
 
-        print(f'Families\n{table_printer}')
+        print(f'********************* Families *********************\n{table_printer}')
 
     def print_indi_table(self, indi_list, processed_map):
         """
@@ -304,7 +304,7 @@ class TreeLine:
         for indi in indi_list:
             self.process_for_pretty_table('INDI', indi, processed_map)
             table_printer.add_row([indi.id, indi.name, indi.sex, indi.birt_disp, indi.age_disp, indi.alive_disp, indi.deat_disp, indi.famc_disp, indi.fams_disp])
-        print(f'Individuals\n{table_printer}')
+        print(f'********************* Individuals *********************\n{table_printer}')
 
     def pretty_print_table(self, table_name, data_list, processed_tree):
         """

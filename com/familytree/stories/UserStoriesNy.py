@@ -17,7 +17,7 @@ class UserStoriesNy:
     def us01(self, file_path=None):
         """ returns a list of objects containing dates after current date
         """
-        print("\n********************* Starting User Story 1 *********************")
+        print("\n##################### Starting User Story 1 #####################")
         file_path = file_path if file_path else self.get_file_path('us01')
         tree_line = TreeLine()
         family_tree = tree_line.process_data(file_path)
@@ -53,15 +53,15 @@ class UserStoriesNy:
 
         tree_line.tabulate(family_tree)
         self.print_report(self.REPORT_NAMES['us01'], indi_list_us01 + fam_list_us01)
-        print('********************* Ending User Story 1 *********************')
+        print('##################### Ending User Story 1 #####################')
         return indi_list_us01 + fam_list_us01
 
-    def us08(self):
+    def us08(self, file_path=None):
         """ returns a list of individuals whose birth date is before parent's marriage date
         or nine months after parent's divorce date
         """
-        print('\n********************* Starting User Story 8 *********************')
-        file_path = self.get_file_path('us08')
+        print('\n##################### Starting User Story 8 #####################')
+        file_path = file_path if file_path else self.get_file_path('us08')
         tree_line = TreeLine()
         family_tree = tree_line.process_data(file_path)
         indi_list = family_tree.get_sorted_list(UserStoriesNy.INDI_TAG)
@@ -85,7 +85,7 @@ class UserStoriesNy:
 
         tree_line.tabulate(family_tree)
         self.print_report(self.REPORT_NAMES['us08'], indi_list_us08_fail)
-        print('********************* Ending User Story 8 *********************')
+        print('##################### Ending User Story 8 #####################')
         return indi_list_us08_fail
 
     @staticmethod
@@ -107,3 +107,8 @@ class UserStoriesNy:
     @staticmethod
     def get_file_path(user_story):
         return f'../data/{user_story}.ged'
+
+
+if __name__ == '__main__':
+    us = UserStoriesNy()
+    us.us01()
