@@ -109,6 +109,6 @@ class UserStoriesNy:
         return f'../data/{user_story}.ged'
 
 
-if __name__ == '__main__':
-    us = UserStoriesNy()
-    us.us01()
+# if __name__ == '__main__':
+#     us = UserStoriesNy()
+#     us.us01()
