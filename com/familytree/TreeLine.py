@@ -17,6 +17,7 @@ class TreeLine:
         '2': two_tags
     }
     all_tags = zero_tags + one_tags + two_tags
+    logger = TreeUtils.get_logger()
 
     def __init__(self, input_line=None):
         """
@@ -230,16 +231,18 @@ class TreeLine:
         if type == 'INDI':
             return self.process_indi_for_table(type_obj, processed_tree)
 
-    def process_fam_for_table(self, type_obj, processed_tree):
+    def process_fam_for_table(self, type_obj, family_tree):
         """
         helper method to process Family object for displaying in table
         :param type_obj: the actual data object to be printed
-        :param processed_tree: the Tree object containing the complete family tree
+        :param family_tree: the Tree object containing the complete family tree
         :return: not required at the moment
         """
-        family = processed_tree.get(type_obj.id)
-        type_obj.husb_name = processed_tree.get(family.husb).name if processed_tree.contains(family.husb) else 'NA'
-        type_obj.wife_name = processed_tree.get(family.wife).name if processed_tree.contains(family.wife) else 'NA'
+        family = family_tree.get(type_obj.id)
+        type_obj.husb_id_disp = family.husb if family.husb else 'NA'
+        type_obj.wife_id_disp = family.wife if family.wife else 'NA'
+        type_obj.husb_name = family_tree.get(family.husb).name if family_tree.contains(family.husb) else 'NA'
+        type_obj.wife_name = family_tree.get(family.wife).name if family_tree.contains(family.wife) else 'NA'
         type_obj.marr_disp = datetime.strptime(type_obj.marr, Individual.date_format).strftime(Tree.OUTPUT_DATE_FORMAT) if type_obj.marr else 'NA'
         type_obj.div_disp = datetime.strptime(type_obj.div, Individual.date_format).strftime(Tree.OUTPUT_DATE_FORMAT) if type_obj.div else 'NA'
         type_obj.chil_disp = type_obj.chil if type_obj.chil else 'NA'
@@ -277,10 +280,9 @@ class TreeLine:
         table_printer = TreeUtils.get_table_printer("FAM", heading_list)
         for fam in fam_list:
             self.process_for_pretty_table('FAM', fam, processed_tree)
-            table_printer.add_row([fam.id, fam.marr_disp, fam.div_disp, fam.husb, fam.husb_name, fam.wife, fam.wife_name, fam.chil])
+            table_printer.add_row([fam.id, fam.marr_disp, fam.div_disp, fam.husb_id_disp, fam.husb_name, fam.wife_id_disp, fam.wife_name, fam.chil])
 
-        # print(f'********************* Families *********************\n{table_printer}')
-        print(f'{TreeUtils.form_heading("Families")}\n{table_printer}')
+        self.logger.error(f'\n{TreeUtils.form_heading("Families")}\n{table_printer}')
 
     def print_indi_table(self, indi_list, processed_map):
         """
@@ -293,8 +295,7 @@ class TreeLine:
         for indi in indi_list:
             self.process_for_pretty_table('INDI', indi, processed_map)
             table_printer.add_row([indi.id, indi.name, indi.sex, indi.birt_disp, indi.age_disp, indi.alive_disp, indi.deat_disp, indi.famc_disp, indi.fams_disp])
-        # print(f'********************* Individuals *********************\n{table_printer}')
-        print(f'{TreeUtils.form_heading("Individuals")}\n{table_printer}')
+        self.logger.error(f'\n{TreeUtils.form_heading("Individuals")}\n{table_printer}')
 
     def pretty_print_table(self, table_name, data_list, processed_tree):
         """
