@@ -1,4 +1,5 @@
 from prettytable import PrettyTable
+import os
 import logging
 
 
@@ -40,13 +41,19 @@ class TreeUtils:
         return x
 
     @staticmethod
-    def print_report(report_name, obj_list):
+    def print_report_table(report_name, obj_list):
         heading_list = ["ID", "Type", "Warning"]
         table_printer = TreeUtils.get_table_printer(report_name, heading_list)
         for obj in obj_list:
             table_printer.add_row([obj.id, obj.tag_name, obj.warn_msg])
 
         TreeUtils.logger.error(f'\n{TreeUtils.form_heading(f"Report - {report_name}")}\n{table_printer}')
+
+    @staticmethod
+    def print_report(report_name, obj_list):
+        # TreeUtils.logger.error(f'\n{TreeUtils.form_heading(f"Report - {report_name}")}\n')
+        for obj in obj_list:
+            TreeUtils.logger.error(obj.err)
 
     @staticmethod
     def get_logger():
@@ -57,9 +64,10 @@ class TreeUtils:
     @staticmethod
     def init_logger():
         TreeUtils.logger = logging.getLogger('familytree')
-        hdlr = logging.FileHandler('../logs/familytree.log')
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-        hdlr.setFormatter(formatter)
+        # print(os.path.join(os.path.realpath('..'), 'logs', 'familytree.log'))
+        hdlr = logging.FileHandler(os.path.join(os.path.realpath('.'), 'com', 'familytree', 'logs', 'familytree.log'))
+        # formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+        # hdlr.setFormatter(formatter)
         TreeUtils.logger.addHandler(hdlr)
         TreeUtils.logger.setLevel(logging.WARNING)
 
