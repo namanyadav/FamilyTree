@@ -1,5 +1,4 @@
 from datetime import datetime
-from prettytable import PrettyTable
 from com.familytree.Individual import Individual
 from com.familytree.Family import Family
 from com.familytree.Tree import Tree
