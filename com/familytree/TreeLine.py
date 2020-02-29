@@ -5,7 +5,6 @@ from com.familytree.Family import Family
 from com.familytree.Tree import Tree
 from com.familytree.TreeUtils import TreeUtils
 
-
 class TreeLine:
 
     zero_tags = ["FAM", "INDI", "HEAD", "TRLR", "NOTE"]
@@ -31,7 +30,7 @@ class TreeLine:
             self.level = split_text[0]
             self.tag_name = self.extract_tag_name(input_line)
             self.arguments = self.extract_arguments(input_line)
-            self.is_valid = self.is_valid(input_line)
+            self.is_valid = self.is_valid_tags(input_line)
 
     def __str__(self):
         """
@@ -53,7 +52,7 @@ class TreeLine:
             return
         return input_line.strip().split(' ', maxsplit=2)
 
-    def is_valid(self, input_line):
+    def is_valid_tags(self, input_line):
         """
         validates whether the input_line in gedcom file is valid or not
         :param input_line: the line that has to be validated
@@ -159,14 +158,18 @@ class TreeLine:
         :param file_path: location of gedcom file to be used as input
         :return: list of all treeline objects created from the supplied gedcom file
         """
-        file = open(file_path, 'r')
-        for line in file:
-            tl = TreeLine(line)
-            # tl.print_line(line)
-            # tl.print_line_info(line)
-            treeline_list.append(tl)
-        file.close()
-        return self.generate_indi_objects()
+        try:
+            file = open(file_path, 'r')
+        except FileNotFoundError:
+            raise FileNotFoundError(f"{file_path} path doesnot exist")
+        else:
+            with file:
+                for line in file:
+                    tl = TreeLine(line)
+                    # tl.print_line(line)
+                    # tl.print_line_info(line)
+                    treeline_list.append(tl)
+                return self.generate_indi_objects()
 
     def generate_indi_objects(self):
         """
