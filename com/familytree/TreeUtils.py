@@ -1,5 +1,6 @@
 from prettytable import PrettyTable
 import logging
+import os
 
 
 class TreeUtils:
@@ -57,7 +58,7 @@ class TreeUtils:
     @staticmethod
     def init_logger():
         TreeUtils.logger = logging.getLogger('familytree')
-        hdlr = logging.FileHandler('../logs/familytree.log')
+        hdlr = logging.FileHandler(os.path.join(os.getcwd(), "com/familytree/logs/familytree.log"))
         formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         hdlr.setFormatter(formatter)
         TreeUtils.logger.addHandler(hdlr)

@@ -54,7 +54,7 @@ class UserStoriesDg:
                     pass
         if fam_list_us05:
             #TreeLine().tabulate(processed_tree)
-            TreeUtils.print_report("US07 Less then 150 years old", fam_list_us05)
+            TreeUtils.print_report("US07 Marriage should occur before death of either spouses", fam_list_us05)
         return fam_list_us05
 
     def get_id_list(self, obj_list):
