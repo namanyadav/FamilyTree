@@ -1,5 +1,5 @@
 import unittest
-from UserStoriesAm import UserStoriesAm
+from com.familytree.stories.UserStoriesAm import UserStoriesAm
 
 class UserStoriesAmTest(unittest.TestCase):
     """ Unittests for userstories 2 and 6 """
