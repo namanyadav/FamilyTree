@@ -1,5 +1,6 @@
 from com.familytree.stories.UserStoriesNy import UserStoriesNy
 from com.familytree.stories.UserStoriesDg import UserStoriesDg
+from com.familytree.stories.UserStoriesAm import UserStoriesAm
 import os
 from os import sys, path
 
@@ -16,3 +17,7 @@ us.us01(os.path.join(os.getcwd(), "com/familytree/data/us08.ged"))
 us1 = UserStoriesDg()
 us1.us05()
 us1.us07()
+
+us2 = UserStoriesAm()
+us2.us02()
+us2.us06()
