@@ -1,11 +1,11 @@
 
 from datetime import datetime
-from TreeUtils import TreeUtils
-from TreeLine import TreeLine
+from com.familytree.TreeUtils import TreeUtils
+from com.familytree.TreeLine import TreeLine
 
 class UserStoriesDg:
 
-    FILE_PATH = './data/us05&07.ged'
+    FILE_PATH = './com/familytree/data/us05&07.ged'
     INDI_TAG = 'INDI'
     FAM_TAG = 'FAM'
 
