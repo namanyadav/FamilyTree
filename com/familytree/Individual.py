@@ -15,6 +15,26 @@ class Individual:
         self.fams = []
         self.tag_name = 'INDI'
 
+    def get_id(self):
+        return self.id
+
+    def get_birth_date(self, output_format=None):
+        if not self.birt:
+            return None
+        date = datetime.strptime(self.birt, Individual.date_format)
+        if output_format:
+            return date.strftime(output_format)
+        return date
+
+    def get_death_date(self, output_format=None):
+        if not self.deat:
+            return None
+        date = datetime.strptime(self.deat, Individual.date_format)
+        if output_format:
+            return date.strftime(output_format)
+        return date
+
+    # get a cleaned up version of the id
     def get_clean_id(self, id):
         if '@' in id:
             return id.replace('@', '')
