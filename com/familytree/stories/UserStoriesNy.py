@@ -1,13 +1,21 @@
 from datetime import datetime, timedelta
+
+from com.familytree.TreeError import TreeError
 from com.familytree.TreeLine import TreeLine
 from com.familytree.Tree import Tree
 from com.familytree.TreeUtils import TreeUtils
 import calendar
 import logging
+import os
+import sys
 
 
 # TODO: use only one gedcom file
 # TODO: convert warn_msg to list of warning messages
+
+# TODO: 9 months check in US08 and US09
+# TODO: Change error report as given in sample
+# TODO: what about Homework 5? Pair programming
 class UserStoriesNy:
 
     FILE_PATH = '../data/Familytree_test_file.ged'
@@ -22,7 +30,7 @@ class UserStoriesNy:
     def us01(self, file_path=None):
         """ returns a list of objects containing dates after current date
         """
-        self.logger.error(TreeUtils.form_heading("Starting User Story 1", "#", 70))
+        # self.logger.error(TreeUtils.form_heading("Starting User Story 1", "#", 70))
         file_path = file_path if file_path else TreeUtils.get_file_path('us01')
         tree_line = TreeLine()
         family_tree = tree_line.process_data(file_path)
@@ -34,39 +42,41 @@ class UserStoriesNy:
         # if there is error in both birth and death criteria, only birth will be listed
         for indi in indi_list:
             if indi.get_birth_date() and indi.get_birth_date() > today_date:
-                indi.warn_msg = f'Birth date {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} ' \
-                    f'is after current date {today_date_formatted}'
+                warn_msg = f'Birthday {indi.get_birth_date()} occurs in future'
+                indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US01', indi.id, warn_msg)
                 indi_list_us01.append(indi)
-                continue
+                # continue
             if indi.get_death_date() and indi.get_death_date() > today_date:
-                indi.warn_msg = f'Death date {indi.get_death_date(Tree.OUTPUT_DATE_FORMAT)} ' \
-                    f'is after current date {today_date_formatted}'
+                warn_msg = f'Death day {indi.get_death_date()} occurs in future'
+                indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US01', indi.id, warn_msg)
                 indi_list_us01.append(indi)
                 # continue
 
         # if there is error in both marriage and divorce criteria, only marriage will be listed
         for fam in fam_list:
             if fam.get_marr_date() and fam.get_marr_date() > today_date:
-                fam.warn_msg = f'Marriage date {fam.get_marr_date(Tree.OUTPUT_DATE_FORMAT)} ' \
-                    f'is after current date {today_date_formatted}'
+                warn_msg = f'Marriage date {fam.get_marr_date()} occurs in future'
+                fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US01', fam.id, warn_msg)
                 fam_list_us01.append(fam)
-                continue
+                # continue
             if fam.get_div_date() and fam.get_div_date() > today_date:
-                fam.warn_msg = f'Divorce date {fam.get_div_date().strftime(Tree.OUTPUT_DATE_FORMAT)} ' \
-                    f'is after current date {today_date_formatted}'
+                warn_msg = f'Divorce date {fam.get_div_date()} occurs in future'
+                fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US01', fam.id, warn_msg)
                 fam_list_us01.append(fam)
                 # continue
 
-        tree_line.tabulate(family_tree)
-        TreeUtils.print_report(self.REPORT_NAMES['us01'], indi_list_us01 + fam_list_us01)
-        self.logger.error(TreeUtils.form_heading('Ending User Story 1', '#', 70))
+        # tree_line.tabulate(family_tree)
+        # TreeUtils.print_report(self.REPORT_NAMES['us01'], indi_list_us01 + fam_list_us01)
+        # self.logger.error(TreeUtils.form_heading('Ending User Story 1', '#', 70))
+        # for indi in indi_list_us01:
+        #     print(indi.err)
         return indi_list_us01 + fam_list_us01
 
     def us08(self, file_path=None):
         """ returns a list of individuals whose birth date is before parent's marriage date
         or nine months after parent's divorce date
         """
-        self.logger.error(TreeUtils.form_heading('Starting User Story 8', '#', 70))
+        # self.logger.error(TreeUtils.form_heading('Starting User Story 8', '#', 70))
         file_path = file_path if file_path else TreeUtils.get_file_path('us08')
         tree_line = TreeLine()
         family_tree = tree_line.process_data(file_path)
@@ -77,25 +87,36 @@ class UserStoriesNy:
             parent_marr_date = family_tree.get(indi.famc).get_marr_date() if family_tree.get(indi.famc) else None
             parent_div_date = family_tree.get(indi.famc).get_div_date() if family_tree.get(indi.famc) else None
             if birth_date and parent_marr_date and birth_date < parent_marr_date:
-                indi.warn_msg = f'Birth date {birth_date.strftime(Tree.OUTPUT_DATE_FORMAT)} ' \
+                warn_msg = f'Birth date {birth_date.strftime(Tree.OUTPUT_DATE_FORMAT)} ' \
                     f'is before parent\'s marriage date {parent_marr_date.strftime(Tree.OUTPUT_DATE_FORMAT)}'
+                indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US08', indi.id, warn_msg)
                 indi_list_us08_fail.append(indi)
-                continue
+                # continue
             if birth_date and parent_div_date:
                 days_in_month = calendar.monthrange(parent_div_date.year, parent_div_date.month)[1]
                 max_birth_date = parent_div_date + timedelta(days=days_in_month)
                 if birth_date > max_birth_date:
-                    indi.warn_msg = f'Birth date {birth_date.strftime(Tree.OUTPUT_DATE_FORMAT)} ' \
+                    warn_msg = f'Birth date {birth_date.strftime(Tree.OUTPUT_DATE_FORMAT)} ' \
                         f'is 9 months after parent\'s divorce date {parent_div_date.strftime(Tree.OUTPUT_DATE_FORMAT)}'
+                    indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US08', indi.id, warn_msg)
                     indi_list_us08_fail.append(indi)
 
-        tree_line.tabulate(family_tree)
-        TreeUtils.print_report(self.REPORT_NAMES['us08'], indi_list_us08_fail)
-        self.logger.error(TreeUtils.form_heading('Ending User Story 8', '#', 70))
+        # tree_line.tabulate(family_tree)
+        # TreeUtils.print_report(self.REPORT_NAMES['us08'], indi_list_us08_fail)
+        # self.logger.error(TreeUtils.form_heading('Ending User Story 8', '#', 70))
         return indi_list_us08_fail
 
 
 if __name__ == '__main__':
+    # ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+    # print(ROOT_DIR)
+    # print(os.path.join(ROOT_DIR, 'com', 'familytree', 'data', 'Familytree_gedcom_yadav.ged'))
+    print(os.path.join(os.path.realpath('..'), 'data', 'Familytree_gedcom_yadav.ged'))
+    # print(os.path.dirname('..'))
     us = UserStoriesNy()
+    # us.us01(os.path.join(os.path.realpath('..'), 'data', 'Familytree_gedcom_yadav.ged'))
+    # us.us08(os.path.join(os.path.realpath('..'), 'data', 'Familytree_gedcom_yadav.ged'))
+
     us.us01()
     us.us08()
+
