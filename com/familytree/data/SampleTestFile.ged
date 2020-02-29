@@ -1,0 +1,120 @@
+0 NOTE Git Repository Name SSW555-2019Spring
+0 NOTE three generations of Telaga family
+0 NOTE define Avinash Telaga
+0 I01 INDI
+1 NAME Avinash /Telaga/ 
+1 BIRT
+2 DATE 03 MAR 1916 
+1 SEX M 
+1 FAMS F01 
+1 DEAT
+2 DATE 13 JUN 2005
+0 NOTE define Bhanu Telaga
+0 I02 INDI 
+1 NAME Bhanu /Telaga/ 
+1 BIRT 
+2 DATE 15 APR 1920 
+1 SEX F 
+1 FAMS F01 
+0 NOTE define Pavan Telaga
+0 I03 INDI 
+1 NAME Pavan /Telaga/ 
+1 BIRT 
+2 DATE 23 May 1947 
+1 SEX M 
+1 FAMS F02
+1 FAMC F01
+0 NOTE define Kusuma Arava
+0 I04 INDI
+1 NAME Kusuma /Arava/
+1 BIRT 
+2 DATE 10 OCT 1948 
+1 SEX F
+1 FAMC F01 
+1 FAMS A03
+1 FAMS F04
+0 NOTE define Harika Telaga 
+0 I05 INDI
+1 NAME Harika /Telaga/
+1 BIRT 
+2 DATE 09 MAR 1949
+1 SEX F
+1 FAMS F02 
+0 NOTE define Madhu Telaga
+0 I06 INDI
+1 NAME Madhu /Telaga/
+1 BIRT 
+2 DATE 17 JAN 1975
+1 SEX F
+1 FAMC F02
+0 NOTE define Sirisha Telaga 
+0 I07 INDI
+1 NAME Sirisha /Telaga/
+1 BIRT 
+2 DATE 08 FEB 1977
+1 SEX F
+1 FAMC F02
+0 NOTE define Anurag Rayala
+0 I08 INDI
+1 NAME Anurag /Rayala/
+1 BIRT 
+2 DATE 11 DEC 1950
+1 SEX M 
+1 FAMS A03
+1 DEAT
+2 DATE 01 SEP 1980
+0 NOTE define Vyas Rayala
+0 I09 INDI
+1 NAME Vyas /Rayala/
+1 BIRT 
+2 DATE 19 OCT 1977
+1 SEX M 
+1 FAMC A03
+0 NOTE define Vamshi Arava
+0 I10 INDI
+1 NAME Vamshi /Arava/
+1 BIRT 
+2 DATE 14 DEC 1950
+1 SEX M 
+1 FAMS F04
+0 NOTE define Harish Arava
+0 I11 INDI
+1 NAME Harish /Arava/
+1 BIRT 
+2 DATE 09 MAR 1989
+1 SEX M 
+1 FAMC F04
+0 NOTE define Maneesha Arava
+0 I12 INDI
+1 NAME Maneesha /Arava/
+1 BIRT 
+2 DATE 09 APR 1991
+1 SEX F 
+1 FAMC F04
+0 F01 FAM 
+1 MARR 
+2 DATE 16 SEP 1944
+1 HUSB I01 
+1 WIFE I02
+1 CHIL I03 
+1 CHIL I04
+0 F02 FAM 
+1 MARR 
+2 DATE 19 APR 1973
+1 HUSB I03 
+1 WIFE I05
+1 CHIL I06 
+1 CHIL I07
+0 A03 FAM 
+1 MARR 
+2 DATE 07 AUG 1975
+1 HUSB I08 
+1 WIFE I04
+1 CHIL I09 
+0 F04 FAM
+1 MARR
+2 DATE 12 OCT 1985
+1 HUSB I10 
+1 WIFE I04
+1 CHIL I11 
+1 CHIL I12

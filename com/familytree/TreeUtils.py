@@ -1,6 +1,7 @@
 from prettytable import PrettyTable
 import os
 import logging
+import os
 
 
 class TreeUtils:
@@ -70,7 +71,7 @@ class TreeUtils:
         # hdlr.setFormatter(formatter)
         TreeUtils.logger.addHandler(hdlr)
         TreeUtils.logger.setLevel(logging.WARNING)
-
+        
     @staticmethod
     def set_logging_level(level):
         if not TreeUtils.logger:
