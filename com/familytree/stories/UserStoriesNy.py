@@ -42,12 +42,12 @@ class UserStoriesNy:
         # if there is error in both birth and death criteria, only birth will be listed
         for indi in indi_list:
             if indi.get_birth_date() and indi.get_birth_date() > today_date:
-                warn_msg = f'Birthday {indi.get_birth_date()} occurs in future'
+                warn_msg = f'Birthday {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} occurs in future'
                 indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US01', indi.id, warn_msg)
                 indi_list_us01.append(indi)
                 # continue
             if indi.get_death_date() and indi.get_death_date() > today_date:
-                warn_msg = f'Death day {indi.get_death_date()} occurs in future'
+                warn_msg = f'Death day {indi.get_death_date(Tree.OUTPUT_DATE_FORMAT)} occurs in future'
                 indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US01', indi.id, warn_msg)
                 indi_list_us01.append(indi)
                 # continue
@@ -55,12 +55,12 @@ class UserStoriesNy:
         # if there is error in both marriage and divorce criteria, only marriage will be listed
         for fam in fam_list:
             if fam.get_marr_date() and fam.get_marr_date() > today_date:
-                warn_msg = f'Marriage date {fam.get_marr_date()} occurs in future'
+                warn_msg = f'Marriage date {fam.get_marr_date(Tree.OUTPUT_DATE_FORMAT)} occurs in future'
                 fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US01', fam.id, warn_msg)
                 fam_list_us01.append(fam)
                 # continue
             if fam.get_div_date() and fam.get_div_date() > today_date:
-                warn_msg = f'Divorce date {fam.get_div_date()} occurs in future'
+                warn_msg = f'Divorce date {fam.get_div_date(Tree.OUTPUT_DATE_FORMAT)} occurs in future'
                 fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US01', fam.id, warn_msg)
                 fam_list_us01.append(fam)
                 # continue
@@ -101,22 +101,4 @@ class UserStoriesNy:
                     indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US08', indi.id, warn_msg)
                     indi_list_us08_fail.append(indi)
 
-        # tree_line.tabulate(family_tree)
-        # TreeUtils.print_report(self.REPORT_NAMES['us08'], indi_list_us08_fail)
-        # self.logger.error(TreeUtils.form_heading('Ending User Story 8', '#', 70))
         return indi_list_us08_fail
-
-
-if __name__ == '__main__':
-    # ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-    # print(ROOT_DIR)
-    # print(os.path.join(ROOT_DIR, 'com', 'familytree', 'data', 'Familytree_gedcom_yadav.ged'))
-    print(os.path.join(os.path.realpath('..'), 'data', 'Familytree_gedcom_yadav.ged'))
-    # print(os.path.dirname('..'))
-    us = UserStoriesNy()
-    # us.us01(os.path.join(os.path.realpath('..'), 'data', 'Familytree_gedcom_yadav.ged'))
-    # us.us08(os.path.join(os.path.realpath('..'), 'data', 'Familytree_gedcom_yadav.ged'))
-
-    us.us01()
-    us.us08()
-

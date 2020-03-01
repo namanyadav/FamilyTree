@@ -62,17 +62,9 @@ class UserStoriesMSK:
                     fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US10',
                                         processed_tree.get(fam.husb).id, warn_msg)
                     indi_list_us10_fail.append(fam)
-            # else:
-            #     print
         return indi_list_us10_fail
 
     def print_list(self, list_name, list):
         print(f'\n******************** {list_name} ********************')
         for item in list:
             print(item)
-
-#
-# if __name__ == '__main__':
-#     usmsk = UserStoriesMSK()
-#     usmsk.print_list('US 01', usmsk.us09())
-#     # usny.print_list('US 08', usny.us08())
