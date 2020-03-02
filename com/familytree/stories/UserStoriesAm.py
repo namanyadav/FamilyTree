@@ -7,7 +7,7 @@ from com.familytree.TreeUtils import TreeUtils
 
 class UserStoriesAm:
 
-    FILE_PATH = './com/familytree/data/Familytree_gedcom_yadav.ged'
+    FILE_PATH = '../data/Familytree_gedcom_yadav.ged'
     INDI_TAG = 'INDI'
     FAM_TAG = 'FAM'
     
