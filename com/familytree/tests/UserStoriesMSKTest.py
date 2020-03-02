@@ -12,19 +12,21 @@ class UserStoriesMSKTest(unittest.TestCase):
         """"Call after every test case"""
         # print("inside teardown")
 
-    def test_us01(self):
-        """ I1, I5, F1 have failing criteria in us01.ged """
-        self.assertEqual(['I1', 'I5', 'F1'], self.get_id_list(self.stories.us09()))
+    def test_us09(self):
+        """ US09I1 have failing criteria in us09.ged """
+        self.assertEqual(['US09I1'], self.get_id_list(self.stories.us09('../data/us09.ged')))
         # self.stories.us01('../data/Family-3-single.ged')
 
-    def test_us08(self):
-        """ I5, I6, I7, I8 have failing criteria in us08.ged """
-        self.assertEqual(['I5', 'I6', 'I7', 'I8'], self.get_id_list(self.stories.us10()))
+    def test_us10(self):
+        """ I1, I2, I7 have failing criteria in us10.ged """
+        error_list = self.stories.us10('../data/us10.ged')
+        self.assertEqual(['F1', 'F2', 'F4'], self.get_id_list(error_list))
 
     @staticmethod
     def get_id_list(obj_list):
         id_list = []
         for obj in obj_list:
+            print(obj.id)
             id_list.append(obj.id)
         return id_list
 
