@@ -33,7 +33,7 @@ class UserStoriesRK:
         indi_list_us04 = []
         for fam in fam_list:
             if fam.get_marr_date() and fam.get_div_date() and fam.get_marr_date() >= fam.get_div_date():
-                warn_msg = f"Marriage {fam.get_marr_date(Tree.OUTPUT_DATE_FORMAT)} should occur before divorse {fam.get_marr_date(Tree.OUTPUT_DATE_FORMAT)}"
+                warn_msg = f"Marriage {fam.get_marr_date(Tree.OUTPUT_DATE_FORMAT)} should occur before divorse {fam.get_div_date(Tree.OUTPUT_DATE_FORMAT)}"
                 fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US04', fam.id, warn_msg)
                 indi_list_us04.append(fam)
         # if indi_list_us04:
