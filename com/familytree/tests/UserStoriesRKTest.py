@@ -1,5 +1,5 @@
 import unittest
-from UserStoriesRK import UserStoriesRK
+from com.familytree.stories.UserStoriesRK import UserStoriesRK
 
 class UserStoriesRKTest(unittest.TestCase):
     """ Unit Testing for US 03 & US 04"""
