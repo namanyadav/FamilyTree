@@ -12,7 +12,7 @@ class UserStoriesAm:
     FAM_TAG = 'FAM'
     
     def us02(self, file_path=None):
-        """return a list of objects whose birth date is after their marriage date """
+        """return a list of objects whose birth date is after or on their marriage date """
         file_path = file_path if file_path else UserStoriesAm.FILE_PATH
         processed_tree = TreeLine().process_data(file_path)
         indi_list = processed_tree.get_sorted_list(UserStoriesAm.INDI_TAG)
@@ -21,8 +21,8 @@ class UserStoriesAm:
             birth_date = indi.get_birth_date()
             for spouse in indi.fams:
                 marriage_date = processed_tree.get(spouse).get_marr_date() if processed_tree.get(spouse) else None
-                if marriage_date and birth_date > marriage_date:
-                    warn_msg = f"birth date {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} should not occur after marriage date {processed_tree.get(spouse).get_marr_date(Tree.OUTPUT_DATE_FORMAT)}"
+                if marriage_date and birth_date >= marriage_date:
+                    warn_msg = f"birth date {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} should not occur after or on marriage date {processed_tree.get(spouse).get_marr_date(Tree.OUTPUT_DATE_FORMAT)}"
                     indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US02', indi.id, warn_msg)
                     indi_list_us02_fail.append(indi)
                     continue
