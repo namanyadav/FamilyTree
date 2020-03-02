@@ -86,9 +86,10 @@ class UserStoriesNy:
             birth_date = indi.get_birth_date()
             parent_marr_date = family_tree.get(indi.famc).get_marr_date() if family_tree.get(indi.famc) else None
             parent_div_date = family_tree.get(indi.famc).get_div_date() if family_tree.get(indi.famc) else None
-            if birth_date and parent_marr_date and birth_date < parent_marr_date:
+            # if birth date is on or before marriage date, add indi to failure list
+            if birth_date and parent_marr_date and birth_date <= parent_marr_date:
                 warn_msg = f'Birth date {birth_date.strftime(Tree.OUTPUT_DATE_FORMAT)} ' \
-                    f'is before parent\'s marriage date {parent_marr_date.strftime(Tree.OUTPUT_DATE_FORMAT)}'
+                    f'is before or on parent\'s marriage date {parent_marr_date.strftime(Tree.OUTPUT_DATE_FORMAT)}'
                 indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US08', indi.id, warn_msg)
                 indi_list_us08_fail.append(indi)
                 # continue
@@ -97,7 +98,7 @@ class UserStoriesNy:
                 max_birth_date = parent_div_date + timedelta(days=days_in_month)
                 if birth_date > max_birth_date:
                     warn_msg = f'Birth date {birth_date.strftime(Tree.OUTPUT_DATE_FORMAT)} ' \
-                        f'is 9 months after parent\'s divorce date {parent_div_date.strftime(Tree.OUTPUT_DATE_FORMAT)}'
+                        f'is more than 9 months after parent\'s divorce date {parent_div_date.strftime(Tree.OUTPUT_DATE_FORMAT)}'
                     indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US08', indi.id, warn_msg)
                     indi_list_us08_fail.append(indi)
 

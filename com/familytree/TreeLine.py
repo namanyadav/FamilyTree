@@ -158,18 +158,14 @@ class TreeLine:
         :param file_path: location of gedcom file to be used as input
         :return: list of all treeline objects created from the supplied gedcom file
         """
-        try:
-            file = open(file_path, 'r')
-        except FileNotFoundError:
-            raise FileNotFoundError(f"{file_path} path does not exist")
-        else:
-            with file:
-                for line in file:
-                    tl = TreeLine(line)
-                    # tl.print_line(line)
-                    # tl.print_line_info(line)
-                    treeline_list.append(tl)
-                return self.generate_indi_objects()
+        file = open(file_path, 'r')
+        with file:
+            for line in file:
+                tl = TreeLine(line)
+                # tl.print_line(line)
+                # tl.print_line_info(line)
+                treeline_list.append(tl)
+            return self.generate_indi_objects()
 
     def generate_indi_objects(self):
         """
