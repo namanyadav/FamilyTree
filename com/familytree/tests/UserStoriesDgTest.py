@@ -14,7 +14,7 @@ class UserStoriesDgTest(unittest.TestCase):
     def test_us07(self):
         """ us07 tests """
 
-        self.assertEqual(UserStoriesDg().get_id_list(UserStoriesDg().us07()), [['I1', 'I3']])
+        self.assertEqual(UserStoriesDg().get_id_list(UserStoriesDg().us07()), ['I1', 'I3'])
         self.assertNotEqual(UserStoriesDg().get_id_list(UserStoriesDg().us07()), ['US0507I2', 'US0507I3'])
         self.assertNotEqual(UserStoriesDg().get_id_list(UserStoriesDg().us07()), [])
 
