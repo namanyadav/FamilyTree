@@ -295,8 +295,8 @@ class TreeLine:
         for indi in indi_list:
             self.process_for_pretty_table('INDI', indi, processed_map)
             table_printer.add_row([indi.id, indi.name, indi.sex, indi.birt_disp, indi.age_disp, indi.alive_disp, indi.deat_disp, indi.famc_disp, indi.fams_disp])
-        self.logger.error(f'Individuals\n{table_printer}')
-        print(f'Individuals\n{table_printer}')
+        self.logger.error(f'People\n{table_printer}')
+        print(f'People\n{table_printer}')
 
     def pretty_print_table(self, table_name, data_list, processed_tree):
         """
