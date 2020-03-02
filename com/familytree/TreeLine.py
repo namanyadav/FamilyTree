@@ -150,6 +150,7 @@ class TreeLine:
             if treeline.get_tag_name() == 'INDI':
                 print('start to create Individual object')
 
+    # TODO exception handling
     def process_data(self, file_path):
         """
         opens the gedcom file, reads each line, creates treeline object for each line
@@ -160,7 +161,7 @@ class TreeLine:
         try:
             file = open(file_path, 'r')
         except FileNotFoundError:
-            raise FileNotFoundError(f"{file_path} path doesnot exist")
+            raise FileNotFoundError(f"{file_path} path does not exist")
         else:
             with file:
                 for line in file:

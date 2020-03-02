@@ -63,10 +63,15 @@ class TreeUtils:
         return TreeUtils.logger
 
     @staticmethod
+    def get_log_file_path():
+        return os.path.join(os.path.realpath(__file__+'/..'), 'logs', 'familytree.log')
+
+    @staticmethod
     def init_logger():
         TreeUtils.logger = logging.getLogger('familytree')
-        # print(os.path.join(os.path.realpath('..'), 'logs', 'familytree.log'))
-        hdlr = logging.FileHandler(os.path.join(os.path.realpath('.'), 'com', 'familytree', 'logs', 'familytree.log'))
+        log_file_path = TreeUtils.get_log_file_path()
+        # print(log_file_path)
+        hdlr = logging.FileHandler(TreeUtils.get_log_file_path())
         # formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         # hdlr.setFormatter(formatter)
         TreeUtils.logger.addHandler(hdlr)
