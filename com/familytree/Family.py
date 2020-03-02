@@ -35,7 +35,7 @@ class Family:
             return None
         date = datetime.strptime(self.div, Tree.INPUT_DATE_FORMAT)
         if output_format:
-            date.strftime(output_format)
+            return date.strftime(output_format)
         return date
 
     def set_marr(self, date):

@@ -8,13 +8,14 @@ from com.familytree.Tree import Tree
 
 class UserStoriesDg:
 
-    FILE_PATH = '../data/Familytree_gedcom_yadav.ged'
+    FILE_PATH1 = '../data/us07.ged'
+    FILE_PATH2 = '../data/us05.ged'
     INDI_TAG = 'INDI'
     FAM_TAG = 'FAM'
 
     def us07(self, file_path=None):
         """returns a list of objects with age greater than or equal to 150"""
-        file_path = file_path if file_path else UserStoriesDg.FILE_PATH
+        file_path = file_path if file_path else UserStoriesDg.FILE_PATH1
         processed_tree = TreeLine().process_data(file_path)
         indi_list = processed_tree.get_sorted_list(UserStoriesDg.INDI_TAG)
         indi_list_us07 = []
@@ -27,7 +28,7 @@ class UserStoriesDg:
 
     def us05(self, file_path=None):
         """ returns a list of objects whose marriage date is after death date"""
-        file_path = file_path if file_path else UserStoriesDg.FILE_PATH
+        file_path = file_path if file_path else UserStoriesDg.FILE_PATH2
         processed_tree = TreeLine().process_data(file_path)
         fam_list = processed_tree.get_sorted_list(UserStoriesDg.FAM_TAG)
         fam_list_us05 = []
