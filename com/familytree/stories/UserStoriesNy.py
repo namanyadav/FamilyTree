@@ -38,7 +38,6 @@ class UserStoriesNy:
         indi_list, fam_list = family_tree.get_sorted_list(UserStoriesNy.INDI_TAG), \
                               family_tree.get_sorted_list(UserStoriesNy.FAM_TAG)
         today_date = datetime.today()
-        today_date_formatted = today_date.strftime(Tree.OUTPUT_DATE_FORMAT)
         indi_list_us01, fam_list_us01 = [], []
         # if there is error in both birth and death criteria, only birth will be listed
         for indi in indi_list:
@@ -46,12 +45,10 @@ class UserStoriesNy:
                 warn_msg = f'Birthday {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} occurs in future'
                 indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US01', indi.id, warn_msg)
                 indi_list_us01.append(indi)
-                # continue
             if indi.get_death_date() and indi.get_death_date() > today_date:
                 warn_msg = f'Death day {indi.get_death_date(Tree.OUTPUT_DATE_FORMAT)} occurs in future'
                 indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US01', indi.id, warn_msg)
                 indi_list_us01.append(indi)
-                # continue
 
         # if there is error in both marriage and divorce criteria, only marriage will be listed
         for fam in fam_list:
@@ -59,18 +56,11 @@ class UserStoriesNy:
                 warn_msg = f'Marriage date {fam.get_marr_date(Tree.OUTPUT_DATE_FORMAT)} occurs in future'
                 fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US01', fam.id, warn_msg)
                 fam_list_us01.append(fam)
-                # continue
             if fam.get_div_date() and fam.get_div_date() > today_date:
                 warn_msg = f'Divorce date {fam.get_div_date(Tree.OUTPUT_DATE_FORMAT)} occurs in future'
                 fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US01', fam.id, warn_msg)
                 fam_list_us01.append(fam)
-                # continue
 
-        # tree_line.tabulate(family_tree)
-        # TreeUtils.print_report(self.REPORT_NAMES['us01'], indi_list_us01 + fam_list_us01)
-        # self.logger.error(TreeUtils.form_heading('Ending User Story 1', '#', 70))
-        # for indi in indi_list_us01:
-        #     print(indi.err)
         return indi_list_us01 + fam_list_us01
 
     def us08(self, file_path=None):
@@ -93,7 +83,6 @@ class UserStoriesNy:
                     f'is before or on parent\'s marriage date {parent_marr_date.strftime(Tree.OUTPUT_DATE_FORMAT)}'
                 indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US08', indi.id, warn_msg)
                 indi_list_us08_fail.append(indi)
-                # continue
             if birth_date and parent_div_date:
                 max_birth_date = parent_div_date + relativedelta(months=9)
                 # days_in_month = calendar.monthrange(parent_div_date.year, parent_div_date.month)[1]

@@ -333,7 +333,3 @@ class TreeLine:
 
 
 treeline_list = []
-if __name__ == '__main__':
-    tree_line = TreeLine()
-    processed_tree = tree_line.process_data('./data/Familytree_test_file.ged')
-    tree_line.tabulate(processed_tree)
