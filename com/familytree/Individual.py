@@ -15,15 +15,24 @@ class Individual:
         self.fams = []
         self.tag_name = 'INDI'
 
-    def get_birth_date(self):
+    def get_id(self):
+        return self.id
+
+    def get_birth_date(self, output_format=None):
         if not self.birt:
             return None
-        return datetime.strptime(self.birt, Individual.date_format)
+        date = datetime.strptime(self.birt, Individual.date_format)
+        if output_format:
+            return date.strftime(output_format)
+        return date
 
-    def get_death_date(self):
+    def get_death_date(self, output_format=None):
         if not self.deat:
             return None
-        return datetime.strptime(self.deat, Individual.date_format)
+        date = datetime.strptime(self.deat, Individual.date_format)
+        if output_format:
+            return date.strftime(output_format)
+        return date
 
     # get a cleaned up version of the id
     def get_clean_id(self, id):
@@ -49,7 +58,13 @@ class Individual:
     def set_spouse_family(self, family_id):
         self.fams.append(self.get_clean_id(family_id))
 
-    def get_age(self):
+    def get_age(self, target_date=None):
+        if target_date:
+            ref_date = target_date
+            birth_date = datetime.strptime(self.birt, Individual.date_format)
+            age = ref_date.year - birth_date.year - (
+                        (ref_date.month, ref_date.day) < (birth_date.month, birth_date.day))
+            return age
         # If indi does not have a birth date, return -1
         if not self.birt:
             return None
