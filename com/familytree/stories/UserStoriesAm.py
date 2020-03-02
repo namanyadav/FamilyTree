@@ -2,11 +2,12 @@ from datetime import datetime, timedelta
 
 from com.familytree.TreeError import TreeError
 from com.familytree.TreeLine import TreeLine
+from com.familytree.Tree import Tree
 from com.familytree.TreeUtils import TreeUtils
 
 class UserStoriesAm:
 
-    FILE_PATH = './com/familytree/data/Family_US02_US06.ged'
+    FILE_PATH = './com/familytree/data/Familytree_gedcom_yadav.ged'
     INDI_TAG = 'INDI'
     FAM_TAG = 'FAM'
     
@@ -21,7 +22,7 @@ class UserStoriesAm:
             for spouse in indi.fams:
                 marriage_date = processed_tree.get(spouse).get_marr_date() if processed_tree.get(spouse) else None
                 if marriage_date and birth_date > marriage_date:
-                    warn_msg = f"birth date should not occur after marriage date"
+                    warn_msg = f"birth date {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} should not occur after marriage date {processed_tree.get(spouse).get_marr_date(Tree.OUTPUT_DATE_FORMAT)}"
                     indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US02', indi.id, warn_msg)
                     indi_list_us02_fail.append(indi)
                     continue
@@ -33,7 +34,6 @@ class UserStoriesAm:
         """ return a list of objects whose divorce date is after death date """
         file_path = file_path if file_path else UserStoriesAm.FILE_PATH
         processed_tree = TreeLine().process_data(file_path)
-        indi_list = processed_tree.get_sorted_list(UserStoriesAm.INDI_TAG)
         fam_list = processed_tree.get_sorted_list(UserStoriesAm.FAM_TAG)
         indi_list_us06_fail = []
         for fam in fam_list:
@@ -43,16 +43,16 @@ class UserStoriesAm:
             if divorce_date:
                 if husband_death_date and wife_death_date:
                     if divorce_date > husband_death_date and divorce_date > wife_death_date:
-                        warn_msg = f"death date is before the divorce date for both"
+                        warn_msg = f"death date {processed_tree.get(fam.husb).get_death_date(Tree.OUTPUT_DATE_FORMAT)}, {processed_tree.get(fam.wife).get_death_date(Tree.OUTPUT_DATE_FORMAT)}  is before the divorce date for both {fam.get_div_date(Tree.OUTPUT_DATE_FORMAT)}"
                         fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US06', fam.id, warn_msg)
                         indi_list_us06_fail.append(fam)
                 elif husband_death_date or wife_death_date:
                     if husband_death_date and divorce_date > husband_death_date:
-                        warn_msg = f"death date of husband is  before the divorce date"
+                        warn_msg = f"death date {processed_tree.get(fam.husb).get_death_date(Tree.OUTPUT_DATE_FORMAT)} of husband is  before the divorce date {fam.get_div_date(Tree.OUTPUT_DATE_FORMAT)}"
                         fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US06', fam.id, warn_msg)
                         indi_list_us06_fail.append(fam)
                     if wife_death_date and divorce_date > wife_death_date:
-                        warn_msg = f"death date of wife is  before the divorce date"
+                        warn_msg = f"death date {processed_tree.get(fam.wife).get_death_date(Tree.OUTPUT_DATE_FORMAT)} of wife is  before the divorce date {fam.get_div_date(Tree.OUTPUT_DATE_FORMAT)}"
                         fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US06', fam.id, warn_msg)
                         indi_list_us06_fail.append(fam)
                 else:
