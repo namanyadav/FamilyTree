@@ -55,6 +55,7 @@ class TreeUtils:
         # TreeUtils.logger.error(f'\n{TreeUtils.form_heading(f"Report - {report_name}")}\n')
         for obj in obj_list:
             TreeUtils.logger.error(obj.err)
+            print(obj.err)
 
     @staticmethod
     def get_logger():
