@@ -8,6 +8,7 @@ import calendar
 import logging
 import os
 import sys
+from dateutil.relativedelta import relativedelta
 
 
 # TODO: use only one gedcom file
@@ -94,8 +95,9 @@ class UserStoriesNy:
                 indi_list_us08_fail.append(indi)
                 # continue
             if birth_date and parent_div_date:
-                days_in_month = calendar.monthrange(parent_div_date.year, parent_div_date.month)[1]
-                max_birth_date = parent_div_date + timedelta(days=days_in_month)
+                max_birth_date = parent_div_date + relativedelta(months=9)
+                # days_in_month = calendar.monthrange(parent_div_date.year, parent_div_date.month)[1]
+                # max_birth_date = parent_div_date + timedelta(days=days_in_month)
                 if birth_date > max_birth_date:
                     warn_msg = f'Birth date {birth_date.strftime(Tree.OUTPUT_DATE_FORMAT)} ' \
                         f'is more than 9 months after parent\'s divorce date {parent_div_date.strftime(Tree.OUTPUT_DATE_FORMAT)}'
