@@ -1,12 +1,16 @@
 from prettytable import PrettyTable
+import os
+import logging
+import os
 
 
 class TreeUtils:
 
+    logger = None
+
     @staticmethod
     def form_heading(title, char='*', max_length=100):
-        title_len = len(title)
-        char_len = (max_length - title_len) // 2
+        char_len = (max_length - len(title)) // 2
         pre = ''
         for x in range(char_len):
             pre += char
@@ -15,7 +19,6 @@ class TreeUtils:
 
     @staticmethod
     def print_list(list_name, obj_list):
-        # print(f'\n******************** {list_name} ********************')
         print(f'\n{TreeUtils.form_heading(list_name)}')
         for item in obj_list:
             print(item)
@@ -39,11 +42,43 @@ class TreeUtils:
         return x
 
     @staticmethod
-    def print_report(report_name, obj_list):
-        heading_list = ["ID", "Type", "Warning Message"]
+    def print_report_table(report_name, obj_list):
+        heading_list = ["ID", "Type", "Warning"]
         table_printer = TreeUtils.get_table_printer(report_name, heading_list)
-        print(f'\n{TreeUtils.form_heading(f"Report - {report_name}")}')
         for obj in obj_list:
             table_printer.add_row([obj.id, obj.tag_name, obj.warn_msg])
 
-        print(table_printer)
+        TreeUtils.logger.error(f'\n{TreeUtils.form_heading(f"Report - {report_name}")}\n{table_printer}')
+
+    @staticmethod
+    def print_report(report_name, obj_list):
+        # TreeUtils.logger.error(f'\n{TreeUtils.form_heading(f"Report - {report_name}")}\n')
+        for obj in obj_list:
+            TreeUtils.logger.error(obj.err)
+
+    @staticmethod
+    def get_logger():
+        if not TreeUtils.logger:
+            TreeUtils.init_logger()
+        return TreeUtils.logger
+
+    @staticmethod
+    def get_log_file_path():
+        return os.path.join(os.path.realpath(__file__+'/..'), 'logs', 'familytree.log')
+
+    @staticmethod
+    def init_logger():
+        TreeUtils.logger = logging.getLogger('familytree')
+        log_file_path = TreeUtils.get_log_file_path()
+        # print(log_file_path)
+        hdlr = logging.FileHandler(TreeUtils.get_log_file_path())
+        # formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+        # hdlr.setFormatter(formatter)
+        TreeUtils.logger.addHandler(hdlr)
+        TreeUtils.logger.setLevel(logging.WARNING)
+        
+    @staticmethod
+    def set_logging_level(level):
+        if not TreeUtils.logger:
+            TreeUtils.init_logger()
+        TreeUtils.logger.setLevel(level)

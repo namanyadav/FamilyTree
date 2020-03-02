@@ -58,7 +58,13 @@ class Individual:
     def set_spouse_family(self, family_id):
         self.fams.append(self.get_clean_id(family_id))
 
-    def get_age(self):
+    def get_age(self, target_date=None):
+        if target_date:
+            ref_date = target_date
+            birth_date = datetime.strptime(self.birt, Individual.date_format)
+            age = ref_date.year - birth_date.year - (
+                        (ref_date.month, ref_date.day) < (birth_date.month, birth_date.day))
+            return age
         # If indi does not have a birth date, return -1
         if not self.birt:
             return None
