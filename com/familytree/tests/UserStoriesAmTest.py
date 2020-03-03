@@ -7,7 +7,7 @@ class UserStoriesAmTest(unittest.TestCase):
     def test_us02(self):
         """ us02 tests """
 
-        self.assertEqual(self.get_id_list(UserStoriesAm().us02()), ['US01I5', 'US0206I8', 'US0910I11'])
+        self.assertEqual(self.get_id_list(UserStoriesAm().us02()), ['US01I5', 'US0206I8', 'US0304I01'])
         self.assertNotEqual(self.get_id_list(UserStoriesAm().us02()), ['US0910F1', 'US0910F2'])
         self.assertNotEqual(self.get_id_list(UserStoriesAm().us02()), "")
 
