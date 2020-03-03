@@ -36,12 +36,12 @@ class Sprint:
     @staticmethod
     def run_sprint_test():
         error_list = []
-        fp = os.path.join(os.path.realpath('.'), 'com', 'familytree', 'data', 'us02.ged')
+        fp = os.path.join(os.path.realpath('.'), 'com', 'familytree', 'data', 'us10.ged')
         try:
             tree_line = TreeLine()
             tree_line.tabulate(tree_line.process_data(fp))
-            error_list.extend(UserStoriesAm().us02(fp))
-            TreeUtils.print_report('USAM', error_list)
+            error_list.extend(UserStoriesMSK().us10(fp))
+            TreeUtils.print_report('USMSK', error_list)
         except FileNotFoundError:
             print(f'File not found: {fp}')
         except Exception as e:
