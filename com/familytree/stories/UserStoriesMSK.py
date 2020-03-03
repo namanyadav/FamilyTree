@@ -4,6 +4,7 @@ from com.familytree.Tree import Tree
 from com.familytree.TreeError import TreeError
 from com.familytree.TreeLine import TreeLine
 import calendar
+from dateutil.relativedelta import relativedelta
 
 
 class UserStoriesMSK:
@@ -32,16 +33,18 @@ class UserStoriesMSK:
                 indi_list_us09_fail.append(indi)
 
             elif birth_date and father_death_date:
-                days_in_month = calendar.monthrange(father_death_date.year, father_death_date.month)[1]
-                max_birth_date = father_death_date + timedelta(days=days_in_month)
+                max_birth_date = father_death_date + relativedelta(months=9)
+                # days_in_month = calendar.monthrange(father_death_date.year, father_death_date.month)[1]
+                # max_birth_date = father_death_date + timedelta(days=days_in_month)
                 if birth_date>max_birth_date:
                     warn_msg = f"Birthday {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} occurs 9 months after father's death date {father_death_date.strftime(Tree.OUTPUT_DATE_FORMAT)}"
                     indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US09', indi.id, warn_msg)
                     indi_list_us09_fail.append(indi)
 
             elif birth_date and mother_death_date:
-                days_in_month = calendar.monthrange(father_death_date.year, father_death_date.month)[1]
-                max_birth_date = father_death_date + timedelta(days=days_in_month)
+                # days_in_month = calendar.monthrange(father_death_date.year, father_death_date.month)[1]
+                # max_birth_date = father_death_date + timedelta(days=days_in_month)
+                max_birth_date = father_death_date + relativedelta(months=9)
                 if birth_date>mother_death_date and birth_date > max_birth_date:
                     warn_msg = f"Birthday {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} occurs after mother's death date {mother_death_date.strftime(Tree.OUTPUT_DATE_FORMAT)} and 9 months after father's death date {father_death_date.strftime(Tree.OUTPUT_DATE_FORMAT)}"
                     indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US09', indi.id, warn_msg)
