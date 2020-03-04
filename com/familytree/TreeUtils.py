@@ -1,5 +1,5 @@
+from dateutil.relativedelta import relativedelta
 from prettytable import PrettyTable
-import os
 import logging
 import os
 
@@ -83,3 +83,21 @@ class TreeUtils:
         if not TreeUtils.logger:
             TreeUtils.init_logger()
         TreeUtils.logger.setLevel(level)
+
+
+def date_greater_than(date1, date2):
+    if not date1 or not date2:
+        return False
+    return (date1 - date2).total_seconds() > 0
+
+
+def date_equal_to(date1, date2):
+    if not date1 or not date2:
+        return False
+    return (date1 - date2).total_seconds() == 0
+
+
+def add_to_date(date1, days=0, months=0, years=0):
+    if not date1:
+        return None
+    return date1 + relativedelta(days=days, months=months, years=years)

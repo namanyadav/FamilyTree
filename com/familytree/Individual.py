@@ -1,5 +1,8 @@
 from datetime import datetime
 
+from com.familytree.Tree import Tree
+from com.familytree.TreeError import TreeError
+
 
 class Individual:
 
@@ -13,6 +16,7 @@ class Individual:
         self.deat = None
         self.famc = None
         self.fams = []
+        self.err = None
         self.tag_name = 'INDI'
 
     def get_id(self):
@@ -21,7 +25,7 @@ class Individual:
     def get_birth_date(self, output_format=None):
         if not self.birt:
             return None
-        date = datetime.strptime(self.birt, Individual.date_format)
+        date = datetime.strptime(self.birt, Tree.INPUT_DATE_FORMAT)
         if output_format:
             return date.strftime(output_format)
         return date
@@ -29,13 +33,23 @@ class Individual:
     def get_death_date(self, output_format=None):
         if not self.deat:
             return None
-        date = datetime.strptime(self.deat, Individual.date_format)
+        date = datetime.strptime(self.deat, Tree.INPUT_DATE_FORMAT)
         if output_format:
             return date.strftime(output_format)
         return date
 
+    def get_parent_marr_date(self, family_tree):
+        return family_tree.get(self.famc).get_marr_date() if family_tree.get(self.famc) else None
+
+    def get_parent_div_date(self, family_tree):
+        return family_tree.get(self.famc).get_div_date() if family_tree.get(self.famc) else None
+
+    def add_error(self, us_name, err_msg):
+        self.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, us_name, self.id, err_msg)
+
     # get a cleaned up version of the id
-    def get_clean_id(self, id):
+    @staticmethod
+    def get_clean_id(id):
         if '@' in id:
             return id.replace('@', '')
         return id
