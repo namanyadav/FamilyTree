@@ -17,7 +17,7 @@ class Individual:
         self.famc = None
         self.fams = []
         self.err = None
-        self.tag_name = 'INDI'
+        self.tag_name = Tree.INDI
 
     def get_id(self):
         return self.id
@@ -43,6 +43,108 @@ class Individual:
 
     def get_parent_div_date(self, family_tree):
         return family_tree.get(self.famc).get_div_date() if family_tree.get(self.famc) else None
+
+    def get_children(self, family_tree):
+        spouse_fam_list = self.get_spouse_families(family_tree)
+        children = []
+        for spouse_fam in spouse_fam_list:
+            children.extend(spouse_fam.get_children(family_tree))
+        return children
+
+    def get_father(self, family_tree):
+        parent_fam = self.get_parent_family(family_tree)
+        if not parent_fam:
+            return None
+        if not family_tree:
+            return parent_fam
+        return family_tree.get(parent_fam.husb)
+
+    def get_mother(self, family_tree):
+        parent_fam = self.get_parent_family(family_tree)
+        if not parent_fam:
+            return None
+        if not family_tree:
+            return parent_fam
+        return family_tree.get(parent_fam.wife)
+
+    def get_cousins(self, family_tree):
+        # get both parents
+        # get all siblings of both parents
+        # get all children of all siblings
+        father, mother = self.get_father(family_tree), self.get_mother(family_tree)
+        father_siblings = father.get_siblings(family_tree) if father else []
+        mother_siblings = mother.get_siblings(family_tree) if mother else []
+        cousins = []
+        for sibling in father_siblings:
+            cousins.extend(sibling.get_children(family_tree))
+        for sibling in mother_siblings:
+            cousins.extend(sibling.get_children(family_tree))
+
+        return cousins
+
+    def get_spouse_families(self, family_tree=None):
+        if not family_tree:
+            return self.fams
+        families = []
+        for fam_id in self.fams:
+            families.append(family_tree.get(fam_id))
+        return families
+
+    def get_spouses(self, family_tree):
+        spouse_families = self.get_spouse_families(family_tree)
+        spouses = []
+        for family in spouse_families:
+            husband = family.get_husb(family_tree)
+            wife = family.get_wife(family_tree)
+            spouses.append(husband) if husband.id != self.id else spouses.append(wife)
+            # spouses.extend(family_tree.get(self.id))
+
+        return spouses
+
+    def get_siblings(self, family_tree):
+        # get parent family
+        # get each partner (ex and current) of both husband and wife
+        # for each partner get a list of fams
+        # for each fams element get all chil
+
+        # if parent family None then no siblings can be found
+        parent_family = self.get_parent_family(family_tree)
+        if not parent_family:
+            return []
+
+        husb = parent_family.get_husb(family_tree)
+        wife = parent_family.get_wife(family_tree)
+
+        # get all spouse families (current and ex) of husband and wife and add them to a set
+        spouse_fam_set = set()
+        spouse_fam_set.update(husb.get_spouse_families(family_tree) if husb else [])
+        spouse_fam_set.update(wife.get_spouse_families(family_tree) if wife else [])
+
+        # iterate on all collected families and get children in them
+        sibling_list = []
+        # TODO can use lambda
+        for fam in spouse_fam_set:
+            sibling_list.extend(fam.get_children(family_tree))
+
+        # remove the individual itself from the list, cannot be his own sibling
+        sibling_list.remove(self) if sibling_list else sibling_list
+
+        return sibling_list
+
+    def get_siblings_temp(self, family_tree):
+        # get parent family
+        # get each partner (ex and current) of both husband and wife
+        # for each partner get a list of fams
+        # for each fams element get all chil
+
+        sibling_list = self.get_parent_family(family_tree).get_children(family_tree) if self.get_parent_family(family_tree) else []
+        sibling_list.remove(self) if sibling_list else sibling_list
+        return sibling_list
+
+    def get_parent_family(self, family_tree=None):
+        if not family_tree:
+            return self.famc
+        return family_tree.get(self.famc)
 
     def add_error(self, us_name, err_msg):
         self.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, us_name, self.id, err_msg)

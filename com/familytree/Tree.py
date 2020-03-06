@@ -2,6 +2,8 @@ class Tree:
 
     INPUT_DATE_FORMAT = '%d %b %Y'
     OUTPUT_DATE_FORMAT = '%m/%d/%Y'
+    INDI = 'INDI'
+    FAM = 'FAM'
 
     def __init__(self):
         self.treemap = {}
@@ -28,6 +30,12 @@ class Tree:
                 obj_list.append(self.treemap[key])
         obj_list.sort(key=lambda x: x.id)
         return obj_list
+
+    def get_indi_list(self):
+        return self.get_sorted_list(Tree.INDI)
+
+    def get_fam_list(self):
+        return self.get_sorted_list(Tree.FAM)
 
     def get_parents(self, indi_id):
         if not indi_id:

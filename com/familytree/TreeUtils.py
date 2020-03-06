@@ -18,16 +18,6 @@ class TreeUtils:
         return f'{pre} {title} {pre}'
 
     @staticmethod
-    def print_list(list_name, obj_list):
-        print(f'\n{TreeUtils.form_heading(list_name)}')
-        for item in obj_list:
-            print(item)
-
-    @staticmethod
-    def get_file_path(user_story):
-        return f'../data/{user_story}.ged'
-
-    @staticmethod
     def get_table_printer(table_name, heading_list):
         """
         method to generate a PrettyTable object which can be used to print data in tabulated form
@@ -53,6 +43,7 @@ class TreeUtils:
     @staticmethod
     def print_report(report_name, obj_list):
         # TreeUtils.logger.error(f'\n{TreeUtils.form_heading(f"Report - {report_name}")}\n')
+        print(f'\n{TreeUtils.form_heading(f"Report - {report_name}")}\n')
         for obj in obj_list:
             TreeUtils.logger.error(obj.err)
             print(obj.err)
@@ -85,9 +76,11 @@ class TreeUtils:
         TreeUtils.logger.setLevel(level)
 
 
-def date_greater_than(date1, date2):
+def date_greater_than(date1, date2, allow_eq=False):
     if not date1 or not date2:
         return False
+    if allow_eq:
+        return ((date1 - date2).total_seconds() > 0) or date_equal_to(date1, date2)
     return (date1 - date2).total_seconds() > 0
 
 
@@ -101,3 +94,24 @@ def add_to_date(date1, days=0, months=0, years=0):
     if not date1:
         return None
     return date1 + relativedelta(days=days, months=months, years=years)
+
+
+def get_file_path(user_story):
+    return f'../data/{user_story}.ged'
+
+
+def get_data_file_path(file_name):
+    return os.path.join(os.path.realpath(__file__ + '/..'), 'data', file_name)
+
+
+def print_list(obj_list, list_name=None):
+    # print(f'\n{TreeUtils.form_heading(list_name)}')
+    for item in obj_list:
+        print(item)
+
+
+def get_id_list(obj_list):
+    id_list = []
+    for obj in obj_list:
+        id_list.append(obj.id)
+    return id_list

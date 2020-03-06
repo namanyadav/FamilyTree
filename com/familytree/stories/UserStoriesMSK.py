@@ -6,6 +6,8 @@ from com.familytree.TreeLine import TreeLine
 import calendar
 from dateutil.relativedelta import relativedelta
 
+from com.familytree.TreeUtils import date_greater_than, add_to_date
+
 
 class UserStoriesMSK:
     FILE_PATH = '../data/Familytree_test_file.ged'
@@ -27,28 +29,42 @@ class UserStoriesMSK:
             birth_date = indi.get_birth_date()
             mother_death_date = processed_tree.get(processed_tree.get(indi.famc).wife).get_death_date() if processed_tree.get(indi.famc) and processed_tree.get(processed_tree.get(indi.famc).wife) else None
             father_death_date = processed_tree.get(processed_tree.get(indi.famc).wife).get_death_date() if processed_tree.get(indi.famc) and processed_tree.get(processed_tree.get(indi.famc).husb) else None
-            if birth_date and mother_death_date and birth_date>mother_death_date:
+
+            if date_greater_than(birth_date, mother_death_date):
                 warn_msg = f"Birthday {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} occurs after mother's death date {mother_death_date.strftime(Tree.OUTPUT_DATE_FORMAT)}"
                 indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US09', indi.id, warn_msg)
                 indi_list_us09_fail.append(indi)
+            elif date_greater_than(birth_date, add_to_date(father_death_date, months=9)):
+                warn_msg = f"Birthday {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} occurs 9 months after father's death date {father_death_date.strftime(Tree.OUTPUT_DATE_FORMAT)}"
+                indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US09', indi.id, warn_msg)
+                indi_list_us09_fail.append(indi)
+            elif date_greater_than(birth_date, mother_death_date) and date_greater_than(birth_date, add_to_date(father_death_date, months=9)):
+                warn_msg = f"Birthday {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} occurs after mother's death date {mother_death_date.strftime(Tree.OUTPUT_DATE_FORMAT)} and 9 months after father's death date {father_death_date.strftime(Tree.OUTPUT_DATE_FORMAT)}"
+                indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US09', indi.id, warn_msg)
+                indi_list_us09_fail.append(indi)
 
-            elif birth_date and father_death_date:
-                max_birth_date = father_death_date + relativedelta(months=9)
-                # days_in_month = calendar.monthrange(father_death_date.year, father_death_date.month)[1]
-                # max_birth_date = father_death_date + timedelta(days=days_in_month)
-                if birth_date>max_birth_date:
-                    warn_msg = f"Birthday {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} occurs 9 months after father's death date {father_death_date.strftime(Tree.OUTPUT_DATE_FORMAT)}"
-                    indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US09', indi.id, warn_msg)
-                    indi_list_us09_fail.append(indi)
-
-            elif birth_date and mother_death_date:
-                # days_in_month = calendar.monthrange(father_death_date.year, father_death_date.month)[1]
-                # max_birth_date = father_death_date + timedelta(days=days_in_month)
-                max_birth_date = father_death_date + relativedelta(months=9)
-                if birth_date>mother_death_date and birth_date > max_birth_date:
-                    warn_msg = f"Birthday {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} occurs after mother's death date {mother_death_date.strftime(Tree.OUTPUT_DATE_FORMAT)} and 9 months after father's death date {father_death_date.strftime(Tree.OUTPUT_DATE_FORMAT)}"
-                    indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US09', indi.id, warn_msg)
-                    indi_list_us09_fail.append(indi)
+            # if birth_date and mother_death_date and birth_date>mother_death_date:
+            #     warn_msg = f"Birthday {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} occurs after mother's death date {mother_death_date.strftime(Tree.OUTPUT_DATE_FORMAT)}"
+            #     indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US09', indi.id, warn_msg)
+            #     indi_list_us09_fail.append(indi)
+            #
+            # elif birth_date and father_death_date:
+            #     max_birth_date = father_death_date + relativedelta(months=9)
+            #     # days_in_month = calendar.monthrange(father_death_date.year, father_death_date.month)[1]
+            #     # max_birth_date = father_death_date + timedelta(days=days_in_month)
+            #     if birth_date>max_birth_date:
+            #         warn_msg = f"Birthday {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} occurs 9 months after father's death date {father_death_date.strftime(Tree.OUTPUT_DATE_FORMAT)}"
+            #         indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US09', indi.id, warn_msg)
+            #         indi_list_us09_fail.append(indi)
+            #
+            # elif birth_date and mother_death_date:
+            #     # days_in_month = calendar.monthrange(father_death_date.year, father_death_date.month)[1]
+            #     # max_birth_date = father_death_date + timedelta(days=days_in_month)
+            #     max_birth_date = father_death_date + relativedelta(months=9)
+            #     if birth_date>mother_death_date and birth_date > max_birth_date:
+            #         warn_msg = f"Birthday {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} occurs after mother's death date {mother_death_date.strftime(Tree.OUTPUT_DATE_FORMAT)} and 9 months after father's death date {father_death_date.strftime(Tree.OUTPUT_DATE_FORMAT)}"
+            #         indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US09', indi.id, warn_msg)
+            #         indi_list_us09_fail.append(indi)
 
         return indi_list_us09_fail
 

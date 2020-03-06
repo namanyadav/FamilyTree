@@ -11,7 +11,7 @@ class Family:
         self.wife = None
         self.chil = []
         self.div = None
-        self.tag_name = 'FAM'
+        self.tag_name = Tree.FAM
 
     @staticmethod
     def get_clean_id(id):
@@ -37,6 +37,27 @@ class Family:
         if output_format:
             return date.strftime(output_format)
         return date
+
+    def get_husb(self, family_tree=None):
+        return family_tree.get(self.husb) if family_tree else self.husb
+
+    def get_wife(self, family_tree=None):
+        return family_tree.get(self.wife) if family_tree else self.wife
+
+    def get_husb_death_date(self, family_tree):
+        return family_tree.get(self.husb).get_death_date() if family_tree.get(self.husb) else None
+
+    def get_wife_death_date(self, family_tree):
+        return family_tree.get(self.wife).get_death_date() if family_tree.get(self.wife) else None
+
+    def get_children(self, family_tree=None):
+        # TODO can use lambda :D
+        if not family_tree:
+            return self.chil
+        children = []
+        for indi_id in self.chil:
+            children.append(family_tree.get(indi_id))
+        return children
 
     def set_marr(self, date):
         self.marr = date
