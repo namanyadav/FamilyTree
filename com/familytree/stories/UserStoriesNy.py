@@ -2,7 +2,7 @@ from datetime import datetime
 from com.familytree.TreeError import TreeError
 from com.familytree.TreeLine import TreeLine
 from com.familytree.Tree import Tree
-from com.familytree.TreeUtils import TreeUtils, date_greater_than, date_equal_to, add_to_date
+from com.familytree.TreeUtils import TreeUtils, date_greater_than, date_equal_to, add_to_date, get_file_path, print_list
 
 
 # TODO: use only one gedcom file
@@ -26,7 +26,7 @@ class UserStoriesNy:
         """ returns a list of objects containing dates after current date
         """
         # self.logger.error(TreeUtils.form_heading("Starting User Story 1", "#", 70))
-        file_path = file_path if file_path else TreeUtils.get_file_path('us01')
+        file_path = file_path if file_path else get_file_path('us01')
         family_tree = TreeLine().process_data(file_path)
         indi_list, fam_list = family_tree.get_sorted_list(UserStoriesNy.INDI_TAG), \
                               family_tree.get_sorted_list(UserStoriesNy.FAM_TAG)
@@ -61,7 +61,7 @@ class UserStoriesNy:
         or nine months after parent's divorce date
         """
         # self.logger.error(TreeUtils.form_heading('Starting User Story 8', '#', 70))
-        file_path = file_path if file_path else TreeUtils.get_file_path('us08')
+        file_path = file_path if file_path else get_file_path('us08')
         family_tree = TreeLine().process_data(file_path)
         indi_list = family_tree.get_sorted_list(UserStoriesNy.INDI_TAG)
         indi_list_us08_fail = []
@@ -83,3 +83,39 @@ class UserStoriesNy:
                 indi_list_us08_fail.append(indi)
 
         return indi_list_us08_fail
+
+    def us13(self, file_path=None):
+        """ sibling spacing, should be more than 8 months apart """
+        file_path = file_path if file_path else get_file_path('us13')
+        family_tree = TreeLine().process_data(file_path)
+        indi_list = family_tree.get_indi_list()
+        us13_fail = []
+        for indi in indi_list:
+            sibling_list = indi.get_siblings(family_tree)
+            for sibling in sibling_list:
+                date_diff = indi.get_birth_date() - sibling.get_birth_date()
+                if 30.4 * 8 >= abs(date_diff.days) >= 2:
+                    warn_msg = f'{indi.name} and {sibling.name} have birth dates {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)}' \
+                        f', {sibling.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} less than 8 months and more than 1 day apart'
+                    indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US13', indi.id, warn_msg)
+                    us13_fail.append(indi)
+
+        return us13_fail
+
+    def us19(self, file_path=None):
+        """ cousins should not marry """
+        file_path = file_path if file_path else get_file_path('us08')
+        family_tree = TreeLine().process_data(file_path)
+        us19_fail = []
+        indi_list = family_tree.get_indi_list()
+        for indi in indi_list:
+            cousin_list = indi.get_cousins(family_tree)
+            spouse_list = indi.get_spouses(family_tree)
+            common_indi_list = set(cousin_list) & set(spouse_list)
+            if common_indi_list:
+                for cousin in common_indi_list:
+                    warn_msg = f'{indi.name} married first cousin {cousin.name}'
+                    indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US19', indi.id, warn_msg)
+                    us19_fail.append(indi)
+
+        return us19_fail
