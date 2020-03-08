@@ -1,4 +1,6 @@
 import unittest
+
+from com.familytree.TreeUtils import get_id_list, get_data_file_path
 from com.familytree.stories.UserStoriesRK import UserStoriesRK
 
 class UserStoriesRKTest(unittest.TestCase):
@@ -10,8 +12,8 @@ class UserStoriesRKTest(unittest.TestCase):
 
     def test_us04(self):
         """testing us04"""
-        self.assertEqual(UserStoriesRK().get_id_list(UserStoriesRK().us04()), ['F04'])
-        self.assertNotEqual(UserStoriesRK().get_id_list(UserStoriesRK().us04()), ['F04', 'F01'])
+        self.assertEqual(get_id_list(UserStoriesRK().us04(get_data_file_path('us03&04.ged'))), ['F04'])
+        self.assertNotEqual(get_id_list(UserStoriesRK().us04()), ['F04', 'F01'])
 
 if __name__ == '__main__':
     unittest.main()

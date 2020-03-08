@@ -4,6 +4,7 @@ from com.familytree.Family import Family
 from com.familytree.Tree import Tree
 from com.familytree.TreeUtils import TreeUtils
 
+
 class TreeLine:
 
     zero_tags = ["FAM", "INDI", "HEAD", "TRLR", "NOTE"]
@@ -17,7 +18,7 @@ class TreeLine:
     all_tags = zero_tags + one_tags + two_tags
     logger = TreeUtils.get_logger()
 
-    def __init__(self, input_line=None):
+    def __init__(self, input_line=None, file_path=None):
         """
         TreeLine object takes a line of gedcome file as input like "0 @I1@ INDI"
         the constructor extracts the level, tag name and arguments from the line
@@ -30,6 +31,7 @@ class TreeLine:
             self.tag_name = self.extract_tag_name(input_line)
             self.arguments = self.extract_arguments(input_line)
             self.is_valid = self.is_valid_tags(input_line)
+            self.src_file = file_path if file_path else None
 
     def __str__(self):
         """
@@ -161,7 +163,7 @@ class TreeLine:
         file = open(file_path, 'r')
         with file:
             for line in file:
-                tl = TreeLine(line)
+                tl = TreeLine(line, file_path)
                 # tl.print_line(line)
                 # tl.print_line_info(line)
                 treeline_list.append(tl)
@@ -215,8 +217,6 @@ class TreeLine:
 
         return processed_tree
 
-
-
     def process_for_pretty_table(self, type, type_obj, processed_tree):
         """
         helper method to call the corresponding table processing method for FAM or INDI
@@ -245,8 +245,8 @@ class TreeLine:
         type_obj.marr_disp = datetime.strptime(type_obj.marr, Individual.date_format).strftime(Tree.OUTPUT_DATE_FORMAT) if type_obj.marr else 'NA'
         type_obj.div_disp = datetime.strptime(type_obj.div, Individual.date_format).strftime(Tree.OUTPUT_DATE_FORMAT) if type_obj.div else 'NA'
         type_obj.chil_disp = type_obj.chil if type_obj.chil else 'NA'
-        type_obj.marr = type_obj.marr if type_obj.marr else 'NA'
-        type_obj.div = type_obj.div if type_obj.div else 'NA'
+        # type_obj.marr = type_obj.marr if type_obj.marr else 'NA'
+        # type_obj.div = type_obj.div if type_obj.div else 'NA'
         return type_obj
 
     def process_indi_for_table(self, type_obj, processed_tree):

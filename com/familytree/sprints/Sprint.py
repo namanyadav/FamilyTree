@@ -1,6 +1,6 @@
 import os
 from com.familytree.TreeLine import TreeLine
-from com.familytree.TreeUtils import TreeUtils
+from com.familytree.TreeUtils import TreeUtils, get_data_file_path
 from com.familytree.stories.UserStoriesAm import UserStoriesAm
 from com.familytree.stories.UserStoriesDg import UserStoriesDg
 from com.familytree.stories.UserStoriesMSK import UserStoriesMSK
@@ -12,7 +12,7 @@ class Sprint:
     @staticmethod
     def run_sprint1():
         error_list = []
-        fp = os.path.join(os.path.realpath('.'), 'com', 'familytree', 'data', 'Familytree_gedcom_yadav.ged')
+        fp = get_data_file_path('Familytree_gedcom_yadav.ged')
         try:
             tree_line = TreeLine()
             tree_line.tabulate(tree_line.process_data(fp))
@@ -30,8 +30,17 @@ class Sprint:
             TreeUtils.print_report('Sprint 1 Report', error_list)
         except FileNotFoundError:
             print(f'File not found: {fp}')
-        except Exception as e:
-            print(f'Exception occurred: {str(e)}')
+
+    @staticmethod
+    def run_sprint2():
+        error_list = []
+        fp = get_data_file_path('data_sprint_2.ged')
+        tree_line = TreeLine()
+        tree_line.tabulate(tree_line.process_data(fp))
+        usny, usmsk, usam, usdg, usrk = UserStoriesNy(), UserStoriesMSK(), UserStoriesAm(), UserStoriesDg(), UserStoriesRK()
+        error_list.extend(usny.us13(get_data_file_path('us13.ged')))
+        error_list.extend(usny.us19(get_data_file_path('us19.ged')))
+        TreeUtils.print_report('Sprint 2 Report', error_list)
 
     @staticmethod
     def run_sprint_test():

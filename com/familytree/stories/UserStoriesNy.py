@@ -2,15 +2,9 @@ from datetime import datetime
 from com.familytree.TreeError import TreeError
 from com.familytree.TreeLine import TreeLine
 from com.familytree.Tree import Tree
-from com.familytree.TreeUtils import TreeUtils, date_greater_than, date_equal_to, add_to_date, get_file_path, print_list
+from com.familytree.TreeUtils import TreeUtils, date_greater_than, date_equal_to, add_to_date, get_data_file_path
 
 
-# TODO: use only one gedcom file
-# TODO: convert warn_msg to list of warning messages
-
-# TODO: 9 months check in US08 and US09
-# TODO: Change error report as given in sample
-# TODO: what about Homework 5? Pair programming
 class UserStoriesNy:
 
     FILE_PATH = '../data/Familytree_test_file.ged'
@@ -26,7 +20,7 @@ class UserStoriesNy:
         """ returns a list of objects containing dates after current date
         """
         # self.logger.error(TreeUtils.form_heading("Starting User Story 1", "#", 70))
-        file_path = file_path if file_path else get_file_path('us01')
+        file_path = file_path if file_path else get_data_file_path('us01.ged')
         family_tree = TreeLine().process_data(file_path)
         indi_list, fam_list = family_tree.get_sorted_list(UserStoriesNy.INDI_TAG), \
                               family_tree.get_sorted_list(UserStoriesNy.FAM_TAG)
@@ -61,7 +55,7 @@ class UserStoriesNy:
         or nine months after parent's divorce date
         """
         # self.logger.error(TreeUtils.form_heading('Starting User Story 8', '#', 70))
-        file_path = file_path if file_path else get_file_path('us08')
+        file_path = file_path if file_path else get_data_file_path('us08.ged')
         family_tree = TreeLine().process_data(file_path)
         indi_list = family_tree.get_sorted_list(UserStoriesNy.INDI_TAG)
         indi_list_us08_fail = []
@@ -86,7 +80,7 @@ class UserStoriesNy:
 
     def us13(self, file_path=None):
         """ sibling spacing, should be more than 8 months apart """
-        file_path = file_path if file_path else get_file_path('us13')
+        file_path = file_path if file_path else get_data_file_path('us13.ged')
         family_tree = TreeLine().process_data(file_path)
         indi_list = family_tree.get_indi_list()
         us13_fail = []
@@ -95,8 +89,12 @@ class UserStoriesNy:
             for sibling in sibling_list:
                 date_diff = indi.get_birth_date() - sibling.get_birth_date()
                 if 30.4 * 8 >= abs(date_diff.days) >= 2:
+                    # TODO f"{today:%B %d, %Y}"
                     warn_msg = f'{indi.name} and {sibling.name} have birth dates {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)}' \
                         f', {sibling.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} less than 8 months and more than 1 day apart'
+                    err_id_1 = indi.id
+                    err_id_2 = sibling.id
+
                     indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US13', indi.id, warn_msg)
                     us13_fail.append(indi)
 
@@ -104,7 +102,7 @@ class UserStoriesNy:
 
     def us19(self, file_path=None):
         """ cousins should not marry """
-        file_path = file_path if file_path else get_file_path('us08')
+        file_path = file_path if file_path else get_data_file_path('us08.ged')
         family_tree = TreeLine().process_data(file_path)
         us19_fail = []
         indi_list = family_tree.get_indi_list()

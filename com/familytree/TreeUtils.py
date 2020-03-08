@@ -96,10 +96,6 @@ def add_to_date(date1, days=0, months=0, years=0):
     return date1 + relativedelta(days=days, months=months, years=years)
 
 
-def get_file_path(user_story):
-    return f'../data/{user_story}.ged'
-
-
 def get_data_file_path(file_name):
     return os.path.join(os.path.realpath(__file__ + '/..'), 'data', file_name)
 
@@ -115,3 +111,17 @@ def get_id_list(obj_list):
     for obj in obj_list:
         id_list.append(obj.id)
     return id_list
+
+
+def get_pretty_table_printer(table_name, heading_list):
+    """
+    method to generate a PrettyTable object which can be used to print data in tabulated form
+    :param table_name: used as the name of the table to be generated
+    :param heading_list: list containing the headers of the table
+    :return: preconfigured PrettyTable object
+    """
+    x = PrettyTable(heading_list)
+    x.align[0] = "1"
+    x.padding_width = 1
+    x.table_name = table_name
+    return x
