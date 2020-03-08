@@ -56,13 +56,13 @@ class Tree:
         return self.treemap
 
     def print_indi_debugging_table(self):
-        heading_list = ["#", "ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"]
+        heading_list = ["#", "ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse", "Source"]
         table_printer = get_pretty_table_printer("INDI", heading_list)
         for num, indi in enumerate(self.get_indi_list()):
             self.prepare_indi_for_display(indi)
             table_printer.add_row(
                 [num+1, indi.id, indi.name, indi.sex, indi.birt_disp, indi.age_disp, indi.alive_disp, indi.deat_disp,
-                 indi.famc_disp, indi.fams_disp])
+                 indi.famc_disp, indi.fams_disp, indi.src_file])
         # self.logger.error(f'People\n{table_printer}')
         print(f'People\n{table_printer}')
 
@@ -101,13 +101,13 @@ class Tree:
         return indi
 
     def print_fam_debugging_table(self):
-        heading_list = ["#", "ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"]
+        heading_list = ["#", "ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children", "Source"]
         table_printer = get_pretty_table_printer("FAM", heading_list)
         for num, fam in enumerate(self.get_fam_list()):
             self.prepare_fam_for_display(fam)
             table_printer.add_row(
                 [num+1, fam.id, fam.marr_disp, fam.div_disp, fam.husb_id_disp, fam.husb_name, fam.wife_id_disp, fam.wife_name,
-                 fam.chil])
+                 fam.chil, fam.src_file])
 
         # self.logger.error(f'Families\n{table_printer}')
         print(f'Families\n{table_printer}')

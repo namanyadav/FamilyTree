@@ -192,10 +192,10 @@ class TreeLine:
                         processed_tree.put(processed_obj.id, processed_obj)
                     curr_zero_tag = treeline.get_tag_name()
                     if curr_zero_tag == 'INDI':
-                        curr_indi_object = Individual(treeline.get_arguments())
+                        curr_indi_object = Individual(treeline.get_arguments(), treeline.src_file)
                         curr_obj_map[curr_zero_tag] = curr_indi_object
                     if curr_zero_tag == 'FAM':
-                        curr_fam_object = Family(treeline.get_arguments())
+                        curr_fam_object = Family(treeline.get_arguments(), treeline.src_file)
                         curr_obj_map[curr_zero_tag] = curr_fam_object
 
                 if treeline.get_level() == '1':

@@ -24,7 +24,7 @@ def suite():
     test_suite.addTest(UserStoriesDgTest('test_us07'))
 
     test_suite.addTest(UserStoriesMSKTest('test_us09'))
-    # test_suite.addTest(UserStoriesMSKTest('test_us10'))
+    test_suite.addTest(UserStoriesMSKTest('test_us10'))
 
     test_suite.addTest(UserStoriesAmTest('test_us02'))
     test_suite.addTest(UserStoriesAmTest('test_us06'))

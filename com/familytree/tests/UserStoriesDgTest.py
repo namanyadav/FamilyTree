@@ -1,6 +1,7 @@
 import unittest
 from com.familytree.stories.UserStoriesDg import UserStoriesDg
 
+
 class UserStoriesDgTest(unittest.TestCase):
     """ Unittests for userstories 5 and 7 """
 
@@ -17,6 +18,7 @@ class UserStoriesDgTest(unittest.TestCase):
         self.assertEqual(UserStoriesDg().get_id_list(UserStoriesDg().us07()), ['I1', 'I3'])
         self.assertNotEqual(UserStoriesDg().get_id_list(UserStoriesDg().us07()), ['US0507I2', 'US0507I3'])
         self.assertNotEqual(UserStoriesDg().get_id_list(UserStoriesDg().us07()), [])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -7,7 +7,7 @@ class Individual:
 
     date_format = '%d %b %Y'
 
-    def __init__(self, id):
+    def __init__(self, id, src_file=None):
         self.id = self.get_clean_id(id)
         self.name = None
         self.sex = None
@@ -17,6 +17,7 @@ class Individual:
         self.fams = []
         self.err = None
         self.tag_name = Tree.INDI
+        self.src_file = src_file
 
     def get_id(self):
         return self.id

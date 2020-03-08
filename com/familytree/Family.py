@@ -4,7 +4,7 @@ from com.familytree.Tree import Tree
 
 class Family:
 
-    def __init__(self, id):
+    def __init__(self, id, src_file=None):
         self.id = self.get_clean_id(id)
         self.marr = None
         self.husb = None
@@ -12,6 +12,7 @@ class Family:
         self.chil = []
         self.div = None
         self.tag_name = Tree.FAM
+        self.src_file = src_file
 
     @staticmethod
     def get_clean_id(id):
