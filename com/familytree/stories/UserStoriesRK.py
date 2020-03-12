@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from com.familytree.TreeLine import TreeLine
-from com.familytree.TreeUtils import TreeUtils
+from com.familytree.TreeUtils import TreeUtils, get_data_file_path
 from com.familytree.Tree import Tree
 from com.familytree.TreeError import TreeError
 
@@ -12,7 +12,7 @@ class UserStoriesRK:
 
     def us03(self, file_path=None):
         """Birth before death"""
-        file_path = file_path if file_path else UserStoriesRK.FILE_PATH
+        file_path = file_path if file_path else get_data_file_path('us03&04.ged')
         processed_tree = TreeLine().process_data(file_path)
         indi_list = processed_tree.get_sorted_list(UserStoriesRK.INDI_TAG)
         indi_list_us03 = []
@@ -27,7 +27,7 @@ class UserStoriesRK:
 
     def us04(self, file_path=None):
         """Marriage after divorce"""
-        file_path = file_path if file_path else UserStoriesRK.FILE_PATH
+        file_path = file_path if file_path else get_data_file_path('us03&04.ged')
         processed_tree = TreeLine().process_data(file_path)
         fam_list = processed_tree.get_sorted_list(UserStoriesRK.FAM_TAG)
         indi_list_us04 = []

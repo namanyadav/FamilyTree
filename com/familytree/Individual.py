@@ -1,6 +1,6 @@
 from datetime import datetime
-
-from com.familytree.Tree import Tree
+# from com.familytree.Tree import Tree
+from com.familytree.TreeUtils import TreeUtils
 from com.familytree.TreeError import TreeError
 
 
@@ -8,7 +8,7 @@ class Individual:
 
     date_format = '%d %b %Y'
 
-    def __init__(self, id):
+    def __init__(self, id, src_file=None):
         self.id = self.get_clean_id(id)
         self.name = None
         self.sex = None
@@ -17,34 +17,49 @@ class Individual:
         self.famc = None
         self.fams = []
         self.err = None
-        self.tag_name = Tree.INDI
+        self.tag_name = TreeUtils.INDI
+        self.src_file = src_file
+
+    def __str__(self):
+        return f'{self.tag_name}|{self.id}|{self.name}|{self.sex}|{self.birt}|{self.deat}|{self.famc}|{self.fams}'
 
     def get_id(self):
         return self.id
 
     def get_birth_date(self, output_format=None):
+        """
+        returns birth date if present as datetime object if no output_format specified
+        returns birth date string if present and output_format given
+        """
         if not self.birt:
             return None
-        date = datetime.strptime(self.birt, Tree.INPUT_DATE_FORMAT)
+        date = datetime.strptime(self.birt, TreeUtils.INPUT_DATE_FORMAT)
         if output_format:
             return date.strftime(output_format)
         return date
 
     def get_death_date(self, output_format=None):
+        """
+        returns death date if present as datetime object if no output_format specified
+        returns deat date string if present and output_format given
+        """
         if not self.deat:
             return None
-        date = datetime.strptime(self.deat, Tree.INPUT_DATE_FORMAT)
+        date = datetime.strptime(self.deat, TreeUtils.INPUT_DATE_FORMAT)
         if output_format:
             return date.strftime(output_format)
         return date
 
     def get_parent_marr_date(self, family_tree):
+        """ returns marriage date of parents as datetime if present, None otherwise """
         return family_tree.get(self.famc).get_marr_date() if family_tree.get(self.famc) else None
 
     def get_parent_div_date(self, family_tree):
+        """ returns divorce date of parents as datetime if present, None otherwise """
         return family_tree.get(self.famc).get_div_date() if family_tree.get(self.famc) else None
 
     def get_children(self, family_tree):
+        """ returns all children of a person with current and ex partner """
         spouse_fam_list = self.get_spouse_families(family_tree)
         children = []
         for spouse_fam in spouse_fam_list:
@@ -52,6 +67,7 @@ class Individual:
         return children
 
     def get_father(self, family_tree):
+        """ returns the father of person as Individual object if present, None otherwise """
         parent_fam = self.get_parent_family(family_tree)
         if not parent_fam:
             return None
@@ -60,6 +76,7 @@ class Individual:
         return family_tree.get(parent_fam.husb)
 
     def get_mother(self, family_tree):
+        """ returns the mother of person as Individual object if present, None otherwise """
         parent_fam = self.get_parent_family(family_tree)
         if not parent_fam:
             return None
@@ -68,6 +85,7 @@ class Individual:
         return family_tree.get(parent_fam.wife)
 
     def get_cousins(self, family_tree):
+        """ returns a list of Individual objects who are first cousins of person if present, an empty list otherwise """
         # get both parents
         # get all siblings of both parents
         # get all children of all siblings
@@ -83,25 +101,28 @@ class Individual:
         return cousins
 
     def get_spouse_families(self, family_tree=None):
+        """ returns a list of spouse families if present, an empty list otherwise """
         if not family_tree:
             return self.fams
         families = []
         for fam_id in self.fams:
-            families.append(family_tree.get(fam_id))
+            # append family object only if family id present in family_tree, otherwise None will be appended
+            families.append(family_tree.get(fam_id)) if family_tree.get(fam_id) else families
         return families
 
     def get_spouses(self, family_tree):
+        """ returns a list of all spouses, both current and ex, of a person """
         spouse_families = self.get_spouse_families(family_tree)
         spouses = []
         for family in spouse_families:
             husband = family.get_husb(family_tree)
             wife = family.get_wife(family_tree)
             spouses.append(husband) if husband.id != self.id else spouses.append(wife)
-            # spouses.extend(family_tree.get(self.id))
 
         return spouses
 
     def get_siblings(self, family_tree):
+        """ returns a list of siblings of a person if present, en empty list otherwise """
         # get parent family
         # get each partner (ex and current) of both husband and wife
         # for each partner get a list of fams
@@ -142,6 +163,7 @@ class Individual:
         return sibling_list
 
     def get_parent_family(self, family_tree=None):
+        """ returns the parent family of a person """
         if not family_tree:
             return self.famc
         return family_tree.get(self.famc)
@@ -152,6 +174,7 @@ class Individual:
     # get a cleaned up version of the id
     @staticmethod
     def get_clean_id(id):
+        """ to clean up id string before saving """
         if '@' in id:
             return id.replace('@', '')
         return id
@@ -175,6 +198,8 @@ class Individual:
         self.fams.append(self.get_clean_id(family_id))
 
     def get_age(self, target_date=None):
+        """ returns the date of individual today if alive,
+        ff dead, returns the age at death """
         if target_date:
             ref_date = target_date
             birth_date = datetime.strptime(self.birt, Individual.date_format)
@@ -210,6 +235,3 @@ class Individual:
             self.set_parent_family(treeline.get_arguments())
         if prop_name == 'FAMS':
             self.set_spouse_family(treeline.get_arguments())
-
-    def __str__(self):
-        return f'{self.tag_name}|{self.id}|{self.name}|{self.sex}|{self.birt}|{self.deat}|{self.famc}|{self.fams}'
