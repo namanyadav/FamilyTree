@@ -1,7 +1,9 @@
 from datetime import datetime
+
+import com
 from com.familytree.Individual import Individual
 from com.familytree.Family import Family
-from com.familytree.Tree import Tree
+# from com.familytree.Tree import Tree
 from com.familytree.TreeUtils import TreeUtils
 
 
@@ -18,7 +20,7 @@ class TreeLine:
     all_tags = zero_tags + one_tags + two_tags
     logger = TreeUtils.get_logger()
 
-    def __init__(self, input_line=None, file_path=None):
+    def __init__(self, input_line=None, line_num=-1, id=-1, src_file=None):
         """
         TreeLine object takes a line of gedcome file as input like "0 @I1@ INDI"
         the constructor extracts the level, tag name and arguments from the line
@@ -31,7 +33,9 @@ class TreeLine:
             self.tag_name = self.extract_tag_name(input_line)
             self.arguments = self.extract_arguments(input_line)
             self.is_valid = self.is_valid_tags(input_line)
-            self.src_file = file_path if file_path else None
+            self.src_file = src_file
+            self.id = id
+            self.line_num = line_num
 
     def __str__(self):
         """
@@ -152,7 +156,7 @@ class TreeLine:
             if treeline.get_tag_name() == 'INDI':
                 print('start to create Individual object')
 
-    # TODO exception handling
+    # keeping this only as a legacy method. everyone knows this as the method to generate the family tree
     def process_data(self, file_path):
         """
         opens the gedcom file, reads each line, creates treeline object for each line
@@ -160,178 +164,122 @@ class TreeLine:
         :param file_path: location of gedcom file to be used as input
         :return: list of all treeline objects created from the supplied gedcom file
         """
-        file = open(file_path, 'r')
-        with file:
-            for line in file:
-                tl = TreeLine(line, file_path)
-                # tl.print_line(line)
-                # tl.print_line_info(line)
-                treeline_list.append(tl)
-            return self.generate_indi_objects()
+        return com.familytree.Tree.Tree().grow(file_path)
 
-    def generate_indi_objects(self):
-        """
-        iterates over a list of treeline objects and creates appropriate data objects such as Family, Individual, Tree
-        :return: a Tree data object which contains information about all Family and Individual in the family tree
-        """
-        if treeline_list:
-            curr_zero_tag = None
-            curr_one_tag = None
-            curr_obj_map = {}
-            processed_tree = Tree()
-            # iterate over all treeline objects
-            for treeline in treeline_list:
-                # if the treeline is not valid, skip to the next treeline
-                if not treeline.is_valid:
-                    # print('treeline not valid, moving to next')
-                    continue
-                if treeline.get_level() == '0':
-                    # if current line level is 0 and if code was already reading something
-                    if curr_zero_tag in curr_obj_map:
-                        processed_obj = curr_obj_map[curr_zero_tag]
-                        processed_tree.put(processed_obj.id, processed_obj)
-                    curr_zero_tag = treeline.get_tag_name()
-                    if curr_zero_tag == 'INDI':
-                        curr_indi_object = Individual(treeline.get_arguments(), treeline.src_file)
-                        curr_obj_map[curr_zero_tag] = curr_indi_object
-                    if curr_zero_tag == 'FAM':
-                        curr_fam_object = Family(treeline.get_arguments(), treeline.src_file)
-                        curr_obj_map[curr_zero_tag] = curr_fam_object
+    # def process_for_pretty_table(self, type, type_obj, processed_tree):
+    #     """
+    #     helper method to call the corresponding table processing method for FAM or INDI
+    #     :param type: string denoting the type of object to be printed
+    #     :param type_obj: the actual data object to be printed
+    #     :param processed_tree: the Tree object containing the complete family tree
+    #     :return: not required at the moment, doesn't get used right now
+    #     """
+    #     if type == 'FAM':
+    #         return self.process_fam_for_table(type_obj, processed_tree)
+    #     if type == 'INDI':
+    #         return self.process_indi_for_table(type_obj, processed_tree)
 
-                if treeline.get_level() == '1':
-                    if not curr_zero_tag:
-                        continue
-                    curr_one_tag = treeline.get_tag_name()
-                    curr_obj_map[curr_zero_tag].set_attr(treeline.get_tag_name(), treeline)
+    # def process_fam_for_table(self, type_obj, family_tree):
+    #     """
+    #     helper method to process Family object for displaying in table
+    #     :param type_obj: the actual data object to be printed
+    #     :param family_tree: the Tree object containing the complete family tree
+    #     :return: not required at the moment
+    #     """
+    #     family = family_tree.get(type_obj.id)
+    #     type_obj.husb_id_disp = family.husb if family.husb else 'NA'
+    #     type_obj.wife_id_disp = family.wife if family.wife else 'NA'
+    #     type_obj.husb_name = family_tree.get(family.husb).name if family_tree.contains(family.husb) else 'NA'
+    #     type_obj.wife_name = family_tree.get(family.wife).name if family_tree.contains(family.wife) else 'NA'
+    #     type_obj.marr_disp = datetime.strptime(type_obj.marr, Individual.date_format).strftime(TreeUtils.OUTPUT_DATE_FORMAT) if type_obj.marr else 'NA'
+    #     type_obj.div_disp = datetime.strptime(type_obj.div, Individual.date_format).strftime(TreeUtils.OUTPUT_DATE_FORMAT) if type_obj.div else 'NA'
+    #     type_obj.chil_disp = type_obj.chil if type_obj.chil else 'NA'
+    #     # type_obj.marr = type_obj.marr if type_obj.marr else 'NA'
+    #     # type_obj.div = type_obj.div if type_obj.div else 'NA'
+    #     return type_obj
 
-                if treeline.get_level() == '2':
-                    if not curr_one_tag:
-                        continue
-                    curr_two_tag = treeline.get_tag_name()
-                    curr_obj_map[curr_zero_tag].set_attr(curr_one_tag, treeline)
+    # def process_indi_for_table(self, type_obj, processed_tree):
+    #     """
+    #     helper method to process Individual object for displaying in table
+    #     :param type_obj: the actual data object to be printed
+    #     :param processed_tree: the Tree object containing the complete family tree
+    #     :return: not required at the moment
+    #     """
+    #     if not processed_tree.get(type_obj.id):
+    #         return type_obj
+    #     indi = processed_tree.get(type_obj.id)
+    #     type_obj.age_disp = indi.get_age() if indi.get_age() else 'NA'
+    #     type_obj.alive_disp = indi.is_alive()
+    #     type_obj.name_disp = type_obj.name if type_obj.name else 'NA'
+    #     type_obj.sex_disp = type_obj.sex if type_obj.sex else 'NA'
+    #     type_obj.deat_disp = datetime.strptime(type_obj.deat, Individual.date_format).strftime(TreeUtils.OUTPUT_DATE_FORMAT) if type_obj.deat else 'NA'
+    #     type_obj.famc_disp = type_obj.famc if type_obj.famc else 'NA'
+    #     type_obj.fams_disp = type_obj.fams if type_obj.fams else 'NA'
+    #     type_obj.birt_disp = datetime.strptime(type_obj.birt, Individual.date_format).strftime(TreeUtils.OUTPUT_DATE_FORMAT) if type_obj.birt else 'NA'
+    #     return type_obj
 
-            if curr_zero_tag in ['INDI', 'FAM']:
-                if curr_obj_map[curr_zero_tag]:
-                    processed_obj = curr_obj_map[curr_zero_tag]
-                    processed_tree.put(processed_obj.id, processed_obj)
+    # def print_fam_table(self, fam_list, processed_tree):
+    #     """
+    #     generates and prints the table printer object and adds all the rows and columns
+    #     :param fam_list: list of all Family objects
+    #     :param processed_tree: Tree object containing the whole tree
+    #     """
+    #     heading_list = ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"]
+    #     table_printer = TreeUtils.get_table_printer("FAM", heading_list)
+    #     for fam in fam_list:
+    #         self.process_for_pretty_table('FAM', fam, processed_tree)
+    #         table_printer.add_row([fam.id, fam.marr_disp, fam.div_disp, fam.husb_id_disp, fam.husb_name, fam.wife_id_disp, fam.wife_name, fam.chil])
+    #
+    #     self.logger.error(f'Families\n{table_printer}')
+    #     print(f'Families\n{table_printer}')
 
-        return processed_tree
+    # def print_indi_table(self, indi_list, processed_map):
+    #     """
+    #     generates and prints the table printer object and adds rows and columns to it
+    #     :param indi_list: list of all Individual objects
+    #     :param processed_map: Tree object containing the whole tree
+    #     """
+    #     heading_list = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"]
+    #     table_printer = TreeUtils.get_table_printer("INDI", heading_list)
+    #     for indi in indi_list:
+    #         self.process_for_pretty_table('INDI', indi, processed_map)
+    #         table_printer.add_row([indi.id, indi.name, indi.sex, indi.birt_disp, indi.age_disp, indi.alive_disp, indi.deat_disp, indi.famc_disp, indi.fams_disp])
+    #     self.logger.error(f'People\n{table_printer}')
+    #     print(f'People\n{table_printer}')
 
-    def process_for_pretty_table(self, type, type_obj, processed_tree):
-        """
-        helper method to call the corresponding table processing method for FAM or INDI
-        :param type: string denoting the type of object to be printed
-        :param type_obj: the actual data object to be printed
-        :param processed_tree: the Tree object containing the complete family tree
-        :return: not required at the moment, doesn't get used right now
-        """
-        if type == 'FAM':
-            return self.process_fam_for_table(type_obj, processed_tree)
-        if type == 'INDI':
-            return self.process_indi_for_table(type_obj, processed_tree)
+    # def pretty_print_table(self, table_name, data_list, processed_tree):
+    #     """
+    #     call the corresponding print method for INDI or FAM
+    #     :param table_name: used as name of table
+    #     :param data_list: list containing all the data objects
+    #     :param processed_tree: Tree object containing the whole family tree
+    #     """
+    #     if table_name == 'INDI':
+    #         self.print_indi_table(data_list, processed_tree)
+    #     if table_name == 'FAM':
+    #         self.print_fam_table(data_list, processed_tree)
 
-    def process_fam_for_table(self, type_obj, family_tree):
-        """
-        helper method to process Family object for displaying in table
-        :param type_obj: the actual data object to be printed
-        :param family_tree: the Tree object containing the complete family tree
-        :return: not required at the moment
-        """
-        family = family_tree.get(type_obj.id)
-        type_obj.husb_id_disp = family.husb if family.husb else 'NA'
-        type_obj.wife_id_disp = family.wife if family.wife else 'NA'
-        type_obj.husb_name = family_tree.get(family.husb).name if family_tree.contains(family.husb) else 'NA'
-        type_obj.wife_name = family_tree.get(family.wife).name if family_tree.contains(family.wife) else 'NA'
-        type_obj.marr_disp = datetime.strptime(type_obj.marr, Individual.date_format).strftime(Tree.OUTPUT_DATE_FORMAT) if type_obj.marr else 'NA'
-        type_obj.div_disp = datetime.strptime(type_obj.div, Individual.date_format).strftime(Tree.OUTPUT_DATE_FORMAT) if type_obj.div else 'NA'
-        type_obj.chil_disp = type_obj.chil if type_obj.chil else 'NA'
-        # type_obj.marr = type_obj.marr if type_obj.marr else 'NA'
-        # type_obj.div = type_obj.div if type_obj.div else 'NA'
-        return type_obj
+    # def get_sep_obj_list(self, processed_tree):
+    #     indi_list = []
+    #     fam_list = []
+    #     processed_map = processed_tree.get_tree_map()
+    #     for key in processed_map:
+    #         if processed_map[key].tag_name == 'INDI':
+    #             indi_list.append(processed_map[key])
+    #         else:
+    #             fam_list.append(processed_map[key])
+    #
+    #     return [indi_list, fam_list]
 
-    def process_indi_for_table(self, type_obj, processed_tree):
-        """
-        helper method to process Individual object for displaying in table
-        :param type_obj: the actual data object to be printed
-        :param processed_tree: the Tree object containing the complete family tree
-        :return: not required at the moment
-        """
-        if not processed_tree.get(type_obj.id):
-            return type_obj
-        indi = processed_tree.get(type_obj.id)
-        type_obj.age_disp = indi.get_age() if indi.get_age() else 'NA'
-        type_obj.alive_disp = indi.is_alive()
-        type_obj.name_disp = type_obj.name if type_obj.name else 'NA'
-        type_obj.sex_disp = type_obj.sex if type_obj.sex else 'NA'
-        type_obj.deat_disp = datetime.strptime(type_obj.deat, Individual.date_format).strftime(Tree.OUTPUT_DATE_FORMAT) if type_obj.deat else 'NA'
-        type_obj.famc_disp = type_obj.famc if type_obj.famc else 'NA'
-        type_obj.fams_disp = type_obj.fams if type_obj.fams else 'NA'
-        type_obj.birt_disp = datetime.strptime(type_obj.birt, Individual.date_format).strftime(Tree.OUTPUT_DATE_FORMAT) if type_obj.birt else 'NA'
-        return type_obj
-
-    def print_fam_table(self, fam_list, processed_tree):
-        """
-        generates and prints the table printer object and adds all the rows and columns
-        :param fam_list: list of all Family objects
-        :param processed_tree: Tree object containing the whole tree
-        """
-        heading_list = ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"]
-        table_printer = TreeUtils.get_table_printer("FAM", heading_list)
-        for fam in fam_list:
-            self.process_for_pretty_table('FAM', fam, processed_tree)
-            table_printer.add_row([fam.id, fam.marr_disp, fam.div_disp, fam.husb_id_disp, fam.husb_name, fam.wife_id_disp, fam.wife_name, fam.chil])
-
-        self.logger.error(f'Families\n{table_printer}')
-        print(f'Families\n{table_printer}')
-
-    def print_indi_table(self, indi_list, processed_map):
-        """
-        generates and prints the table printer object and adds rows and columns to it
-        :param indi_list: list of all Individual objects
-        :param processed_map: Tree object containing the whole tree
-        """
-        heading_list = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"]
-        table_printer = TreeUtils.get_table_printer("INDI", heading_list)
-        for indi in indi_list:
-            self.process_for_pretty_table('INDI', indi, processed_map)
-            table_printer.add_row([indi.id, indi.name, indi.sex, indi.birt_disp, indi.age_disp, indi.alive_disp, indi.deat_disp, indi.famc_disp, indi.fams_disp])
-        self.logger.error(f'People\n{table_printer}')
-        print(f'People\n{table_printer}')
-
-    def pretty_print_table(self, table_name, data_list, processed_tree):
-        """
-        call the corresponding print method for INDI or FAM
-        :param table_name: used as name of table
-        :param data_list: list containing all the data objects
-        :param processed_tree: Tree object containing the whole family tree
-        """
-        if table_name == 'INDI':
-            self.print_indi_table(data_list, processed_tree)
-        if table_name == 'FAM':
-            self.print_fam_table(data_list, processed_tree)
-
-    def get_sep_obj_list(self, processed_tree):
-        indi_list = []
-        fam_list = []
-        processed_map = processed_tree.get_tree_map()
-        for key in processed_map:
-            if processed_map[key].tag_name == 'INDI':
-                indi_list.append(processed_map[key])
-            else:
-                fam_list.append(processed_map[key])
-
-        return [indi_list, fam_list]
-
-    def process_and_print(self, obj_type, processed_tree):
-        self.pretty_print_table(obj_type, processed_tree.get_sorted_list(obj_type), processed_tree)
+    # def process_and_print(self, obj_type, processed_tree):
+    #     self.pretty_print_table(obj_type, processed_tree.get_sorted_list(obj_type), processed_tree)
 
     def tabulate(self, processed_tree):
         """
         tabulates the whole tree separated as Individual and Family table
         :param processed_tree: Tree object containing the whole tree
         """
-        self.process_and_print('INDI', processed_tree)
-        self.process_and_print('FAM', processed_tree)
+        processed_tree.print()
 
 
 treeline_list = []

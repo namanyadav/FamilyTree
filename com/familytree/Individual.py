@@ -1,5 +1,6 @@
 from datetime import datetime
-from com.familytree.Tree import Tree
+# from com.familytree.Tree import Tree
+from com.familytree.TreeUtils import TreeUtils
 from com.familytree.TreeError import TreeError
 
 
@@ -16,8 +17,11 @@ class Individual:
         self.famc = None
         self.fams = []
         self.err = None
-        self.tag_name = Tree.INDI
+        self.tag_name = TreeUtils.INDI
         self.src_file = src_file
+
+    def __str__(self):
+        return f'{self.tag_name}|{self.id}|{self.name}|{self.sex}|{self.birt}|{self.deat}|{self.famc}|{self.fams}'
 
     def get_id(self):
         return self.id
@@ -29,7 +33,7 @@ class Individual:
         """
         if not self.birt:
             return None
-        date = datetime.strptime(self.birt, Tree.INPUT_DATE_FORMAT)
+        date = datetime.strptime(self.birt, TreeUtils.INPUT_DATE_FORMAT)
         if output_format:
             return date.strftime(output_format)
         return date
@@ -41,7 +45,7 @@ class Individual:
         """
         if not self.deat:
             return None
-        date = datetime.strptime(self.deat, Tree.INPUT_DATE_FORMAT)
+        date = datetime.strptime(self.deat, TreeUtils.INPUT_DATE_FORMAT)
         if output_format:
             return date.strftime(output_format)
         return date
@@ -102,7 +106,8 @@ class Individual:
             return self.fams
         families = []
         for fam_id in self.fams:
-            families.append(family_tree.get(fam_id))
+            # append family object only if family id present in family_tree, otherwise None will be appended
+            families.append(family_tree.get(fam_id)) if family_tree.get(fam_id) else families
         return families
 
     def get_spouses(self, family_tree):
@@ -230,6 +235,3 @@ class Individual:
             self.set_parent_family(treeline.get_arguments())
         if prop_name == 'FAMS':
             self.set_spouse_family(treeline.get_arguments())
-
-    def __str__(self):
-        return f'{self.tag_name}|{self.id}|{self.name}|{self.sex}|{self.birt}|{self.deat}|{self.famc}|{self.fams}'

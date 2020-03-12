@@ -1,5 +1,6 @@
 from datetime import datetime
-from com.familytree.Tree import Tree
+# from com.familytree.Tree import Tree
+from com.familytree.TreeUtils import TreeUtils
 
 
 class Family:
@@ -11,7 +12,7 @@ class Family:
         self.wife = None
         self.chil = []
         self.div = None
-        self.tag_name = Tree.FAM
+        self.tag_name = TreeUtils.FAM
         self.src_file = src_file
 
     @staticmethod
@@ -26,7 +27,7 @@ class Family:
     def get_marr_date(self, output_format=None):
         if not self.marr:
             return None
-        date = datetime.strptime(self.marr, Tree.INPUT_DATE_FORMAT)
+        date = datetime.strptime(self.marr, TreeUtils.INPUT_DATE_FORMAT)
         if output_format:
             return date.strftime(output_format)
         return date
@@ -34,7 +35,7 @@ class Family:
     def get_div_date(self, output_format=None):
         if not self.div:
             return None
-        date = datetime.strptime(self.div, Tree.INPUT_DATE_FORMAT)
+        date = datetime.strptime(self.div, TreeUtils.INPUT_DATE_FORMAT)
         if output_format:
             return date.strftime(output_format)
         return date

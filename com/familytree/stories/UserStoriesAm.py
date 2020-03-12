@@ -16,8 +16,6 @@ class UserStoriesAm:
         """return a list of objects whose birth date is after or on their marriage date """
         file_path = file_path if file_path else get_data_file_path('us02.ged')
         family_tree = TreeLine().process_data(file_path)
-        family_tree.pretty_print(debug=True)
-        # TreeLine().tabulate(processed_tree)
         indi_list = family_tree.get_sorted_list(UserStoriesAm.INDI_TAG)
         indi_list_us02_fail = []
         for indi in indi_list:
@@ -31,16 +29,15 @@ class UserStoriesAm:
                     continue
         # if indi_list_us02_fail:
         #     TreeUtils.print_report("US02 birth date is after marriage date ", indi_list_us02_fail)
-        print('prining indi us02 failed:')
-        for indi in indi_list_us02_fail:
-            print(indi)
+        # print('prining indi us02 failed:')
+        # for indi in indi_list_us02_fail:
+        #     print(indi)
         return indi_list_us02_fail 
     
     def us06(self, file_path=None):
         """ return a list of objects whose divorce date is after death date """
         file_path = file_path if file_path else get_data_file_path('us06.ged')
         family_tree = TreeLine().process_data(file_path)
-        family_tree.pretty_print(True)
         fam_list = family_tree.get_fam_list()
         indi_list_us06_fail = []
         for fam in fam_list:

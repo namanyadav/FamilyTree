@@ -27,6 +27,12 @@ class UserStoriesNyTest(unittest.TestCase):
     def test_us19(self):
         self.assertEqual(['I12', 'I8'], get_id_list(self.stories.us19(get_data_file_path('us19.ged'))))
 
+    def test_us26(self):
+        self.assertEqual(['I2', 'I6', 'F1', 'F2', 'F3'], get_id_list(self.stories.us26(get_data_file_path('us26.ged'))))
+
+    def test_us22(self):
+        self.assertEqual(['I2', 'I5', 'F1'], get_id_list(self.stories.us22(get_data_file_path('us22.ged'))))
+
 
 if __name__ == "__main__":
     unittest.main()
