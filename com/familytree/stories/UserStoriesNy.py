@@ -30,22 +30,22 @@ class UserStoriesNy:
         # if there is error in both birth and death criteria, only birth will be listed
         for indi in indi_list:
             if date_greater_than(indi.get_birth_date(), today_date):
-                warn_msg = f'Birthday {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} occurs in future'
+                warn_msg = f'Birthday {indi.get_birth_date(TreeUtils.OUTPUT_DATE_FORMAT)} occurs in future'
                 indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US01', indi.id, warn_msg)
                 indi_list_us01.append(indi)
             if date_greater_than(indi.get_death_date(), today_date):
-                warn_msg = f'Death day {indi.get_death_date(Tree.OUTPUT_DATE_FORMAT)} occurs in future'
+                warn_msg = f'Death day {indi.get_death_date(TreeUtils.OUTPUT_DATE_FORMAT)} occurs in future'
                 indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US01', indi.id, warn_msg)
                 indi_list_us01.append(indi)
 
         # if there is error in both marriage and divorce criteria, only marriage will be listed
         for fam in fam_list:
             if date_greater_than(fam.get_marr_date(), today_date):
-                warn_msg = f'Marriage date {fam.get_marr_date(Tree.OUTPUT_DATE_FORMAT)} occurs in future'
+                warn_msg = f'Marriage date {fam.get_marr_date(TreeUtils.OUTPUT_DATE_FORMAT)} occurs in future'
                 fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US01', fam.id, warn_msg)
                 fam_list_us01.append(fam)
             if date_greater_than(fam.get_div_date(), today_date):
-                warn_msg = f'Divorce date {fam.get_div_date(Tree.OUTPUT_DATE_FORMAT)} occurs in future'
+                warn_msg = f'Divorce date {fam.get_div_date(TreeUtils.OUTPUT_DATE_FORMAT)} occurs in future'
                 fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US01', fam.id, warn_msg)
                 fam_list_us01.append(fam)
 
@@ -67,13 +67,13 @@ class UserStoriesNy:
             # if birth date is on or before marriage date, add indi to failure list
             # if birth_date and parent_marr_date and birth_date <= parent_marr_date:
             if date_greater_than(parent_marr_date, birth_date) or date_equal_to(parent_marr_date, birth_date):
-                warn_msg = f'Birth date {birth_date.strftime(Tree.OUTPUT_DATE_FORMAT)} ' \
-                    f'is before or on parent\'s marriage date {parent_marr_date.strftime(Tree.OUTPUT_DATE_FORMAT)}'
+                warn_msg = f'Birth date {birth_date.strftime(TreeUtils.OUTPUT_DATE_FORMAT)} ' \
+                    f'is before or on parent\'s marriage date {parent_marr_date.strftime(TreeUtils.OUTPUT_DATE_FORMAT)}'
                 indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US08', indi.id, warn_msg)
                 indi_list_us08_fail.append(indi)
             if date_greater_than(birth_date, add_to_date(parent_div_date, months=9)):
-                warn_msg = f'Birth date {birth_date.strftime(Tree.OUTPUT_DATE_FORMAT)} ' \
-                    f'is more than 9 months after parent\'s divorce date {parent_div_date.strftime(Tree.OUTPUT_DATE_FORMAT)}'
+                warn_msg = f'Birth date {birth_date.strftime(TreeUtils.OUTPUT_DATE_FORMAT)} ' \
+                    f'is more than 9 months after parent\'s divorce date {parent_div_date.strftime(TreeUtils.OUTPUT_DATE_FORMAT)}'
                 indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US08', indi.id, warn_msg)
                 indi_list_us08_fail.append(indi)
 
@@ -91,8 +91,8 @@ class UserStoriesNy:
                 date_diff = indi.get_birth_date() - sibling.get_birth_date()
                 if 30.4 * 8 >= abs(date_diff.days) >= 2:
                     # TODO f"{today:%B %d, %Y}"
-                    warn_msg = f'{indi.name} and {sibling.name} have birth dates {indi.get_birth_date(Tree.OUTPUT_DATE_FORMAT)}' \
-                        f', {sibling.get_birth_date(Tree.OUTPUT_DATE_FORMAT)} less than 8 months and more than 1 day apart'
+                    warn_msg = f'{indi.name} and {sibling.name} have birth dates {indi.get_birth_date(TreeUtils.OUTPUT_DATE_FORMAT)}' \
+                        f', {sibling.get_birth_date(TreeUtils.OUTPUT_DATE_FORMAT)} less than 8 months and more than 1 day apart'
                     err_id_1 = indi.id
                     err_id_2 = sibling.id
 

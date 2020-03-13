@@ -8,17 +8,13 @@ from com.familytree.TreeUtils import get_pretty_table_printer, TreeUtils
 
 class Tree:
 
-    INPUT_DATE_FORMAT = '%d %b %Y'
-    OUTPUT_DATE_FORMAT = '%m/%d/%Y'
-    INDI = 'INDI'
-    FAM = 'FAM'
     logger = TreeUtils.get_logger()
 
     # TODO move gedcom file processing logic here
     def __init__(self, fp=None):
         self.treemap = {}
-        self.src_file = fp if fp else None
         self.duplicate_items = []
+        self.src_file = fp if fp else None
         self.grow(fp) if fp else None
 
     def put(self, key, val):
@@ -131,10 +127,10 @@ class Tree:
         return obj_list
 
     def get_indi_list(self):
-        return self.get_sorted_list(Tree.INDI)
+        return self.get_sorted_list(TreeUtils.INDI)
 
     def get_fam_list(self):
-        return self.get_sorted_list(Tree.FAM)
+        return self.get_sorted_list(TreeUtils.FAM)
 
     def get_parents(self, indi_id):
         if not indi_id:
@@ -188,10 +184,10 @@ class Tree:
         indi.alive_disp = indi.is_alive()
         indi.name_disp = indi.name if indi.name else 'NA'
         indi.sex_disp = indi.sex if indi.sex else 'NA'
-        indi.deat_disp = datetime.strptime(indi.deat, self.INPUT_DATE_FORMAT).strftime(self.OUTPUT_DATE_FORMAT) if indi.deat else 'NA'
+        indi.deat_disp = datetime.strptime(indi.deat, TreeUtils.INPUT_DATE_FORMAT).strftime(TreeUtils.OUTPUT_DATE_FORMAT) if indi.deat else 'NA'
         indi.famc_disp = indi.famc if indi.famc else 'NA'
         indi.fams_disp = indi.fams if indi.fams else 'NA'
-        indi.birt_disp = datetime.strptime(indi.birt, self.INPUT_DATE_FORMAT).strftime(self.OUTPUT_DATE_FORMAT) if indi.birt else 'NA'
+        indi.birt_disp = datetime.strptime(indi.birt, TreeUtils.INPUT_DATE_FORMAT).strftime(TreeUtils.OUTPUT_DATE_FORMAT) if indi.birt else 'NA'
         return indi
 
     def print_fam_debugging_table(self):
@@ -233,10 +229,10 @@ class Tree:
         fam.wife_id_disp = family.wife if family.wife else 'NA'
         fam.husb_name = self.get(family.husb).name if self.contains(family.husb) else 'NA'
         fam.wife_name = self.get(family.wife).name if self.contains(family.wife) else 'NA'
-        fam.marr_disp = datetime.strptime(fam.marr, self.INPUT_DATE_FORMAT).strftime(
-            Tree.OUTPUT_DATE_FORMAT) if fam.marr else 'NA'
-        fam.div_disp = datetime.strptime(fam.div, self.INPUT_DATE_FORMAT).strftime(
-            Tree.OUTPUT_DATE_FORMAT) if fam.div else 'NA'
+        fam.marr_disp = datetime.strptime(fam.marr, TreeUtils.INPUT_DATE_FORMAT).strftime(
+            TreeUtils.OUTPUT_DATE_FORMAT) if fam.marr else 'NA'
+        fam.div_disp = datetime.strptime(fam.div, TreeUtils.INPUT_DATE_FORMAT).strftime(
+            TreeUtils.OUTPUT_DATE_FORMAT) if fam.div else 'NA'
         fam.chil_disp = fam.chil if fam.chil else 'NA'
         return fam
 

@@ -1,7 +1,5 @@
 import unittest
 
-# from com.familytree.tests.UserStoriesNyTest import UserStoriesNyTest
-# from unittest import getTestCaseNames
 from com.familytree.tests.UserStoriesAmTest import UserStoriesAmTest
 from com.familytree.tests.UserStoriesDgTest import UserStoriesDgTest
 from com.familytree.tests.UserStoriesMSKTest import UserStoriesMSKTest
@@ -49,3 +47,5 @@ if __name__ == '__main__':
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(suite())
 
+# python -m com.familytree.tests.UserStoriesNyTest
+# python -m com.familytree.tests.stories_test_suite
