@@ -82,3 +82,9 @@ class Sprint:
             traceback.print_exc(file=sys.stderr)
             # track = traceback.format_exc()
             # print(track)
+
+
+if __name__ == '__main__':
+    Sprint.run_sprint1()
+    Sprint.run_sprint2()
+    Sprint.run_sprint3()

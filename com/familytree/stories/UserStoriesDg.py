@@ -39,19 +39,19 @@ class UserStoriesDg:
 
             # if marr_date and hus_death_date and wife_death_date and wife_death_date <= marr_date and hus_death_date <= marr_date:
             if date_greater_than(marr_date, wife_death_date, True) and date_greater_than(marr_date, hus_death_date, True):
-                warn_msg = f'Marriage {fam.get_marr_date(Tree.OUTPUT_DATE_FORMAT)} should occur before death of {family_tree.get(fam.husb).name} - {family_tree.get(fam.husb).get_death_date(Tree.OUTPUT_DATE_FORMAT)}, {family_tree.get(fam.wife).name} - {family_tree.get(fam.wife).get_death_date(Tree.OUTPUT_DATE_FORMAT)}'
+                warn_msg = f'Marriage {fam.get_marr_date(TreeUtils.OUTPUT_DATE_FORMAT)} should occur before death of {family_tree.get(fam.husb).name} - {family_tree.get(fam.husb).get_death_date(TreeUtils.OUTPUT_DATE_FORMAT)}, {family_tree.get(fam.wife).name} - {family_tree.get(fam.wife).get_death_date(TreeUtils.OUTPUT_DATE_FORMAT)}'
                 fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US05', fam.id, warn_msg)
                 fam_list_us05.append(fam)
 
             # elif marr_date and hus_death_date and hus_death_date <= marr_date:
             elif date_greater_than(marr_date, hus_death_date, True):
-                warn_msg = f'Marriage date {fam.get_marr_date(Tree.OUTPUT_DATE_FORMAT)} should occur before death of {family_tree.get(fam.husb).name} - {family_tree.get(fam.husb).get_death_date(Tree.OUTPUT_DATE_FORMAT)}'
+                warn_msg = f'Marriage date {fam.get_marr_date(TreeUtils.OUTPUT_DATE_FORMAT)} should occur before death of {family_tree.get(fam.husb).name} - {family_tree.get(fam.husb).get_death_date(TreeUtils.OUTPUT_DATE_FORMAT)}'
                 fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US05', fam.id, warn_msg)
                 fam_list_us05.append(fam)
 
             # elif marr_date and wife_death_date and wife_death_date <= marr_date:
             elif date_greater_than(marr_date, wife_death_date, True):
-                warn_msg = f'Marriage date {fam.get_marr_date(Tree.OUTPUT_DATE_FORMAT)} should occur before death of {family_tree.get(fam.wife).name} - {family_tree.get(fam.wife).get_death_date(Tree.OUTPUT_DATE_FORMAT)}'
+                warn_msg = f'Marriage date {fam.get_marr_date(TreeUtils.OUTPUT_DATE_FORMAT)} should occur before death of {family_tree.get(fam.wife).name} - {family_tree.get(fam.wife).get_death_date(TreeUtils.OUTPUT_DATE_FORMAT)}'
                 fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US05', fam.id, warn_msg)
                 fam_list_us05.append(fam)
 
