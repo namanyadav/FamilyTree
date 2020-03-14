@@ -8,10 +8,6 @@ on:
     branches:
       - naman
       - staging
-  pull_request:
-    branches:
-      - naman
-      - staging
 
 jobs:
   build:
