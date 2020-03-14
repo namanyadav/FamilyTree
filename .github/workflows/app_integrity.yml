@@ -1,13 +1,17 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Python application
+name: Family Tree application integrity test
 
 on:
   push:
-    branches: [ staging ]
+    branches:
+      - naman
+      - staging
   pull_request:
-    branches: [ staging ]
+    branches:
+      - naman
+      - staging
 
 jobs:
   build:
@@ -26,6 +30,7 @@ jobs:
         #pip install -r requirements.txt
         pip install python-dateutil
         pip install PrettyTable
-    - name: Run automated tests
+    - name: Run user stories automated tests
       run: |
         python -m com.familytree.tests.stories_test_suite
+        python run_app.py
