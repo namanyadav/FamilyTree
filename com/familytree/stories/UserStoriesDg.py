@@ -58,11 +58,11 @@ class UserStoriesDg:
 
     def us15(self, file_path=None):
         """ returns a list of objects if family has more than 15 siblings """
-        fam_list = self.get_treedata(file_path).get_sorted_list(UserStoriesDg.FAM_TAG)
+        fam_list = self.get_treedata("./com/familytree/data/us12&15.ged").get_sorted_list(UserStoriesDg.FAM_TAG)
         fam_list_us15 = []
         for fam in fam_list:
             if len(fam.chil) >= 15:
-                warn_msg = f'A Family should have fewer than 15 siblings'
+                warn_msg = f'Family has more than 15 siblings'
                 fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US15', fam.id, warn_msg)
                 fam_list_us15.append(fam)
         return fam_list_us15
@@ -70,7 +70,7 @@ class UserStoriesDg:
     
     def us12(self, file_path=None):
         """ returns a list of objects if Parents are too old  """
-        family_tree = self.get_treedata(file_path)
+        family_tree = self.get_treedata("./com/familytree/data/us12&15.ged")
         fam_list = family_tree.get_sorted_list(UserStoriesDg.FAM_TAG)
         fam_list_us12 = []
         for fam in fam_list:
@@ -80,13 +80,14 @@ class UserStoriesDg:
                 child_age = family_tree.get(child).get_age()
                 father_child_diff = father_age - child_age
                 mother_child_diff = mother_age - child_age
-                if father_age < child_age or father_child_diff >= 80:
-                    warn_msg = f'Father should be less than 80 years older than his children'
-                    fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US12', fam.id, warn_msg)
-                    fam_list_us12.append(fam)
-                if mother_age < child_age or mother_child_diff >=60:
-                    warn_msg = f'Mother should be less than 60 years older than her children'
-                    fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US12', fam.id, warn_msg)
+                if father_child_diff >= 80 or  mother_child_diff >=60 :
+                    if father_child_diff >= 80 and  mother_child_diff >=60 :
+                        warn_msg = f'Father and Mother should be less than 80 years and 60 years older than their child - {family_tree.get(child).name}'
+                    elif  father_child_diff >= 80:
+                        warn_msg = f'Father should be less than 80 years than their child - {family_tree.get(child).name}'
+                    else:
+                        warn_msg = f'Mother should be less than 60 years than their child - {family_tree.get(child).name}'
+                    fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US12', child, warn_msg)
                     fam_list_us12.append(fam)
         return fam_list_us12
 
