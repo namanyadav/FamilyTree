@@ -21,6 +21,20 @@ class UserStoriesAmTest(unittest.TestCase):
         self.assertNotEqual(self.get_id_list(UserStoriesAm().us06()), [])
         self.assertNotEqual(self.get_id_list(UserStoriesAm().us06()), "")
     
+    def test_us11(self):
+        """ us11 tests """
+
+        self.assertEqual(self.get_id_list(UserStoriesAm().us11()), ['I4','I7'])
+        self.assertNotEqual(self.get_id_list(UserStoriesAm().us11()), [])
+        self.assertNotEqual(self.get_id_list(UserStoriesAm().us11()), "")
+
+    def test_us16(self):
+        """ us16 tests """
+
+        self.assertEqual(self.get_id_list(UserStoriesAm().us16()), ['F1'])
+        self.assertNotEqual(self.get_id_list(UserStoriesAm().us16()), [])
+        self.assertNotEqual(self.get_id_list(UserStoriesAm().us16()), "")
+    
     def get_id_list(self, obj_list):
         """ return the individual or family id's """
 

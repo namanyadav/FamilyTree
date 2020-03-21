@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-
+from collections import defaultdict
 from com.familytree.TreeError import TreeError
 from com.familytree.TreeLine import TreeLine
 from com.familytree.Tree import Tree
@@ -63,7 +63,27 @@ class UserStoriesAm:
                     continue   
         # if indi_list_us06_fail:
         #     TreeUtils.print_report("US06 divorce date is after death date ", indi_list_us06_fail)
-         return indi_list_us06_fail 
+        return indi_list_us06_fail 
+
+    def us11(self, file_path=None):
+        """ returns list of individuals whose marriage occured with two spouses at the same time """
+        family_tree = TreeLine().process_data(file_path)
+        fam_list = family_tree.get_fam_list()
+        indi_list_us11_fail = []
+        indi_list = family_tree.get_sorted_list(UserStoriesAm.INDI_TAG)
+        for indi in indi_list:
+            if len(indi.fams) > 1:
+                indi_marr_dict = defaultdict(int) 
+                for spouse in indi.fams:
+                    marriage_date = family_tree.get(spouse).get_marr_date()
+                    indi_marr_dict[marriage_date]+=1
+                for key, val in indi_marr_dict.items():
+                    if val > 1:
+                        warn_msg = f"{indi.name} should not marry more than one person at same time" 
+                        indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US11', indi.id, warn_msg)
+                        indi_list_us11_fail.append(indi)     
+        return indi_list_us11_fail
+
 
     def us16(self, file_path=None):
         """ returns list of males whose last name do not match their family name """
@@ -86,3 +106,4 @@ class UserStoriesAm:
                     continue
     
         return indi_list_us16_fail
+
