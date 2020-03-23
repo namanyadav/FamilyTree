@@ -76,7 +76,8 @@ class UserStoriesAm:
                 indi_marr_dict = defaultdict(int) 
                 for spouse in indi.fams:
                     marriage_date = family_tree.get(spouse).get_marr_date()
-                    indi_marr_dict[marriage_date]+=1
+                    if marriage_date:
+                        indi_marr_dict[marriage_date]+=1
                 for key, val in indi_marr_dict.items():
                     if val > 1:
                         warn_msg = f"{indi.name} should not marry more than one person at same time" 

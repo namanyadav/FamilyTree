@@ -51,8 +51,9 @@ class UserStoriesRK:
             if len(fam.chil) > 5:
                 fail_dict = defaultdict(int)
                 for child in fam.chil:
-                    fail_dict[processed_tree.get(child).get_birth_date()] += 1
-
+                    birthdate = processed_tree.get(child).get_birth_date()
+                    if birthdate:
+                        fail_dict[birthdate] += 1
                 for key in fail_dict.keys():
                     if fail_dict[key] > 5:
                         warn_msg = f"No more than five siblings should be born at the same time"
