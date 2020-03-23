@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-
+from collections import defaultdict
 from com.familytree.TreeError import TreeError
 from com.familytree.TreeLine import TreeLine
 from com.familytree.Tree import Tree
@@ -35,7 +35,7 @@ class UserStoriesAm:
         return indi_list_us02_fail 
     
     def us06(self, file_path=None):
-        """ return a list of objects whose divorce date is after death date """
+        """ return a list of objects whose divorce date is after death date """ 
         file_path = file_path if file_path else get_data_file_path('us06.ged')
         family_tree = TreeLine().process_data(file_path)
         fam_list = family_tree.get_fam_list()
@@ -64,3 +64,47 @@ class UserStoriesAm:
         # if indi_list_us06_fail:
         #     TreeUtils.print_report("US06 divorce date is after death date ", indi_list_us06_fail)
         return indi_list_us06_fail 
+
+    def us11(self, file_path=None):
+        """ returns list of individuals whose marriage occured with two spouses at the same time """
+        family_tree = TreeLine().process_data(file_path)
+        fam_list = family_tree.get_fam_list()
+        indi_list_us11_fail = []
+        indi_list = family_tree.get_sorted_list(UserStoriesAm.INDI_TAG)
+        for indi in indi_list:
+            if len(indi.fams) > 1:
+                indi_marr_dict = defaultdict(int) 
+                for spouse in indi.fams:
+                    marriage_date = family_tree.get(spouse).get_marr_date()
+                    if marriage_date:
+                        indi_marr_dict[marriage_date]+=1
+                for key, val in indi_marr_dict.items():
+                    if val > 1:
+                        warn_msg = f"{indi.name} should not marry more than one person at same time" 
+                        indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US11', indi.id, warn_msg)
+                        indi_list_us11_fail.append(indi)     
+        return indi_list_us11_fail
+
+
+    def us16(self, file_path=None):
+        """ returns list of males whose last name do not match their family name """
+        #file_path = file_path if file_path else get_data_file_path('us02.ged')
+        family_tree = TreeLine().process_data(file_path)
+        fam_list = family_tree.get_fam_list()
+        indi_list_us16_fail = []
+        indi_list = family_tree.get_sorted_list(UserStoriesAm.INDI_TAG)
+        for fam in fam_list:
+            parent_full_name = (family_tree.get(fam.husb).name).split("/")
+            parent_last_name = parent_full_name[1]
+            for child in fam.chil:
+                child_full_name = (family_tree.get(child).name).split("/")
+                child_last_name = child_full_name[1]
+                if parent_last_name != child_last_name:
+                    warn_msg = f"Last name of {family_tree.get(child).name} doesnot match with last name of family {family_tree.get(fam.husb).name}"
+                    fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US16', fam.id, warn_msg)
+                    indi_list_us16_fail.append(fam)
+                else:
+                    continue
+    
+        return indi_list_us16_fail
+
