@@ -47,17 +47,18 @@ class UserStoriesRK:
         processed_tree = TreeLine().process_data(file_path)
         fam_list = processed_tree.get_sorted_list(UserStoriesRK.FAM_TAG)
         fail_list_us14 = []
-        fail_dict = defaultdict(int)
         for fam in fam_list:
             if len(fam.chil) > 5:
+                fail_dict = defaultdict(int)
                 for child in fam.chil:
-                    #temp = processed_tree.get(child).get_birth_date()
                     fail_dict[processed_tree.get(child).get_birth_date()] += 1
 
                 for key in fail_dict.keys():
                     if fail_dict[key] > 5:
-                        print(f"{key} has occured {fail_dict[key]}")
-        return []
+                        warn_msg = f"No more than five siblings should be born at the same time"
+                        fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US14', fam.id, warn_msg)
+                        fail_list_us14.append(fam)
+        return fail_list_us14
 
     def us21(self, file_path=None):
         """Husband in family should be male and wife in family should be female"""
@@ -66,16 +67,16 @@ class UserStoriesRK:
         fam_list = processed_tree.get_sorted_list(UserStoriesRK.FAM_TAG)
         fail_list_us21 = []
         for fam in fam_list:
-            if processed_tree.get(fam.husb).sex != 'M':
-                fail_list_us21.append(fam.husb)
-
-            if processed_tree.get(fam.wife).sex != 'F':
-                fail_list_us21.append(fam.wife)
-
-            print(f"These husband and wife ids have wrongh gender{fail_list_us21}")
-    
-
-                        
+            if processed_tree.get(fam.husb).sex != 'M' or processed_tree.get(fam.wife).sex != 'F':
+                if processed_tree.get(fam.husb).sex != 'M' and processed_tree.get(fam.wife).sex != 'F':
+                    warn_msg = f"Husband - {processed_tree.get(fam.husb).name} in family should be male and wife - {processed_tree.get(fam.wife).name} in family should be female"
+                elif processed_tree.get(fam.husb).sex != 'M':
+                    warn_msg = f"Husband - {processed_tree.get(fam.husb).name} in family should be male"
+                else:
+                    warn_msg = f"Wife - {processed_tree.get(fam.wife).name} in family should be female"
+                fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US21', fam.id, warn_msg)
+                fail_list_us21.append(fam)
+        return fail_list_us21
                         
     def get_id_list(self, obj_list):
         """ Returns id of family or individual"""
