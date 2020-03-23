@@ -420,3 +420,136 @@
 1 _CURRENT N
 0 TRLR
 0 NOTE ############################### US12&15 End ###############################
+
+
+0 NOTE ############################### US14&21 End ###############################
+
+0 HEAD
+1 SOUR Family Echo
+2 WWW http://www.familyecho.com/
+1 FILE My Family
+1 DATE 19 MAR 2020
+1 DEST ANSTFILE
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 SUBM @I1@
+2 NAME Rahul
+1 SUBN
+1 CHAR UTF-8
+0 @US1421I1@ INDI
+1 NAME Sunil /Swarna/
+2 GIVN Sunil
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 5 MAY 1947
+1 FAMS @US1421F1@
+0 @US1421I2@ INDI
+1 NAME Harika /Kapoor/
+2 GIVN Harika
+2 SURN Kapoor
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 1 FEB 1950
+1 FAMS @US1421F1@
+0 @US1421I3@ INDI
+1 NAME Lisa /Swarna/
+2 GIVN Lisa
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX F
+1 BIRT
+2 DATE 1 DEC 1980
+1 FAMC @US1421F1@
+0 @US1421I4@ INDI
+1 NAME Hitin /Swarna/
+2 GIVN Hitin
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 1 DEC 1980
+1 FAMC @US1421F1@
+0 @US1421I5@ INDI
+1 NAME Gold /Swarna/
+2 GIVN Gold
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 1 DEC 1980
+1 FAMC @US1421F1@
+0 @US1421I6@ INDI
+1 NAME Silver /Swarna/
+2 GIVN Silver
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 1 DEC 1980
+1 FAMC @US1421F1@
+0 @US1421I7@ INDI
+1 NAME Copper /Swarna/
+2 GIVN Copper
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX F
+1 BIRT
+2 DATE 1 DEC 1980
+1 FAMC @US1421F1@
+0 @US1421I8@ INDI
+1 NAME Bronze /Swarna/
+2 GIVN Bronze
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 1 DEC 1980
+1 FAMC @US1421F1@
+0 @US1421I9@ INDI
+1 NAME Narma /Swarna/
+2 GIVN Narma
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX F
+1 BIRT
+2 DATE 5 MAR 1985
+1 FAMC @US1421F1@
+0 @US1421I10@ INDI
+1 NAME Vyaas /Swarna/
+2 GIVN Vyaas
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 2 DEC 1975
+1 FAMC @US1421F1@
+0 @US1421I11@ INDI
+1 NAME Pratik /Swarna/
+2 GIVN Pratik
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 2 DEC 1975
+1 FAMC @US1421F1@
+0 @US1421F1@ FAM
+1 HUSB @US1421I1@
+1 WIFE @US1421I2@
+1 CHIL @US1421I3@
+1 CHIL @US1421I4@
+1 CHIL @US1421I5@
+1 CHIL @US1421I6@
+1 CHIL @US1421I7@
+1 CHIL @US1421I8@
+1 CHIL @US1421I9@
+1 CHIL @US1421I10@
+1 CHIL @US1421I11@
+1 _CURRENT Y
+0 TRLR
+
+
+0 NOTE ############################### US14&21 End ###############################

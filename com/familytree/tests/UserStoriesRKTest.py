@@ -15,6 +15,16 @@ class UserStoriesRKTest(unittest.TestCase):
         self.assertEqual(get_id_list(UserStoriesRK().us04()), ['F04'])
         self.assertNotEqual(get_id_list(UserStoriesRK().us04()), ['F04', 'F01'])
 
+    def test_us14(self):
+        """ testing us14"""
+        self.assertEqual(UserStoriesRK().get_id_list(UserStoriesRK().us14()), ['US1421F1'])
+        self.assertNotEqual(UserStoriesRK().get_id_list(UserStoriesRK().us14()), ['I01', 'I03'])
+
+    def test_us21(self):
+        """testing us21"""
+        self.assertEqual(get_id_list(UserStoriesRK().us21()), ['US1421F1'])
+        self.assertNotEqual(get_id_list(UserStoriesRK().us21()), ['F04', 'F01'])
+
 
 if __name__ == '__main__':
     unittest.main()
