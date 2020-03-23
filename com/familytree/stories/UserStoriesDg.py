@@ -15,9 +15,9 @@ class UserStoriesDg:
 
     def us07(self, file_path=None):
         """returns a list of objects with age greater than or equal to 150"""
-        file_path = file_path if file_path else UserStoriesDg.FILE_PATH1
-        processed_tree = TreeLine().process_data(file_path)
-        indi_list = processed_tree.get_sorted_list(UserStoriesDg.INDI_TAG)
+        # file_path = file_path if file_path else UserStoriesDg.FILE_PATH1
+        # processed_tree = TreeLine().process_data(file_path)
+        indi_list = self.get_treedata(file_path).get_sorted_list(UserStoriesDg.INDI_TAG)
         indi_list_us07 = []
         for indi in indi_list:
             if indi.get_age() >= 150:
@@ -28,8 +28,7 @@ class UserStoriesDg:
 
     def us05(self, file_path=None):
         """ returns a list of objects whose marriage date is after death date"""
-        file_path = file_path if file_path else UserStoriesDg.FILE_PATH2
-        family_tree = TreeLine().process_data(file_path)
+        family_tree = self.get_treedata(file_path)
         fam_list = family_tree.get_sorted_list(UserStoriesDg.FAM_TAG)
         fam_list_us05 = []
         for fam in fam_list:
@@ -54,27 +53,43 @@ class UserStoriesDg:
                 warn_msg = f'Marriage date {fam.get_marr_date(TreeUtils.OUTPUT_DATE_FORMAT)} should occur before death of {family_tree.get(fam.wife).name} - {family_tree.get(fam.wife).get_death_date(TreeUtils.OUTPUT_DATE_FORMAT)}'
                 fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US05', fam.id, warn_msg)
                 fam_list_us05.append(fam)
-
-            # if marr_date:
-            #     if hus_death_date and wife_death_date:
-            #         if wife_death_date <= marr_date and hus_death_date <= marr_date:
-            #             warn_msg = f'Marriage {fam.get_marr_date(Tree.OUTPUT_DATE_FORMAT)} should occur before death of {family_tree.get(fam.husb).name} - {family_tree.get(fam.husb).get_death_date(Tree.OUTPUT_DATE_FORMAT)}, {family_tree.get(fam.wife).name} - {family_tree.get(fam.wife).get_death_date(Tree.OUTPUT_DATE_FORMAT)}'
-            #             fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US05', fam.id, warn_msg)
-            #             fam_list_us05.append(fam)
-            #     elif hus_death_date or wife_death_date:
-            #         if hus_death_date and hus_death_date <= marr_date:
-            #             warn_msg = f'Marriage date {fam.get_marr_date(Tree.OUTPUT_DATE_FORMAT)} should occur before death of {family_tree.get(fam.husb).name} - {family_tree.get(fam.husb).get_death_date(Tree.OUTPUT_DATE_FORMAT)}'
-            #             fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US05', fam.id, warn_msg)
-            #             fam_list_us05.append(fam)
-            #         elif wife_death_date and wife_death_date <= marr_date:
-            #             warn_msg = f'Marriage date {fam.get_marr_date(Tree.OUTPUT_DATE_FORMAT)} should occur before death of {family_tree.get(fam.wife).name} - {family_tree.get(fam.wife).get_death_date(Tree.OUTPUT_DATE_FORMAT)}'
-            #             fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US05', fam.id, warn_msg)
-            #             fam_list_us05.append(fam)
-            #         else:
-            #             continue
-            #     else:
-            #         pass
         return fam_list_us05
+
+
+    def us15(self, file_path=None):
+        """ returns a list of objects if family has more than 15 siblings """
+        fam_list = self.get_treedata(file_path).get_sorted_list(UserStoriesDg.FAM_TAG)
+        fam_list_us15 = []
+        for fam in fam_list:
+            if len(fam.chil) >= 15:
+                warn_msg = f'Family has more than 15 siblings'
+                fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US15', fam.id, warn_msg)
+                fam_list_us15.append(fam)
+        return fam_list_us15
+
+    
+    def us12(self, file_path=None):
+        """ returns a list of objects if Parents are too old  """
+        family_tree = self.get_treedata(file_path)
+        fam_list = family_tree.get_sorted_list(UserStoriesDg.FAM_TAG)
+        fam_list_us12 = []
+        for fam in fam_list:
+            father_age = family_tree.get(fam.husb).get_age()
+            mother_age = family_tree.get(fam.wife).get_age()
+            for child in fam.chil:
+                child_age = family_tree.get(child).get_age()
+                father_child_diff = father_age - child_age
+                mother_child_diff = mother_age - child_age
+                if father_child_diff >= 80 or  mother_child_diff >=60 :
+                    if father_child_diff >= 80 and  mother_child_diff >=60 :
+                        warn_msg = f'Father and Mother should be less than 80 years and 60 years older than their child - {family_tree.get(child).name}'
+                    elif  father_child_diff >= 80:
+                        warn_msg = f'Father should be less than 80 years than their child - {family_tree.get(child).name}'
+                    else:
+                        warn_msg = f'Mother should be less than 60 years than their child - {family_tree.get(child).name}'
+                    fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US12', child, warn_msg)
+                    fam_list_us12.append(fam)
+        return fam_list_us12
 
     def get_id_list(self, obj_list):
         """ return the individual or family id's """
@@ -84,4 +99,11 @@ class UserStoriesDg:
             for obj in obj_list:
                 id_list.append(obj.id)
         return id_list
+
+    def get_treedata(self, path):
+        """ return the tree objects of individual and family """
+        file_path = path if path else UserStoriesDg.FILE_PATH1
+        processed_tree = TreeLine().process_data(file_path)
+        return processed_tree
+
 

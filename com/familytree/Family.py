@@ -52,6 +52,12 @@ class Family:
     def get_wife_death_date(self, family_tree):
         return family_tree.get(self.wife).get_death_date() if family_tree.get(self.wife) else None
 
+    def get_husb_birth_date(self, family_tree):
+        return family_tree.get(self.husb).get_birth_date() if family_tree.get(self.husb) else None
+
+    def get_wife_birth_date(self, family_tree):
+        return family_tree.get(self.wife).get_birth_date() if family_tree.get(self.wife) else None
+
     def get_children(self, family_tree=None):
         # TODO can use lambda :D
         if not family_tree:
