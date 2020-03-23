@@ -1,0 +1,220 @@
+0 HEAD
+1 SOUR Family Echo
+2 WWW http://www.familyecho.com/
+1 FILE Family 3
+1 DATE 21 MAR 2020
+1 DEST ANSTFILE
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 SUBM @I1@
+2 NAME Divya
+1 SUBN
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME Sunil /Swarna/
+2 GIVN Sunil
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 4 APR 1922
+1 FAMS @F1@
+1 FAMS @F2@
+0 @I2@ INDI
+1 NAME Harika /Simha/
+2 GIVN Harika
+2 SURN Simha
+2 _MARNM Swarna
+1 SEX F
+1 BIRT
+2 DATE 3 APR 1975
+1 FAMS @F1@
+0 @I3@ INDI
+1 NAME Swati /Swarna/
+2 GIVN Swati
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX F
+1 BIRT
+2 DATE 2 MAR 1999
+1 FAMC @F1@
+0 @I4@ INDI
+1 NAME Swetha /Swarna/
+2 GIVN Swetha
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX F
+1 BIRT
+2 DATE 3 APR 1998
+1 FAMC @F1@
+0 @I5@ INDI
+1 NAME Deepa /Swarna/
+2 GIVN Deepa
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX F
+1 BIRT
+2 DATE 1 MAR 1998
+1 FAMC @F1@
+0 @I6@ INDI
+1 NAME Nitin /Swarna/
+2 GIVN Nitin
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 2 APR 2000
+1 FAMC @F1@
+0 @I7@ INDI
+1 NAME Shashank /Swarna/
+2 GIVN Shashank
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 4 MAR 2000
+1 FAMC @F1@
+0 @I8@ INDI
+1 NAME Bamu /Swarna/
+2 GIVN Bamu
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 2 APR 1995
+1 FAMC @F1@
+0 @I9@ INDI
+1 NAME Shankar /Swarna/
+2 GIVN Shankar
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 3 MAR 1996
+1 FAMC @F1@
+0 @I10@ INDI
+1 NAME Pooja /Swarna/
+2 GIVN Pooja
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX F
+1 BIRT
+2 DATE 3 APR 1997
+1 FAMC @F1@
+0 @I11@ INDI
+1 NAME Punitha /Swarna/
+2 GIVN Punitha
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX F
+1 BIRT
+2 DATE 2 MAR 1999
+1 FAMC @F1@
+0 @I12@ INDI
+1 NAME Punith /Swarna/
+2 GIVN Punith
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 4 MAY 1998
+1 FAMC @F1@
+0 @I13@ INDI
+1 NAME Shiva /Swarna/
+2 GIVN Shiva
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 3 MAR 1996
+1 FAMC @F1@
+0 @I14@ INDI
+1 NAME Geetha /Swarna/
+2 GIVN Geetha
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX F
+1 BIRT
+2 DATE 6 MAY 1999
+1 FAMC @F1@
+0 @I15@ INDI
+1 NAME Vijay /Swarna/
+2 GIVN Vijay
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 3 MAY 1997
+1 FAMC @F1@
+0 @I16@ INDI
+1 NAME Keeru /Swarna/
+2 GIVN Keeru
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX F
+1 BIRT
+2 DATE 3 MAR 1995
+1 FAMC @F1@
+0 @I17@ INDI
+1 NAME Navya /Swarna/
+2 GIVN Navya
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX F
+1 BIRT
+2 DATE 4 MAY 1998
+1 FAMC @F1@
+0 @I18@ INDI
+1 NAME Padma /Swarna/
+2 GIVN Padma
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX F
+1 BIRT
+2 DATE 4 JUN 2000
+1 FAMC @F1@
+0 @I19@ INDI
+1 NAME Chinki /Singh/
+2 GIVN Chinki
+2 SURN Singh
+2 _MARNM Swarna
+1 SEX F
+1 BIRT
+2 DATE 2 APR 1942
+1 FAMS @F2@
+0 @I20@ INDI
+1 NAME Xing /Swarna/
+2 GIVN Xing
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 3 APR 2002
+1 FAMC @F2@
+0 @F1@ FAM
+1 HUSB @I1@
+1 WIFE @I2@
+1 CHIL @I3@
+1 CHIL @I4@
+1 CHIL @I5@
+1 CHIL @I6@
+1 CHIL @I7@
+1 CHIL @I8@
+1 CHIL @I9@
+1 CHIL @I10@
+1 CHIL @I11@
+1 CHIL @I12@
+1 CHIL @I13@
+1 CHIL @I14@
+1 CHIL @I15@
+1 CHIL @I16@
+1 CHIL @I17@
+1 CHIL @I18@
+1 _CURRENT Y
+0 @F2@ FAM
+1 HUSB @I1@
+1 WIFE @I19@
+1 CHIL @I20@
+1 _CURRENT N
+0 TRLR
