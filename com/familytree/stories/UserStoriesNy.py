@@ -3,7 +3,7 @@ from com.familytree.TreeError import TreeError
 from com.familytree.TreeLine import TreeLine
 from com.familytree.Tree import Tree
 from com.familytree.TreeUtils import TreeUtils, date_greater_than, date_equal_to, add_to_date, get_data_file_path, \
-    get_id_list
+    get_id_list, print_list
 
 
 class UserStoriesNy:
@@ -95,9 +95,10 @@ class UserStoriesNy:
                         f', {sibling.get_birth_date(TreeUtils.OUTPUT_DATE_FORMAT)} less than 8 months and more than 1 day apart'
                     err_id_1 = indi.id
                     err_id_2 = sibling.id
-
-                    indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US13', indi.id, warn_msg)
-                    us13_fail.append(indi)
+                    # indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US13', indi.id, warn_msg)
+                    indi.add_err(TreeError.TYPE_ERROR, 'US13', warn_msg)
+            if indi.err or indi.err_list:
+                us13_fail.append(indi)
 
         return us13_fail
 
@@ -114,8 +115,10 @@ class UserStoriesNy:
             if common_indi_list:
                 for cousin in common_indi_list:
                     warn_msg = f'{indi.name} married first cousin {cousin.name}'
-                    indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US19', indi.id, warn_msg)
-                    us19_fail.append(indi)
+                    # indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US19', indi.id, warn_msg)
+                    indi.add_err(TreeError.TYPE_ERROR, 'US19', warn_msg)
+            if indi.err or indi.err_list:
+                us19_fail.append(indi)
 
         return us19_fail
 

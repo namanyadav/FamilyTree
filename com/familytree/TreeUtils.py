@@ -48,11 +48,16 @@ class TreeUtils:
 
     @staticmethod
     def print_report(report_name, obj_list):
-        TreeUtils.logger.error(f'\n{TreeUtils.form_heading(f"Report - {report_name}")}\n')
+        logger = TreeUtils.get_logger()
+        logger.error(f'\n{TreeUtils.form_heading(f"Report - {report_name}")}\n')
         # print(f'\n{TreeUtils.form_heading(f"Report - {report_name}")}\n')
         for obj in obj_list:
-            TreeUtils.logger.error(obj.err)
-            # print(obj.err)
+            if obj.err_list:
+                # logger.error(f'{obj.id} error list size [{len(obj.err_list)}]')
+                for err in obj.err_list:
+                    logger.error(err)
+            else:
+                logger.error(obj.err)
 
     @staticmethod
     def get_logger():

@@ -1,5 +1,6 @@
 from datetime import datetime
 # from com.familytree.Tree import Tree
+from com.familytree.TreeError import TreeError
 from com.familytree.TreeUtils import TreeUtils
 
 
@@ -12,6 +13,8 @@ class Family:
         self.wife = None
         self.chil = []
         self.div = None
+        self.err = None
+        self.err_list = []
         self.tag_name = TreeUtils.FAM
         self.src_file = src_file
 
@@ -57,6 +60,9 @@ class Family:
 
     def get_wife_birth_date(self, family_tree):
         return family_tree.get(self.wife).get_birth_date() if family_tree.get(self.wife) else None
+
+    def add_err(self, err_type, us_name, err_msg):
+        self.err_list.append(TreeError(err_type, TreeError.ON_FAM, us_name, self.id, err_msg))
 
     def get_children(self, family_tree=None):
         # TODO can use lambda :D
