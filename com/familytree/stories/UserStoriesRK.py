@@ -3,6 +3,7 @@ from com.familytree.TreeLine import TreeLine
 from com.familytree.TreeUtils import TreeUtils, get_data_file_path
 from com.familytree.Tree import Tree
 from com.familytree.TreeError import TreeError
+from collections import defaultdict
 
 class UserStoriesRK:
 
@@ -40,6 +41,42 @@ class UserStoriesRK:
         #     TreeUtils.print_report("US04 Marriage before divorce", indi_list_us04)
         return indi_list_us04
 
+    def us14(self, file_path=None):
+        """ Multiple births <= 5"""
+        file_path = file_path if file_path else get_data_file_path('US14.ged')
+        processed_tree = TreeLine().process_data(file_path)
+        fam_list = processed_tree.get_sorted_list(UserStoriesRK.FAM_TAG)
+        fail_list_us14 = []
+        fail_dict = defaultdict(int)
+        for fam in fam_list:
+            if len(fam.chil) > 5:
+                for child in fam.chil:
+                    #temp = processed_tree.get(child).get_birth_date()
+                    fail_dict[processed_tree.get(child).get_birth_date()] += 1
+
+                for key in fail_dict.keys():
+                    if fail_dict[key] > 5:
+                        print(f"{key} has occured {fail_dict[key]}")
+        return []
+
+    def us21(self, file_path=None):
+        """Husband in family should be male and wife in family should be female"""
+        file_path = file_path if file_path else get_data_file_path('US14.ged')
+        processed_tree = TreeLine().process_data(file_path)
+        fam_list = processed_tree.get_sorted_list(UserStoriesRK.FAM_TAG)
+        fail_list_us21 = []
+        for fam in fam_list:
+            if processed_tree.get(fam.husb).sex != 'M':
+                fail_list_us21.append(fam.husb)
+
+            if processed_tree.get(fam.wife).sex != 'F':
+                fail_list_us21.append(fam.wife)
+
+            print(f"These husband and wife ids have wrongh gender{fail_list_us21}")
+    
+
+                        
+                        
     def get_id_list(self, obj_list):
         """ Returns id of family or individual"""
         id_list = []
