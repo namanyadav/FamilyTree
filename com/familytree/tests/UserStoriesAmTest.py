@@ -1,6 +1,6 @@
 import unittest
 from com.familytree.stories.UserStoriesAm import UserStoriesAm
-
+from com.familytree.TreeUtils import get_data_file_path
 
 class UserStoriesAmTest(unittest.TestCase):
     """ Unittests for userstories 2 and 6 """
