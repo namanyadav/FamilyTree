@@ -19,15 +19,21 @@ def suite():
 
     test_suite.addTest(UserStoriesRKTest('test_us03'))
     test_suite.addTest(UserStoriesRKTest('test_us04'))
+    test_suite.addTest(UserStoriesRKTest('test_us14'))
+    test_suite.addTest(UserStoriesRKTest('test_us21'))
 
     test_suite.addTest(UserStoriesDgTest('test_us05'))
     test_suite.addTest(UserStoriesDgTest('test_us07'))
+    test_suite.addTest(UserStoriesDgTest('test_us12'))
+    test_suite.addTest(UserStoriesDgTest('test_us15'))
 
     test_suite.addTest(UserStoriesMSKTest('test_us09'))
     test_suite.addTest(UserStoriesMSKTest('test_us10'))
 
     test_suite.addTest(UserStoriesAmTest('test_us02'))
     test_suite.addTest(UserStoriesAmTest('test_us06'))
+    test_suite.addTest(UserStoriesAmTest('test_us11'))
+    test_suite.addTest(UserStoriesAmTest('test_us16'))
 
     return test_suite
 
