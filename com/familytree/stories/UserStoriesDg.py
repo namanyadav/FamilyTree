@@ -58,7 +58,7 @@ class UserStoriesDg:
 
     def us15(self, file_path=None):
         """ returns a list of objects if family has more than 15 siblings """
-        fam_list = self.get_treedata("./com/familytree/data/us12&15.ged").get_sorted_list(UserStoriesDg.FAM_TAG)
+        fam_list = self.get_treedata(file_path).get_sorted_list(UserStoriesDg.FAM_TAG)
         fam_list_us15 = []
         for fam in fam_list:
             if len(fam.chil) >= 15:
@@ -70,7 +70,7 @@ class UserStoriesDg:
     
     def us12(self, file_path=None):
         """ returns a list of objects if Parents are too old  """
-        family_tree = self.get_treedata("./com/familytree/data/us12&15.ged")
+        family_tree = self.get_treedata(file_path)
         fam_list = family_tree.get_sorted_list(UserStoriesDg.FAM_TAG)
         fam_list_us12 = []
         for fam in fam_list:
