@@ -55,6 +55,8 @@ class Sprint:
             error_list.extend(usrk.us21(fp))
             error_list.extend(usam.us11(fp))
             error_list.extend(usam.us16(fp))
+            error_list.extend(usmsk.us17(fp))
+            error_list.extend(usmsk.us18(fp))
             TreeUtils.print_report('Sprint 2 Report', error_list)
         except FileNotFoundError:
             print(f'File not found: {fp}')

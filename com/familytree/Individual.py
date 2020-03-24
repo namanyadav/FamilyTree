@@ -222,6 +222,23 @@ class Individual:
             return False
         return True
 
+    def get_real_siblings(self, family_tree):
+        """ returns a list of real siblings of a person if present, en empty list otherwise """
+
+        # if parent family None then no siblings can be found
+        parent_family = self.get_parent_family(family_tree)
+        if not parent_family:
+            return []
+
+        # get children in the family
+        real_sibling_list = []
+        real_sibling_list.extend(parent_family.get_children(family_tree))
+
+        # remove the individual itself from the list, cannot be his own sibling
+        # real_sibling_list.remove(self) if real_sibling_list else real_sibling_list
+
+        return real_sibling_list
+
     def set_attr(self, prop_name, treeline):
 
         if prop_name == 'NAME':
