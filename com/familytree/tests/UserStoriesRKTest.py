@@ -1,5 +1,5 @@
 import unittest
-from com.familytree.TreeUtils import get_id_list
+from com.familytree.TreeUtils import get_id_list, get_data_file_path
 from com.familytree.stories.UserStoriesRK import UserStoriesRK
 
 
@@ -17,13 +17,15 @@ class UserStoriesRKTest(unittest.TestCase):
 
     def test_us14(self):
         """ testing us14"""
-        self.assertEqual(UserStoriesRK().get_id_list(UserStoriesRK().us14()), ['US1421F1'])
-        self.assertNotEqual(UserStoriesRK().get_id_list(UserStoriesRK().us14()), ['I01', 'I03'])
+        fp = get_data_file_path('US14.ged')
+        self.assertEqual(UserStoriesRK().get_id_list(UserStoriesRK().us14(fp)), ['F1'])
+        self.assertNotEqual(UserStoriesRK().get_id_list(UserStoriesRK().us14(fp)), ['I01', 'I03'])
 
     def test_us21(self):
         """testing us21"""
-        self.assertEqual(get_id_list(UserStoriesRK().us21()), ['US1421F1'])
-        self.assertNotEqual(get_id_list(UserStoriesRK().us21()), ['F04', 'F01'])
+        fp = get_data_file_path('US14.ged')
+        self.assertEqual(get_id_list(UserStoriesRK().us21(fp)), ['F1'])
+        self.assertNotEqual(get_id_list(UserStoriesRK().us21(fp)), ['F04', 'F01'])
 
 
 if __name__ == '__main__':
