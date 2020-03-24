@@ -78,17 +78,18 @@ class UserStoriesDg:
             mother_age = family_tree.get(fam.wife).get_age()
             for child in fam.chil:
                 child_age = family_tree.get(child).get_age()
-                father_child_diff = father_age - child_age
-                mother_child_diff = mother_age - child_age
-                if father_child_diff >= 80 or  mother_child_diff >=60 :
-                    if father_child_diff >= 80 and  mother_child_diff >=60 :
-                        warn_msg = f'Father and Mother should be less than 80 years and 60 years older than their child - {family_tree.get(child).name}'
-                    elif  father_child_diff >= 80:
-                        warn_msg = f'Father should be less than 80 years than their child - {family_tree.get(child).name}'
-                    else:
-                        warn_msg = f'Mother should be less than 60 years than their child - {family_tree.get(child).name}'
-                    fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US12', child, warn_msg)
-                    fam_list_us12.append(fam)
+                father_child_diff = father_age - child_age if father_age and child_age else None
+                mother_child_diff = mother_age - child_age if mother_age and child_age else None
+                if father_child_diff and mother_child_diff: 
+                    if father_child_diff >= 80 or  mother_child_diff >=60 :
+                        if father_child_diff >= 80 and  mother_child_diff >=60 :
+                            warn_msg = f'Father and Mother should be less than 80 years and 60 years older than their child - {family_tree.get(child).name}'
+                        elif  father_child_diff >= 80:
+                            warn_msg = f'Father should be less than 80 years than their child - {family_tree.get(child).name}'
+                        else:
+                            warn_msg = f'Mother should be less than 60 years than their child - {family_tree.get(child).name}'
+                        fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US12', child, warn_msg)
+                        fam_list_us12.append(fam)
         return fam_list_us12
 
     def get_id_list(self, obj_list):
