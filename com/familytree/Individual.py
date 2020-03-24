@@ -5,7 +5,6 @@ from com.familytree.TreeError import TreeError
 
 
 class Individual:
-
     date_format = '%d %b %Y'
 
     def __init__(self, id, src_file=None):
@@ -122,6 +121,23 @@ class Individual:
 
         return spouses
 
+    def get_real_siblings(self, family_tree):
+        """ returns a list of real siblings of a person if present, en empty list otherwise """
+
+        # if parent family None then no siblings can be found
+        parent_family = self.get_parent_family(family_tree)
+        if not parent_family:
+            return []
+
+        # get children in the family
+        real_sibling_list = []
+        real_sibling_list.extend(parent_family.get_children(family_tree))
+
+        # remove the individual itself from the list, cannot be his own sibling
+        # real_sibling_list.remove(self) if real_sibling_list else real_sibling_list
+
+        return real_sibling_list
+
     def get_siblings(self, family_tree):
         """ returns a list of siblings of a person if present, en empty list otherwise """
         # get parent family
@@ -159,7 +175,8 @@ class Individual:
         # for each partner get a list of fams
         # for each fams element get all chil
 
-        sibling_list = self.get_parent_family(family_tree).get_children(family_tree) if self.get_parent_family(family_tree) else []
+        sibling_list = self.get_parent_family(family_tree).get_children(family_tree) if self.get_parent_family(
+            family_tree) else []
         sibling_list.remove(self) if sibling_list else sibling_list
         return sibling_list
 
@@ -205,7 +222,7 @@ class Individual:
             ref_date = target_date
             birth_date = datetime.strptime(self.birt, Individual.date_format)
             age = ref_date.year - birth_date.year - (
-                        (ref_date.month, ref_date.day) < (birth_date.month, birth_date.day))
+                    (ref_date.month, ref_date.day) < (birth_date.month, birth_date.day))
             return age
         # If indi does not have a birth date, return -1
         if not self.birt:
