@@ -1,0 +1,26 @@
+name: Travis integrity test for staging
+language: python
+python:
+  - "3.8"
+on:
+  push:
+    branches:
+      - staging
+  pull_request:
+    branches:
+      - staging
+
+before_install:
+  - python --version
+  - pip install -U pip
+  - pip install python-dateutil
+  - pip install PrettyTable
+#  - pip install -U pytest
+# command to install dependencies
+install:
+#  - pip install -r requirements.txt
+#  - pip install ".[test]" . # install package + test dependencies
+# command to run tests
+script:
+  - python -m com.familytree.tests.stories_test_suite
+  - python run_app.py

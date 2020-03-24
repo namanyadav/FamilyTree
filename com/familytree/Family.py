@@ -1,17 +1,22 @@
 from datetime import datetime
-from com.familytree.Tree import Tree
+# from com.familytree.Tree import Tree
+from com.familytree.TreeError import TreeError
+from com.familytree.TreeUtils import TreeUtils
 
 
 class Family:
 
-    def __init__(self, id):
+    def __init__(self, id, src_file=None):
         self.id = self.get_clean_id(id)
         self.marr = None
         self.husb = None
         self.wife = None
         self.chil = []
         self.div = None
-        self.tag_name = 'FAM'
+        self.err = None
+        self.err_list = []
+        self.tag_name = TreeUtils.FAM
+        self.src_file = src_file
 
     @staticmethod
     def get_clean_id(id):
@@ -25,7 +30,7 @@ class Family:
     def get_marr_date(self, output_format=None):
         if not self.marr:
             return None
-        date = datetime.strptime(self.marr, Tree.INPUT_DATE_FORMAT)
+        date = datetime.strptime(self.marr, TreeUtils.INPUT_DATE_FORMAT)
         if output_format:
             return date.strftime(output_format)
         return date
@@ -33,10 +38,40 @@ class Family:
     def get_div_date(self, output_format=None):
         if not self.div:
             return None
-        date = datetime.strptime(self.div, Tree.INPUT_DATE_FORMAT)
+        date = datetime.strptime(self.div, TreeUtils.INPUT_DATE_FORMAT)
         if output_format:
             return date.strftime(output_format)
         return date
+
+    def get_husb(self, family_tree=None):
+        return family_tree.get(self.husb) if family_tree else self.husb
+
+    def get_wife(self, family_tree=None):
+        return family_tree.get(self.wife) if family_tree else self.wife
+
+    def get_husb_death_date(self, family_tree):
+        return family_tree.get(self.husb).get_death_date() if family_tree.get(self.husb) else None
+
+    def get_wife_death_date(self, family_tree):
+        return family_tree.get(self.wife).get_death_date() if family_tree.get(self.wife) else None
+
+    def get_husb_birth_date(self, family_tree):
+        return family_tree.get(self.husb).get_birth_date() if family_tree.get(self.husb) else None
+
+    def get_wife_birth_date(self, family_tree):
+        return family_tree.get(self.wife).get_birth_date() if family_tree.get(self.wife) else None
+
+    def add_err(self, err_type, us_name, err_msg):
+        self.err_list.append(TreeError(err_type, TreeError.ON_FAM, us_name, self.id, err_msg))
+
+    def get_children(self, family_tree=None):
+        # TODO can use lambda :D
+        if not family_tree:
+            return self.chil
+        children = []
+        for indi_id in self.chil:
+            children.append(family_tree.get(indi_id))
+        return children
 
     def set_marr(self, date):
         self.marr = date
