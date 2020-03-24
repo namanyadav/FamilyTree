@@ -19,10 +19,8 @@ class Sprint:
     def run_sprint1():
         error_list = []
         fp = get_data_file_path('data_sprint_1.ged')
-        Sprint.logger.error('#################### starting sprint 1 ... ####################')
+        Sprint.logger.error('######################################## starting sprint 1 ... ########################################')
         try:
-            # TODO there is some weird behavior with chained method calls on new object
-            #  Tree().grow(fp).pretty_print()
             tree = Tree().grow(fp).pretty_print()
             usny, usmsk, usam, usdg, usrk = UserStoriesNy(), UserStoriesMSK(), UserStoriesAm(), UserStoriesDg(), UserStoriesRK()
             error_list.extend(usmsk.us09(fp))
@@ -36,37 +34,43 @@ class Sprint:
             error_list.extend(usrk.us03(fp))
             error_list.extend(usrk.us04(fp))
             TreeUtils.print_report('Sprint 1 Report', error_list)
-            Sprint.logger.error('#################### ending sprint 1 ... ####################')
         except FileNotFoundError:
             print(f'File not found: {fp}')
+        Sprint.logger.error('######################################## ending sprint 1 ... ########################################\n')
 
     @staticmethod
     def run_sprint2():
         error_list = []
         fp = get_data_file_path('data_sprint_2.ged')
-        Sprint.logger.error('#################### starting sprint 2 ... ####################')
-        Tree().grow(fp).pretty_print()
-        usny, usmsk, usam, usdg, usrk = UserStoriesNy(), UserStoriesMSK(), UserStoriesAm(), UserStoriesDg(), UserStoriesRK()
-        error_list.extend(usny.us13(fp))
-        error_list.extend(usny.us19(fp))
-        error_list.extend(usdg.us15(fp))
-        error_list.extend(usdg.us12(fp))
-        error_list.extend(usmsk.us17(fp))
-        error_list.extend(usmsk.us18(fp))
-        TreeUtils.print_report('Sprint 2 Report', error_list)
-        Sprint.logger.error('#################### ending sprint 2 ... ####################')
+        Sprint.logger.error('######################################## starting sprint 2 ... ########################################')
+        try:
+
+            Tree().grow(fp).pretty_print()
+            usny, usmsk, usam, usdg, usrk = UserStoriesNy(), UserStoriesMSK(), UserStoriesAm(), UserStoriesDg(), UserStoriesRK()
+            error_list.extend(usny.us13(fp))
+            error_list.extend(usny.us19(fp))
+            error_list.extend(usdg.us15(fp))
+            error_list.extend(usdg.us12(fp))
+            error_list.extend(usrk.us14(fp))
+            error_list.extend(usrk.us21(fp))
+            error_list.extend(usam.us11(fp))
+            error_list.extend(usam.us16(fp))
+            TreeUtils.print_report('Sprint 2 Report', error_list)
+        except FileNotFoundError:
+            print(f'File not found: {fp}')
+        Sprint.logger.error('######################################## ending sprint 2 ... ########################################\n')
 
     @staticmethod
     def run_sprint3():
         error_list = []
         fp = get_data_file_path('data_sprint_3.ged')
-        Sprint.logger.error('#################### starting sprint 3 ... ####################')
+        Sprint.logger.error('######################################## starting sprint 3 ... ########################################')
         Tree().grow(fp).pretty_print()
         usny, usmsk, usam, usdg, usrk = UserStoriesNy(), UserStoriesMSK(), UserStoriesAm(), UserStoriesDg(), UserStoriesRK()
         error_list.extend(usny.us22(fp))
         error_list.extend(usny.us26(fp))
         TreeUtils.print_report('Sprint 3 Report', error_list)
-        Sprint.logger.error('#################### ending sprint 3 ... ####################')
+        Sprint.logger.error('######################################## ending sprint 3 ... ########################################\n')
 
     @staticmethod
     def run_sprint_test():
