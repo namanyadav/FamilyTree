@@ -1,0 +1,102 @@
+0 HEAD
+1 SOUR Family Echo
+2 WWW http://www.familyecho.com/
+1 FILE Family 4
+1 DATE 23 MAR 2020
+1 DEST ANSTFILE
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 SUBM @I3@
+2 NAME Divya
+1 SUBN
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME Rakshit /Shetty/
+2 GIVN Rakshit
+2 SURN Shetty
+2 _MARNM Shetty
+1 SEX M
+1 BIRT
+2 DATE 2 MAR 1970
+1 FAMS @F1@
+0 @I2@ INDI
+1 NAME Rakul /Shetty/
+2 GIVN Rakul
+2 SURN Shetty
+2 _MARNM Shetty
+1 SEX F
+1 BIRT
+2 DATE 4 MAR 1975
+1 FAMS @F1@
+0 @I3@ INDI
+1 NAME Rachit /Shetty/
+2 GIVN Rachit
+2 SURN Shetty
+2 _MARNM Shetty
+1 SEX M
+1 BIRT
+2 DATE 4 MAR 1999
+1 FAMS @F2@
+1 FAMS @F4@
+1 FAMC @F1@
+0 @I4@ INDI
+1 NAME Raja /Shetty/
+2 GIVN Raja
+2 SURN Shetty
+2 _MARNM Shetty
+1 SEX M
+1 BIRT
+2 DATE 1 JUL 2000
+1 FAMS @F3@
+1 FAMC @F1@
+0 @I5@ INDI
+1 NAME Rachana /Shetty/
+2 GIVN Rachana
+2 SURN Shetty
+2 _MARNM Shetty
+1 SEX F
+1 BIRT
+2 DATE 7 JUN 2001
+1 FAMS @F3@
+1 FAMC @F1@
+0 @I6@ INDI
+1 NAME Raji /Shetty/
+2 GIVN Raji
+2 SURN Shetty
+2 _MARNM Shetty
+1 SEX F
+1 BIRT
+2 DATE 2 JAN 2000
+1 FAMS @F2@
+0 @I7@ INDI
+1 NAME Jaspreet /Shetty/
+2 GIVN Jaspreet
+2 SURN Shetty
+2 _MARNM Shetty
+1 SEX F
+1 BIRT
+2 DATE 2 APR 2020
+1 FAMS @F4@
+1 FAMC @F2@
+0 @F1@ FAM
+1 HUSB @I1@
+1 WIFE @I2@
+1 CHIL @I3@
+1 CHIL @I4@
+1 CHIL @I5@
+1 _CURRENT Y
+0 @F2@ FAM
+1 HUSB @I3@
+1 WIFE @I6@
+1 CHIL @I7@
+1 _CURRENT Y
+0 @F3@ FAM
+1 HUSB @I4@
+1 WIFE @I5@
+1 _CURRENT Y
+0 @F4@ FAM
+1 HUSB @I3@
+1 WIFE @I7@
+1 _CURRENT Y
+0 TRLR

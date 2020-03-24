@@ -7,7 +7,7 @@ from com.familytree.TreeUtils import TreeUtils
 import calendar
 from dateutil.relativedelta import relativedelta
 
-from com.familytree.TreeUtils import date_greater_than, add_to_date
+from com.familytree.TreeUtils import date_greater_than, add_to_date, get_data_file_path
 
 
 class UserStoriesMSK:
@@ -102,3 +102,44 @@ class UserStoriesMSK:
                     indi_list_us10_fail.append(fam)
                     # continue
         return indi_list_us10_fail
+
+
+    def us17(self, file_path=None):
+        """
+                returns list of individuals who are married to their children
+        """
+        file_path = file_path if file_path else get_data_file_path('us17.ged')
+        family_tree = TreeLine().process_data(file_path)
+        us17_fail = []
+        indi_list = family_tree.get_indi_list()
+        for indi in indi_list:
+            children_list = indi.get_children(family_tree)
+            spouse_list = indi.get_spouses(family_tree)
+            common_indi_list = set(children_list) & set(spouse_list)
+            if common_indi_list:
+                for child in common_indi_list:
+                    warn_msg = f'{indi.name} married child {child.name}'
+                    indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US17', indi.id, warn_msg)
+                    us17_fail.append(indi)
+
+        return us17_fail
+
+    def us18(self, file_path=None):
+        """
+                returns list of individuals who are married to their siblings
+        """
+        file_path = file_path if file_path else get_data_file_path('us18.ged')
+        family_tree = TreeLine().process_data(file_path)
+        us18_fail = []
+        indi_list = family_tree.get_indi_list()
+        for indi in indi_list:
+            real_siblings_list = indi.get_real_siblings(family_tree)
+            spouse_list = indi.get_spouses(family_tree)
+            common_indi_list = set(real_siblings_list) & set(spouse_list)
+            if common_indi_list:
+                for real_sibling in common_indi_list:
+                    warn_msg = f'{indi.name} married sibling {real_sibling.name}'
+                    indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US18', indi.id, warn_msg)
+                    us18_fail.append(indi)
+
+        return us18_fail
