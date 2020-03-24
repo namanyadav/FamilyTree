@@ -21,6 +21,22 @@ class UserStoriesAmTest(unittest.TestCase):
         self.assertNotEqual(self.get_id_list(UserStoriesAm().us06()), [])
         self.assertNotEqual(self.get_id_list(UserStoriesAm().us06()), "")
     
+    def test_us11(self):
+        """ us11 tests """
+
+        fp = get_data_file_path('US11and16.ged')
+        self.assertEqual(self.get_id_list(UserStoriesAm().us11(fp)), ['I4','I7'])
+        self.assertNotEqual(self.get_id_list(UserStoriesAm().us11(fp)), [])
+        self.assertNotEqual(self.get_id_list(UserStoriesAm().us11(fp)), "")
+
+    def test_us16(self):
+        """ us16 tests """
+
+        fp = get_data_file_path('US11and16.ged')
+        self.assertEqual(self.get_id_list(UserStoriesAm().us16(fp)), ['F1'])
+        self.assertNotEqual(self.get_id_list(UserStoriesAm().us16(fp)), [])
+        self.assertNotEqual(self.get_id_list(UserStoriesAm().us16(fp)), "")
+    
     def get_id_list(self, obj_list):
         """ return the individual or family id's """
 
