@@ -17,6 +17,7 @@ class Individual:
         self.famc = None
         self.fams = []
         self.err = None
+        self.err_list = []
         self.tag_name = TreeUtils.INDI
         self.src_file = src_file
 
@@ -168,8 +169,8 @@ class Individual:
             return self.famc
         return family_tree.get(self.famc)
 
-    def add_error(self, us_name, err_msg):
-        self.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, us_name, self.id, err_msg)
+    def add_err(self, err_type, us_name, err_msg):
+        self.err_list.append(TreeError(err_type, TreeError.ON_INDI, us_name, self.id, err_msg))
 
     # get a cleaned up version of the id
     @staticmethod
