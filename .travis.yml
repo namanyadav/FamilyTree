@@ -13,14 +13,14 @@ on:
 before_install:
   - python --version
   - pip install -U pip
-  - pip install python-dateutil
-  - pip install PrettyTable
+#  - pip install python-dateutil
+#  - pip install PrettyTable
 #  - pip install -U pytest
 # command to install dependencies
 install:
-#  - pip install -r requirements.txt
+  - pip install -r requirements.txt
 #  - pip install ".[test]" . # install package + test dependencies
 # command to run tests
 script:
-  - python -m com.familytree.tests.stories_test_suite
+  - python run_tests.py
   - python run_app.py
