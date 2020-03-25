@@ -67,7 +67,7 @@ class TreeUtils:
 
     @staticmethod
     def get_log_file_path():
-        return os.path.join(os.path.realpath(__file__+'/..'), 'logs', 'familytree.log')
+        return os.path.join(os.path.realpath(__file__+'/../../..'), 'logs', 'familytree.log')
 
     @staticmethod
     def init_logger():
@@ -113,7 +113,7 @@ def add_to_date(date1, days=0, months=0, years=0):
 
 
 def get_data_file_path(file_name):
-    return os.path.join(os.path.realpath(__file__ + '/..'), 'data', file_name)
+    return os.path.join(os.path.realpath(__file__ + '/../../..'), 'data', file_name)
 
 
 def print_list(obj_list, list_name=None):
@@ -123,7 +123,7 @@ def print_list(obj_list, list_name=None):
 
 
 def get_log_file_path():
-    return os.path.join(os.path.realpath(__file__+'/..'), 'logs', 'familytree.log')
+    return os.path.join(os.path.realpath(__file__+'/../../..'), 'logs', 'familytree.log')
 
 
 def get_id_list(obj_list):
