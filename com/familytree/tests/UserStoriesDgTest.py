@@ -34,6 +34,20 @@ class UserStoriesDgTest(unittest.TestCase):
         self.assertEqual(UserStoriesDg().get_id_list(UserStoriesDg().us15(get_data_file_path('us12&15.ged'))), ['F1'])
         self.assertNotEqual(UserStoriesDg().get_id_list(UserStoriesDg().us15(get_data_file_path('us12&15.ged'))), ['US0507F1', 'US0507F3'])
         self.assertNotEqual(UserStoriesDg().get_id_list(UserStoriesDg().us15(get_data_file_path('us12&15.ged'))), [])
+    
+    def test_us23(self):
+        """ us23 tests """
+
+        self.assertEqual(UserStoriesDg().get_id_list(UserStoriesDg().us23(get_data_file_path('US23&25.ged'))), ['I3', 'I5', 'I7', 'I9'])
+        self.assertNotEqual(UserStoriesDg().get_id_list(UserStoriesDg().us23(get_data_file_path('US23&25.ged'))), ['I3', 'I5'])
+        self.assertNotEqual(UserStoriesDg().get_id_list(UserStoriesDg().us23(get_data_file_path('US23&25.ged'))), [])
+
+    def test_us25(self):
+        """ us25 tests """
+
+        self.assertEqual(UserStoriesDg().get_id_list(UserStoriesDg().us25(get_data_file_path('US23&25.ged'))), ['F1', 'F3'])
+        self.assertNotEqual(UserStoriesDg().get_id_list(UserStoriesDg().us25(get_data_file_path('US23&25.ged'))), ['F1'])
+        self.assertNotEqual(UserStoriesDg().get_id_list(UserStoriesDg().us25(get_data_file_path('US23&25.ged'))), "")
 
 
 if __name__ == "__main__":
