@@ -37,6 +37,8 @@ def suite():
     test_suite.addTest(UserStoriesAmTest('test_us06'))
     test_suite.addTest(UserStoriesAmTest('test_us11'))
     test_suite.addTest(UserStoriesAmTest('test_us16'))
+    test_suite.addTest(UserStoriesAmTest('test_us27'))
+    test_suite.addTest(UserStoriesAmTest('test_us30'))
 
     return test_suite
 
