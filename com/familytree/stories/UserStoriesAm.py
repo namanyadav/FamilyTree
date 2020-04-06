@@ -134,5 +134,5 @@ class UserStoriesAm:
                 indi_list_us30.append(indi)
             else:
                 continue
-        print("Individuals Living Married"x)
+        print("Individuals Living Married")
         return indi_list_us30                                 
