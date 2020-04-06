@@ -41,9 +41,9 @@ class UserStoriesAmTest(unittest.TestCase):
         """ us27 tests """
 
         fp = get_data_file_path('US27and30.ged')
-        self.assertEqual(self.get_id_list(UserStoriesAm().us27(fp)), {'I1': 44, 'I2' : 39,'I3': 19,'I4': 19,'I5': 17,'I6': 16,'I7': 16,'I8': 17})
-        self.assertNotEqual(self.get_id_list(UserStoriesAm().us27(fp)), [])
-        self.assertNotEqual(self.get_id_list(UserStoriesAm().us27(fp)), "")
+        self.assertEqual(UserStoriesAm().us27(fp), {'I1': 44, 'I2' : 39,'I3': 19,'I4': 19,'I5': 17,'I6': 16,'I7': 16,'I8': 17})
+        self.assertNotEqual(UserStoriesAm().us27(fp), [])
+        self.assertNotEqual(UserStoriesAm().us27(fp), "")
 
     def test_us30(self):
         """ us30 tests """
