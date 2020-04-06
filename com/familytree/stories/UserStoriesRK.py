@@ -4,6 +4,7 @@ from com.familytree.TreeUtils import TreeUtils, get_data_file_path
 from com.familytree.Tree import Tree
 from com.familytree.TreeError import TreeError
 from collections import defaultdict
+from prettytable import PrettyTable
 
 class UserStoriesRK:
 
@@ -78,7 +79,47 @@ class UserStoriesRK:
                 fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US21', fam.id, warn_msg)
                 fail_list_us21.append(fam)
         return fail_list_us21
-                        
+    
+    def us29(self, file_path = None):
+        """List all deceased individuals in a GEDCOM file"""
+        file_path = file_path if file_path else get_data_file_path('us03&04.ged')
+        processed_tree = TreeLine().process_data("./com/familytree/data/us03&04.ged")
+        indi_list = processed_tree.get_sorted_list(UserStoriesRK.INDI_TAG)
+        indi_deceasedlist_us29 = []
+        pt = PrettyTable()
+        pt.field_names = ["ID", "Name", "Birth", "Death"]
+        for indi in indi_list:
+            if indi.deat != None:
+                pt.add_row([indi.id, indi.name, indi.birt, indi.deat])
+                indi_deceasedlist_us29.append(indi)
+        print("List of all deceased individuals")    
+        print(pt)
+        return indi_deceasedlist_us29
+
+    def us28(self, file_path = None):
+        """List siblings in families by decreasing age, i.e. oldest siblings first"""
+        file_path = file_path if file_path else get_data_file_path("./com/familytree/data/us28.ged")
+        processed_tree = TreeLine().process_data("./com/familytree/data/us28.ged")
+        fam_list = processed_tree.get_sorted_list(UserStoriesRK.FAM_TAG)
+        pt = PrettyTable()
+        pt.field_names = ["Family ID", "siblings"]
+        sib_list = []
+        fam_list_us28 = []
+        for fam in fam_list:
+            sib_list = fam.chil
+            dict1 = defaultdict(list)
+            if len(sib_list) != 0:
+                for sib in sib_list:
+                    dict1[processed_tree.get(sib).get_age()].append(sib)
+                    lst1 = sorted(dict1.keys(), reverse=True)
+                    lst2 = []
+                for i in lst1:
+                    lst2.extend(dict1[i])
+                pt.add_row([fam.id, lst2])
+                fam_list_us28.append(lst2)
+        print(pt)
+        return fam_list_us28
+   
     def get_id_list(self, obj_list):
         """ Returns id of family or individual"""
         id_list = []
