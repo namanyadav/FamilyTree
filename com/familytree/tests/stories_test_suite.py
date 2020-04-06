@@ -21,11 +21,15 @@ def suite():
     test_suite.addTest(UserStoriesRKTest('test_us04'))
     test_suite.addTest(UserStoriesRKTest('test_us14'))
     test_suite.addTest(UserStoriesRKTest('test_us21'))
+    test_suite.addTest(UserStoriesRKTest('test_us28'))
+    test_suite.addTest(UserStoriesRKTest('test_us29'))
 
     test_suite.addTest(UserStoriesDgTest('test_us05'))
     test_suite.addTest(UserStoriesDgTest('test_us07'))
-    test_suite.addTest(UserStoriesDgTest('test_us05'))
-    test_suite.addTest(UserStoriesDgTest('test_us07'))
+    test_suite.addTest(UserStoriesDgTest('test_us12'))
+    test_suite.addTest(UserStoriesDgTest('test_us15'))
+    test_suite.addTest(UserStoriesDgTest('test_us23'))
+    test_suite.addTest(UserStoriesDgTest('test_us25'))
 
     test_suite.addTest(UserStoriesMSKTest('test_us09'))
     test_suite.addTest(UserStoriesMSKTest('test_us10'))
@@ -37,6 +41,8 @@ def suite():
     test_suite.addTest(UserStoriesAmTest('test_us06'))
     test_suite.addTest(UserStoriesAmTest('test_us11'))
     test_suite.addTest(UserStoriesAmTest('test_us16'))
+    test_suite.addTest(UserStoriesAmTest('test_us27'))
+    test_suite.addTest(UserStoriesAmTest('test_us30'))
 
     return test_suite
 
