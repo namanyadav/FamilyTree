@@ -5,6 +5,7 @@ from com.familytree.TreeError import TreeError
 from com.familytree.TreeUtils import TreeUtils, date_greater_than
 from com.familytree.TreeLine import TreeLine
 from com.familytree.Tree import Tree
+from collections import defaultdict
 
 class UserStoriesDg:
 
@@ -88,8 +89,52 @@ class UserStoriesDg:
                     else:
                         warn_msg = f'Mother should be less than 60 years than their child - {family_tree.get(child).name}'
                     fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US12', child, warn_msg)
-                    fam_list_us12.append(fam)
+                    fam_list_us12.append(family_tree.get(child))
         return fam_list_us12
+
+    def us23(self, file_path=None):
+        """ returns a list of individuals with the same name and birth date """
+        ind_list = self.get_treedata(file_path).get_sorted_list(UserStoriesDg.INDI_TAG)
+        ind_list_us23 = []
+        ind_dict = {}
+        for ind in ind_list:
+            if ind.name and ind.get_birth_date():
+                ind.name = ind.name.replace('/', '')
+                if ind.name not in ind_dict:
+                    ind_dict[ind.name] = ind.get_birth_date()
+                else:
+                    if ind.get_birth_date() == ind_dict[ind.name]:
+                        warn_msg = f'More than one individual has same name - {ind.name} and birthdate - {ind.get_birth_date(TreeUtils.OUTPUT_DATE_FORMAT)}'
+                        ind.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US23', ind.id, warn_msg)
+                        ind_list_us23.append(ind)
+                        continue
+                    else:
+                        ind_dict[ind.name] = ind.get_birth_date()
+        return ind_list_us23
+
+    def us25(self, file_path=None):
+        """ returns a children list with the same first name and birth date in a family """
+        family_tree = self.get_treedata(file_path)
+        fam_list = family_tree.get_sorted_list(UserStoriesDg.FAM_TAG)
+        fam_list_us25 = []
+        for fam in fam_list: 
+            fam_dict = {}
+            for child in fam.chil:
+                childname = family_tree.get(child).name
+                child_birthdate = family_tree.get(child).get_birth_date()
+                if childname and child_birthdate:
+                    childname = family_tree.get(child).name.replace('/','').split(' ')[0]
+                    if childname not in fam_dict:
+                        fam_dict[childname] = child_birthdate
+                    else:
+                        if child_birthdate == fam_dict[childname]:
+                            warn_msg = f'More than one child has the same first name - {childname} and birthdate - {family_tree.get(child).get_birth_date(TreeUtils.OUTPUT_DATE_FORMAT)}'
+                            fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_FAM, 'US25', fam.id, warn_msg)
+                            fam_list_us25.append(fam)
+                            continue
+                        else:
+                            fam_dict[childname] = child_birthdate
+        return fam_list_us25
 
     def get_id_list(self, obj_list):
         """ return the individual or family id's """

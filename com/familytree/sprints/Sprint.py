@@ -73,6 +73,8 @@ class Sprint:
         error_list.extend(usny.us26(fp))
         usam.us27(fp)
         usam.us30(fp)
+        error_list.extend(usdg.us23(fp))
+        error_list.extend(usdg.us25(fp))
         TreeUtils.print_report('Sprint 3 Report', error_list)
         Sprint.logger.error('######################################## ending sprint 3 ... ########################################\n')
 
