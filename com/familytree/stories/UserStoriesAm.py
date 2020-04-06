@@ -4,6 +4,8 @@ from com.familytree.TreeError import TreeError
 from com.familytree.TreeLine import TreeLine
 from com.familytree.Tree import Tree
 from com.familytree.TreeUtils import TreeUtils, get_data_file_path
+from prettytable import PrettyTable
+
 
 
 class UserStoriesAm:
@@ -107,4 +109,30 @@ class UserStoriesAm:
                     continue
     
         return indi_list_us16_fail
+    
+    def us27(self, file_path=None):
+        """ returns list of individuals with their ages"""
+        family_tree = TreeLine().process_data(file_path)
+        indi_list = family_tree.get_sorted_list(UserStoriesAm.INDI_TAG)
+        indi_list_us27 = []
+        dictt = defaultdict(int)
+        for indi in indi_list:
+            dictt[indi.id] = indi.get_age()
+        return dictt
 
+
+    def us30(self, file_path=None):
+        """ returns list of sll living married people """
+        family_tree = TreeLine().process_data(file_path)
+        x = PrettyTable()
+        indi_list_us30 = []
+        indi_list = family_tree.get_sorted_list(UserStoriesAm.INDI_TAG)
+        x.field_names = ["ID","Name","Gender","Number of spouses"]
+        for indi in indi_list:
+            if indi.fams and indi.get_death_date() == None:
+                x.add_row([indi.id, indi.name, indi.sex, len(indi.fams)])
+                indi_list_us30.append(indi)
+            else:
+                continue
+        print("Individuals Living Married")
+        return indi_list_us30                                 
