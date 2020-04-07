@@ -88,7 +88,7 @@ class UserStoriesDg:
                         warn_msg = f'Father should be less than 80 years than their child - {family_tree.get(child).name}'
                     else:
                         warn_msg = f'Mother should be less than 60 years than their child - {family_tree.get(child).name}'
-                    fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US12', child, warn_msg)
+                    (family_tree.get(child)).err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US12', child, warn_msg)
                     fam_list_us12.append(family_tree.get(child))
         return fam_list_us12
 
