@@ -118,7 +118,8 @@ class Individual:
         for family in spouse_families:
             husband = family.get_husb(family_tree)
             wife = family.get_wife(family_tree)
-            spouses.append(husband) if husband.id != self.id else spouses.append(wife)
+            if husband and wife:
+                spouses.append(husband) if husband.id != self.id else spouses.append(wife)
 
         return spouses
 
