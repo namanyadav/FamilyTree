@@ -143,3 +143,63 @@ class UserStoriesMSK:
                     us18_fail.append(indi)
 
         return us18_fail
+
+    def us20(self, file_path=None):
+        """
+                        returns list of individuals who are married to Aunts and uncles
+        """
+        file_path = file_path if file_path else get_data_file_path('US20.ged')
+        family_tree = TreeLine().process_data(file_path)
+        us20_fail = []
+        indi_list = family_tree.get_indi_list()
+        for indi in indi_list:
+            # print("indi: ",indi)
+            indi_father = indi.get_father(family_tree)
+            indi_mother = indi.get_mother(family_tree)
+            # spouse_list = indi.get_spouses(family_tree)
+            if indi_father:
+                # print("indi: ",indi.name, " father: ", indi_father.name)
+                father_real_sibling_list = indi_father.get_real_siblings(family_tree)
+                if father_real_sibling_list:
+                    spouse_list = indi.get_spouses(family_tree)
+                    common_indi_list = set(father_real_sibling_list) & set(spouse_list)
+                    if common_indi_list:
+                        for father_real_sibling in common_indi_list:
+                            warn_msg = f'{indi.name} married fathers sibling {father_real_sibling.name}'
+                            # print("warn_msg: ", warn_msg)
+                            indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US20', indi.id, warn_msg)
+                            us20_fail.append(indi)
+
+            if indi_mother:
+                # print("indi: ", indi.name, " mother: ", indi_mother.name)
+                mother_real_sibling_list = indi_mother.get_real_siblings(family_tree)
+                if mother_real_sibling_list:
+                    spouse_list = indi.get_spouses(family_tree)
+                    common_indi_list = set(mother_real_sibling_list) & set(spouse_list)
+                    if common_indi_list:
+                        for mother_real_sibling in common_indi_list:
+                            warn_msg = f'{indi.name} married mothers sibling {mother_real_sibling.name}'
+                            # print("warn_msg: ", warn_msg)
+                            indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US20', indi.id, warn_msg)
+                            us20_fail.append(indi)
+
+        return us20_fail
+
+    def us31(self, file_path=None):
+        """"
+                        returns list of living individuals who are over 30 and have never been married
+        """
+        file_path = file_path if file_path else get_data_file_path('US31.ged')
+        family_tree = TreeLine().process_data(file_path)
+        us31_fail = []
+        indi_list = family_tree.get_indi_list()
+        for indi in indi_list:
+            spouse_list = indi.get_spouses(family_tree)
+            if len(spouse_list) == 0:
+                age = indi.get_age()
+                if age and age > 30:
+                    warn_msg = f'{indi.name} age is {age} and has never been married'
+                    print(warn_msg)
+                    indi.err = TreeError(TreeError.TYPE_ANOMALY, TreeError.ON_INDI, 'US31', indi.id, warn_msg)
+                    us31_fail.append(indi)
+        return us31_fail
