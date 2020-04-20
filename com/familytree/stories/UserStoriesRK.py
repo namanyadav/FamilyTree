@@ -152,9 +152,7 @@ class UserStoriesRK:
                     warn_msg = f"Children {list_children} in {fam.id} has multiple births"
                     fam.err = TreeError(TreeError.TYPE_ANOMALY, TreeError.ON_FAM, 'US32', fam.id, warn_msg)
                     fam_list_us32.append(fam)
-
         return fam_list_us32
-
                        
     def us24(self, file_path=None):
         """No more than one family with the same spouses by name and the same marriage date should appear in a GEDCOM file"""
@@ -184,13 +182,8 @@ class UserStoriesRK:
                     else:
                         fam_dict1[mrg_dt] = husb_name
                         fam_dict2[mrg_dt] = wife_name
-
-        
         return fam_list_us24
-
                         
-
-   
     def get_id_list(self, obj_list):
         """ Returns id of family or individual"""
         id_list = []
