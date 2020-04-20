@@ -83,6 +83,18 @@ class Sprint:
         Sprint.logger.error('######################################## ending sprint 3 ... ########################################\n')
 
     @staticmethod
+    def run_sprint4():
+        error_list = []
+        fp = get_data_file_path('us33&35.ged')
+        Sprint.logger.error('######################################## starting sprint 4 ... ########################################')
+        Tree().grow(fp).pretty_print()
+        usny, usmsk, usam, usdg, usrk = UserStoriesNy(), UserStoriesMSK(), UserStoriesAm(), UserStoriesDg(), UserStoriesRK()
+        error_list.extend(usdg.us33(fp))
+        error_list.extend(usdg.us35(fp))
+        TreeUtils.print_report('Sprint 4 Report', error_list)
+        Sprint.logger.error('######################################## ending sprint 4 ... ########################################\n')
+
+    @staticmethod
     def run_sprint_test():
         error_list = []
         # fp = os.path.join(os.path.realpath('.'), 'com', 'familytree', 'data', 'us10.ged')
