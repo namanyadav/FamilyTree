@@ -161,9 +161,10 @@ class UserStoriesDg:
         ind_list_us35 = []
         for indi in ind_list:
             indi_birth_date = indi.get_birth_date()
-            recent_birth_date =  datetime.today() - relativedelta(days = 30)
-            if indi_birth_date and indi_birth_date <= datetime.today() and indi_birth_date >= recent_birth_date:
-                warn_msg = f'individual {indi.name} is born in last 30 days'
+            # recent_birth_date =  datetime.today() - relativedelta(days = 30)
+            date_diff = (datetime.today() - indi_birth_date).days
+            if indi_birth_date and date_diff >= 0 and date_diff <= 30 :
+                warn_msg = f'Individual {indi.name} is born in last 30 days'
                 indi.err = TreeError(TreeError.TYPE_ANOMALY, TreeError.ON_INDI, 'US35', indi.id, warn_msg)
                 ind_list_us35.append(indi)
         return ind_list_us35
