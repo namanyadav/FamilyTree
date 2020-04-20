@@ -50,6 +50,8 @@ def suite():
     test_suite.addTest(UserStoriesAmTest('test_us16'))
     test_suite.addTest(UserStoriesAmTest('test_us27'))
     test_suite.addTest(UserStoriesAmTest('test_us30'))
+    test_suite.addTest(UserStoriesAmTest('test_us34'))
+    test_suite.addTest(UserStoriesAmTest('test_us36'))
 
     return test_suite
 

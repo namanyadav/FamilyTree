@@ -5,6 +5,7 @@ from com.familytree.TreeLine import TreeLine
 from com.familytree.Tree import Tree
 from com.familytree.TreeUtils import TreeUtils, get_data_file_path
 from prettytable import PrettyTable
+from dateutil.relativedelta import relativedelta
 
 
 
@@ -122,7 +123,7 @@ class UserStoriesAm:
 
 
     def us30(self, file_path=None):
-        """ returns list of sll living married people """
+        """ returns list of all living married people """
         family_tree = TreeLine().process_data(file_path)
         x = PrettyTable()
         indi_list_us30 = []
@@ -134,5 +135,46 @@ class UserStoriesAm:
                 indi_list_us30.append(indi)
             else:
                 continue
-        print("Individuals Living Married\n",x)
-        return indi_list_us30                                 
+        print("US_30 : Individuals Living Married\n",x)
+        return indi_list_us30 
+
+    def us34(self, file_path=None):
+        """ returns all the couples who were married when the older spouse was more than twice as old as the younger spouse """ 
+        file_path = file_path if file_path else get_data_file_path('US34.ged')
+        family_tree = TreeLine().process_data(file_path)
+        fam_list = family_tree.get_fam_list()
+        fam_list_us34 = []
+        x = PrettyTable()
+        x.field_names = ["Family ID","Husband Name","Wife Name"]
+        for fam in fam_list:
+            marriage_date = fam.get_marr_date() 
+            if marriage_date:
+                husband_birth_date = family_tree.get(fam.husb).get_birth_date() if family_tree.get(fam.husb) else None
+                wife_birth_date = family_tree.get(fam.wife).get_birth_date() if family_tree.get(fam.wife) else None
+                husb_age = marriage_date - husband_birth_date
+                wife_age = marriage_date - wife_birth_date
+                if wife_age >= 2*husb_age or husb_age >= 2*wife_age:
+                    x.add_row([fam.id,family_tree.get(fam.husb).name,family_tree.get(fam.wife).name])
+                    fam_list_us34.append(fam)
+        print("US_34 : Couples who were married when the older spouse was twice as old as younger spouse\n",x)
+        return fam_list_us34 
+
+    def us36(self, file_path=None):
+        """returns list of all the people who died in the last 30 days """ 
+        family_tree = TreeLine().process_data(file_path) 
+        indi_list_us36 = []
+        x = PrettyTable()
+        x.field_names = ["Individual ID","Name"]
+        indi_list = family_tree.get_sorted_list(UserStoriesAm.INDI_TAG) 
+        for indi in indi_list:
+            death_date = indi.get_death_date()
+            if death_date:   
+                days_diff = datetime.today() - death_date  
+                if days_diff.days > 0  and days_diff.days<=30:
+                    x.add_row([indi.id,indi.name])
+                    indi_list_us36.append(indi)
+        print("US_36 : List of people who died in last 30 days\n",x)
+        return indi_list_us36
+    
+
+    
