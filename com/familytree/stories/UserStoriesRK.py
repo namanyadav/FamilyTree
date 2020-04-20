@@ -127,6 +127,64 @@ class UserStoriesRK:
             print("List of siblings by decreasing age")
             print(pt)
         return fam_list_us28
+
+    def us32(self, file_path=None):
+        """List all multiple births in a GEDCOM file"""
+        file_path = file_path if file_path else get_data_file_path('US14.ged')
+        processed_tree = TreeLine().process_data(file_path)
+        fam_list = processed_tree.get_sorted_list(UserStoriesRK.FAM_TAG)
+        fam_list_us32 = []
+    
+        for fam in fam_list:
+            if len(fam.chil) >= 2:
+                cnt_dict = defaultdict(int)
+                birth_dict = {}
+                for child in fam.chil:
+                    birthdate = processed_tree.get(child).get_birth_date()
+                    if birthdate:
+                        cnt_dict[birthdate] += 1
+                        birth_dict[birthdate].append(child)
+
+                for key in cnt_dict:
+                    if cnt_dict[key] >= 2:
+                        warn_msg = f" {birth_dict[key]} in {fam.id} has multiple births"
+                        fam.err = TreeError(TreeError.TYPE_ANOMALY, TreeError.ON_INDI, 'US32', fam.id, warn_msg)
+                        fam_list_us32.append(fam)
+
+        return fam_list_us32.append(fam)
+
+                       
+    def us24(self, file_path=None):
+        """No more than one family with the same spouses by name and the same marriage date should appear in a GEDCOM file"""
+        file_path = file_path if file_path else get_data_file_path('US24.ged')
+        processed_tree = TreeLine().process_data(file_path)
+        fam_list = processed_tree.get_sorted_list(UserStoriesRK.FAM_TAG)
+        fam_list_us24 = []
+        fam_dict1 = {}
+        fam_dict2 = {}
+        for fam in fam_list:
+            mrg_dt = fam.get_marr_date()
+            if fam.Husband and fam.Wife and mrg_dt:
+                fam.Husband = fam.husb.replace('/', '')
+                fam.Wife = fam.wife.replace('/', '')
+                if mrg_dt not in fam_dict1:
+                    fam_dict1[mrg_dt] = fam.Husband
+                    fam_dict2[mrg_dt] = fam.Wife
+                else:
+                    if fam_dict1[mrg_dt] == fam.Husband and fam_dict2[mrg_dt] == fam.Wife:
+                        warn_msg = f'more than one family with same spouse names {fam.Husband}, {fam.Wife} and same marriage date {mrg_dt}'
+                        fam.err = TreeError(TreeError.TYPE_ANOMALY, TreeError.ON_INDI, 'US24', fam.id, warn_msg)
+                        fam_list_us24.append(fam)
+                        continue
+                    else:
+                        fam_dict1[mrg_dt] = fam.Husband
+                        fam_dict2[mrg_dt] = fam.Wife
+
+        
+        return fam_list_us24
+
+                        
+
    
     def get_id_list(self, obj_list):
         """ Returns id of family or individual"""
