@@ -52,6 +52,22 @@ class UserStoriesAmTest(unittest.TestCase):
         self.assertEqual(self.get_id_list(UserStoriesAm().us30(fp)), ['I1','I2','I4','I5','I6','I7'])
         self.assertNotEqual(self.get_id_list(UserStoriesAm().us30(fp)), [])
         self.assertNotEqual(self.get_id_list(UserStoriesAm().us30(fp)), "")
+    
+    def test_us34(self):
+        """ us34 tests """
+
+        fp = get_data_file_path('US34and36.ged')
+        self.assertEqual(self.get_id_list(UserStoriesAm().us34(fp)), ['F1'])
+        self.assertNotEqual(self.get_id_list(UserStoriesAm().us34(fp)), [])
+        self.assertNotEqual(self.get_id_list(UserStoriesAm().us34(fp)), "")
+    
+    def test_us36(self):
+        """ us36 tests """
+
+        fp = get_data_file_path('US34and36.ged')
+        self.assertEqual(self.get_id_list(UserStoriesAm().us36(fp)), ['I8'])
+        self.assertNotEqual(self.get_id_list(UserStoriesAm().us36(fp)), [])
+        self.assertNotEqual(self.get_id_list(UserStoriesAm().us36(fp)), "")
 
     
     def get_id_list(self, obj_list):

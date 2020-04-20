@@ -145,7 +145,7 @@ class UserStoriesAm:
         fam_list = family_tree.get_fam_list()
         fam_list_us34 = []
         x = PrettyTable()
-        x.field_names = ["Husband Name","Wife Name"]
+        x.field_names = ["Family ID","Husband Name","Wife Name"]
         for fam in fam_list:
             marriage_date = fam.get_marr_date() 
             if marriage_date:
@@ -154,7 +154,7 @@ class UserStoriesAm:
                 husb_age = marriage_date - husband_birth_date
                 wife_age = marriage_date - wife_birth_date
                 if wife_age >= 2*husb_age or husb_age >= 2*wife_age:
-                    x.add_row([family_tree.get(fam.husb).name,family_tree.get(fam.wife).name])
+                    x.add_row([fam.id,family_tree.get(fam.husb).name,family_tree.get(fam.wife).name])
                     fam_list_us34.append(fam)
         print("US_34 : Couples who were married when the older spouse was twice as old as younger spouse\n",x)
         return fam_list_us34 
@@ -164,14 +164,14 @@ class UserStoriesAm:
         family_tree = TreeLine().process_data(file_path) 
         indi_list_us36 = []
         x = PrettyTable()
-        x.field_names = ["Name"]
+        x.field_names = ["Individual ID","Name"]
         indi_list = family_tree.get_sorted_list(UserStoriesAm.INDI_TAG) 
         for indi in indi_list:
             death_date = indi.get_death_date()
-            recent_death_date = datetime.today() - relativedelta(days = 30)
-            if death_date:       
-                if death_date <= datetime.today()  and death_date >= recent_death_date:
-                    x.add_row([indi.name])
+            if death_date:   
+                days_diff = datetime.today() - death_date  
+                if days_diff.days > 0  and days_diff.days<=30:
+                    x.add_row([indi.id,indi.name])
                     indi_list_us36.append(indi)
         print("US_36 : List of people who died in last 30 days\n",x)
         return indi_list_us36
