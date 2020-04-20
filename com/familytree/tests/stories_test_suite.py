@@ -25,6 +25,8 @@ def suite():
     test_suite.addTest(UserStoriesRKTest('test_us21'))
     test_suite.addTest(UserStoriesRKTest('test_us28'))
     test_suite.addTest(UserStoriesRKTest('test_us29'))
+    test_suite.addTest(UserStoriesRKTest('test_us24'))
+    test_suite.addTest(UserStoriesRKTest('test_us32'))
 
     test_suite.addTest(UserStoriesDgTest('test_us05'))
     test_suite.addTest(UserStoriesDgTest('test_us07'))
