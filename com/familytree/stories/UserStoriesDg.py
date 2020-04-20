@@ -6,6 +6,7 @@ from com.familytree.TreeUtils import TreeUtils, date_greater_than
 from com.familytree.TreeLine import TreeLine
 from com.familytree.Tree import Tree
 from collections import defaultdict
+from dateutil.relativedelta import relativedelta
 
 class UserStoriesDg:
 
@@ -135,6 +136,38 @@ class UserStoriesDg:
                         else:
                             fam_dict[childname] = child_birthdate
         return fam_list_us25
+
+
+    def us33(self, file_path=None):
+        """ returns a list of all orphaned children with age lessthan 18 years """
+        family_tree = self.get_treedata(file_path)
+        fam_list = family_tree.get_sorted_list(UserStoriesDg.FAM_TAG)
+        ind_list_us33 = []
+        for fam in fam_list:
+            hus_death_date = family_tree.get(fam.husb).get_death_date()
+            wife_death_date = family_tree.get(fam.wife).get_death_date()
+            if hus_death_date and wife_death_date:
+                for child in fam.chil:
+                    child_age = family_tree.get(child).get_age()
+                    if child_age < 18:
+                        warn_msg = f'{family_tree.get(child).name} is an orphan'
+                        family_tree.get(child).err = TreeError(TreeError.TYPE_ANOMALY, TreeError.ON_INDI, 'US33', child, warn_msg)
+                        ind_list_us33.append(family_tree.get(child))
+        return ind_list_us33
+    
+    def us35(self, file_path=None):
+        """ returns a list of individuals who are born in last 30 days"""
+        ind_list = self.get_treedata(file_path).get_sorted_list(UserStoriesDg.INDI_TAG)
+        ind_list_us35 = []
+        for indi in ind_list:
+            indi_birth_date = indi.get_birth_date()
+            # recent_birth_date =  datetime.today() - relativedelta(days = 30)
+            date_diff = (datetime.today() - indi_birth_date).days
+            if indi_birth_date and date_diff >= 0 and date_diff <= 30 :
+                warn_msg = f'Individual {indi.name} is born in last 30 days'
+                indi.err = TreeError(TreeError.TYPE_ANOMALY, TreeError.ON_INDI, 'US35', indi.id, warn_msg)
+                ind_list_us35.append(indi)
+        return ind_list_us35
 
     def get_id_list(self, obj_list):
         """ return the individual or family id's """

@@ -221,3 +221,43 @@ class UserStoriesNy:
             err_on = TreeError.ON_INDI if item.tag_name == TreeUtils.INDI else TreeError.ON_FAM
             item.err = TreeError(TreeError.TYPE_ERROR, err_on, 'US22', item.id, warn_msg)
         return us22_fail
+
+    def us37(self, file_path=None):
+        file_path = file_path if file_path else get_data_file_path('us37.ged')
+        family_tree = Tree(file_path)
+        us37_fail = []
+        indi_list = family_tree.get_indi_list()
+        for indi in indi_list:
+            if(date_greater_than(add_to_date(indi.get_death_date(), days=30),datetime.today())):
+                children = indi.get_children(family_tree)
+                children_name = map(lambda x: x.name, children)
+                warn_msg = f'{indi.name} died in last 30 days [{indi.get_death_date()}], descendents:  [{",".join(children_name)}]'
+                indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US37', indi.id, warn_msg)
+                us37_fail.append(indi)
+
+        return us37_fail
+
+    def us40(self, file_path=None):
+        file_path = file_path if file_path else get_data_file_path('us40.ged')
+        family_tree = Tree(file_path)
+        us40_fail = []
+        indi_list = family_tree.get_indi_list()
+
+        us40_fail = family_tree.duplicate_items
+        for item in us40_fail:
+            warn_msg = f'duplicate item [{item.id}] found at source file line num [{item.line_num}]'
+            item.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US40', item.id, warn_msg)
+        return us40_fail
+
+        # for indi in indi_list:
+        #     cousin_list = indi.get_cousins(family_tree)
+        #     spouse_list = indi.get_spouses(family_tree)
+        #     common_indi_list = set(cousin_list) & set(spouse_list)
+        #     if common_indi_list:
+        #         for cousin in common_indi_list:
+        #             warn_msg = f'{indi.name} married first cousin {cousin.name}; gedcom source indi line num [{indi.line_num}]'
+        #             indi.add_err(TreeError.TYPE_ERROR, 'US40', warn_msg)
+        #     if indi.err or indi.err_list:
+        #         us40_fail.append(indi)
+        #
+        # return us40_fail
