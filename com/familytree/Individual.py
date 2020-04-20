@@ -8,7 +8,7 @@ class Individual:
 
     date_format = '%d %b %Y'
 
-    def __init__(self, id, src_file=None):
+    def __init__(self, id, src_file=None, line_num=None):
         self.id = self.get_clean_id(id)
         self.name = None
         self.sex = None
@@ -20,6 +20,7 @@ class Individual:
         self.err_list = []
         self.tag_name = TreeUtils.INDI
         self.src_file = src_file
+        self.line_num = line_num
 
     def __str__(self):
         return f'{self.tag_name}|{self.id}|{self.name}|{self.sex}|{self.birt}|{self.deat}|{self.famc}|{self.fams}'

@@ -81,23 +81,40 @@ class Sprint:
         Sprint.logger.error('######################################## ending sprint 3 ... ########################################\n')
 
     @staticmethod
-    def run_sprint_test():
+    def run_sprint4():
         error_list = []
-        # fp = os.path.join(os.path.realpath('.'), 'com', 'familytree', 'data', 'us10.ged')
-        fp = get_data_file_path('us26.ged')
-        try:
-            family_tree = Tree().grow(fp)
-            family_tree.pretty_print()
-            error_list.extend(UserStoriesNy().us26(fp))
-            TreeUtils.print_report('US 26', error_list)
-        except FileNotFoundError:
-            print(f'File not found: {fp}')
-        except Exception as e:
-            # print(f'Exception occurred: {str(e)}')
-            # e.print_exception()
-            traceback.print_exc(file=sys.stderr)
-            # track = traceback.format_exc()
-            # print(track)
+        fp = get_data_file_path('data_sprint_4.ged')
+        Sprint.logger.error(
+            '######################################## starting sprint 4 ... ########################################')
+        Tree().grow(fp).pretty_print()
+        usny, usmsk, usam, usdg, usrk = UserStoriesNy(), UserStoriesMSK(), UserStoriesAm(), UserStoriesDg(), UserStoriesRK()
+        error_list.extend(usny.us37(fp))
+        error_list.extend(usny.us40(fp))
+        TreeUtils.print_report('Sprint 4 Report', error_list)
+        Sprint.logger.error(
+            '######################################## ending sprint 4 ... ########################################\n')
+
+    @staticmethod
+    def run_sprint_test():
+        usny = UserStoriesNy()
+        error_list = usny.us37()
+        TreeUtils.print_report('Sprint 4 Report', error_list)
+        # error_list = []
+        # # fp = os.path.join(os.path.realpath('.'), 'com', 'familytree', 'data', 'us10.ged')
+        # fp = get_data_file_path('us26.ged')
+        # try:
+        #     family_tree = Tree().grow(fp)
+        #     family_tree.pretty_print()
+        #     error_list.extend(UserStoriesNy().us26(fp))
+        #     TreeUtils.print_report('US 26', error_list)
+        # except FileNotFoundError:
+        #     print(f'File not found: {fp}')
+        # except Exception as e:
+        #     # print(f'Exception occurred: {str(e)}')
+        #     # e.print_exception()
+        #     traceback.print_exc(file=sys.stderr)
+        #     # track = traceback.format_exc()
+        #     # print(track)
 
 
 if __name__ == '__main__':
