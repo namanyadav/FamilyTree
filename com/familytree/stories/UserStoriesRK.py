@@ -95,7 +95,7 @@ class UserStoriesRK:
                 pt.add_row([indi.id, indi.name, indi.birt, indi.deat])
                 indi_deceasedlist_us29.append(indi)
         if hasrows:
-            print("List of all deceased individuals")    
+            print("US29 - List of all deceased individuals ")    
             print(pt)
         return indi_deceasedlist_us29
 
@@ -124,7 +124,7 @@ class UserStoriesRK:
                 pt.add_row([fam.id, lst2])
                 fam_list_us28.append(lst2)
         if hasrows:
-            print("List of siblings by decreasing age")
+            print("US28 - List of siblings by decreasing age")
             print(pt)
         return fam_list_us28
 
