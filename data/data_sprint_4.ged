@@ -67,3 +67,93 @@
 1 DEAT
 2 DATE 10 APR 2020
 1 FAMS @US37US40F2@
+
+0 NOTE ****************************************    US33&35 - START    ************************************************************
+
+0 HEAD
+1 SOUR Family Echo
+2 WWW http://www.familyecho.com/
+1 FILE Family 7
+1 DATE 19 APR 2020
+1 DEST ANSTFILE
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 SUBM @I1@
+2 NAME Divya
+1 SUBN
+1 CHAR UTF-8
+0 @US3335I1@ INDI
+1 NAME Rahul /Kampati/
+2 GIVN Rahul
+2 SURN Kampati
+2 _MARNM Kampati
+1 SEX M
+1 BIRT
+2 DATE 4 MAR 1995
+1 DEAT Y
+2 DATE 3 APR 2018
+1 FAMS @US3335F1@
+1 FAMC @US3335F2@
+0 @US3335I2@ INDI
+1 NAME Rao /Kampati/
+2 GIVN Rao
+2 SURN Kampati
+2 _MARNM Kampati
+1 SEX M
+1 BIRT
+2 DATE 5 MAY 1975
+1 FAMS @US3335F2@
+0 @US3335I3@ INDI
+1 NAME Kadar /Bai/
+2 GIVN Kadar
+2 SURN Bai
+2 _MARNM Kampati
+1 SEX F
+1 BIRT
+2 DATE 4 APR 1978
+1 FAMS @US3335F2@
+0 @US3335I4@ INDI
+1 NAME Rakul /Preeth/
+2 GIVN Rakul
+2 SURN Preeth
+2 _MARNM Kampati
+1 SEX F
+1 BIRT
+2 DATE 3 MAR 1996
+1 DEAT Y
+2 DATE 2 JAN 2019
+1 FAMS @US3335F1@
+0 @US3335I5@ INDI
+1 NAME Raxul /Kampati/
+2 GIVN Raxul
+2 SURN Kampati
+2 _MARNM Kampati
+1 SEX M
+1 BIRT
+2 DATE 4 APR 2020
+1 FAMC @US3335F1@
+0 @US3335I6@ INDI
+1 NAME Rashi /Kampati/
+2 GIVN Rashi
+2 SURN Kampati
+2 _MARNM Kampati
+1 SEX M
+1 BIRT
+2 DATE 10 APR 2020
+1 FAMC @US3335F1@
+0 @US3335F1@ FAM
+1 HUSB @US3335I1@
+1 WIFE @US3335I4@
+1 CHIL @US3335I5@
+1 CHIL @US3335I6@
+1 _CURRENT Y
+0 @US3335F2@ FAM
+1 HUSB @US3335I2@
+1 WIFE @US3335I3@
+1 CHIL @US3335I1@
+1 _CURRENT Y
+0 TRLR
+
+0 NOTE ****************************************   US33&35 - END     ************************************************************
+

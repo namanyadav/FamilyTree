@@ -92,6 +92,8 @@ class Sprint:
         usny, usmsk, usam, usdg, usrk = UserStoriesNy(), UserStoriesMSK(), UserStoriesAm(), UserStoriesDg(), UserStoriesRK()
         error_list.extend(usny.us37(fp))
         error_list.extend(usny.us40(fp))
+        error_list.extend(usdg.us33(fp))
+        error_list.extend(usdg.us35(fp))
         TreeUtils.print_report('Sprint 4 Report', error_list)
         Sprint.logger.error(
             '######################################## ending sprint 4 ... ########################################\n')

@@ -1,0 +1,104 @@
+0 HEAD
+1 SOUR Family Echo
+2 WWW http://www.familyecho.com/
+1 FILE Family 2
+1 DATE 6 APR 2020
+1 DEST ANSTFILE
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 SUBM @I1@
+2 NAME Rahul
+1 SUBN
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME Sunil /Swarna/
+2 GIVN Sunil
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 FAMS @F1@
+1 FAMS @F2@
+0 @I2@ INDI
+1 NAME Harika /Muna/
+2 GIVN Harika
+2 SURN Muna
+2 _MARNM Muna
+1 SEX F
+1 FAMS @F2@
+0 @I3@ INDI
+1 NAME Manas /Swarna/
+2 GIVN Manas
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 5 JAN 1996
+1 FAMC @F2@
+0 @I4@ INDI
+1 NAME Mani /Swarna/
+2 GIVN Mani
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX F
+1 BIRT
+2 DATE 5 JAN 1996
+1 FAMC @F2@
+0 @I5@ INDI
+1 NAME Muna /Swarna/
+2 GIVN Muna
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 7 JAN 1998
+1 FAMC @F2@
+0 @I6@ INDI
+1 NAME Mouni /Swarna/
+2 GIVN Mouni
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX F
+1 FAMS @F1@
+0 @I7@ INDI
+1 NAME Mini /Swarna/
+2 GIVN Mini
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX F
+1 BIRT
+2 DATE 3 MAR 2000
+1 FAMC @F1@
+0 @I8@ INDI
+1 NAME Mega /Swarna/
+2 GIVN Mega
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX M
+1 BIRT
+2 DATE 1 MAY 1999
+1 FAMC @F1@
+0 @I9@ INDI
+1 NAME Ken /Swarna/
+2 GIVN Ken
+2 SURN Swarna
+2 _MARNM Swarna
+1 SEX F
+1 BIRT
+2 DATE 2 MAY 2002
+1 FAMC @F1@
+0 @F1@ FAM
+1 HUSB @I1@
+1 WIFE @I6@
+1 CHIL @I7@
+1 CHIL @I8@
+1 CHIL @I9@
+1 _CURRENT Y
+0 @F2@ FAM
+1 HUSB @I1@
+1 WIFE @I2@
+1 CHIL @I3@
+1 CHIL @I4@
+1 CHIL @I5@
+1 _CURRENT N
+0 TRLR
