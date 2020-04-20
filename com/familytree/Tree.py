@@ -50,7 +50,7 @@ class Tree:
             treeline_list = []
             for line_ind, line in enumerate(file):
                 self.logger.debug(f'reading line {line_ind+1}: {line.strip()}')
-                tl = TreeLine(line, line_ind, line_ind, file_path)
+                tl = TreeLine(line, line_ind+1, line_ind, file_path)
                 # tl.print_line(line)
                 # tl.print_line_info(line)
                 treeline_list.append(tl)
@@ -80,11 +80,11 @@ class Tree:
                         self.put(processed_obj.id, processed_obj)
                     curr_zero_tag = treeline.get_tag_name()
                     if curr_zero_tag == 'INDI':
-                        curr_indi_object = Individual(treeline.get_arguments(), treeline.src_file)
+                        curr_indi_object = Individual(treeline.get_arguments(), treeline.src_file, treeline.line_num)
                         logger.debug(f'treeline[id:{treeline.id}:] initialize new object [{curr_zero_tag}] {curr_indi_object}')
                         curr_obj_map[curr_zero_tag] = curr_indi_object
                     if curr_zero_tag == 'FAM':
-                        curr_fam_object = Family(treeline.get_arguments(), treeline.src_file)
+                        curr_fam_object = Family(treeline.get_arguments(), treeline.src_file, treeline.line_num)
                         logger.debug(f'treeline[id:{treeline.id}:] initialize new object [{curr_zero_tag}] {curr_fam_object}')
                         curr_obj_map[curr_zero_tag] = curr_fam_object
                     # else:
