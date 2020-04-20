@@ -39,6 +39,18 @@ class UserStoriesRKTest(unittest.TestCase):
         self.assertEqual(get_id_list(UserStoriesRK().us29(fp)), ['I01', 'I08'])
         self.assertNotEqual(get_id_list(UserStoriesRK().us29(fp)), ['I01', 'F01'])
 
+    def test_us24(self):
+        """ testing us24"""
+        fp = get_data_file_path('us24.ged')
+        self.assertEqual(UserStoriesRK().us24(fp), ['F1'])
+        self.assertNotEqual(UserStoriesRK().us24(fp), ['I01', 'I03'])
+
+    def test_us32(self):
+        """testing us32"""
+        fp = get_data_file_path('US14.ged')
+        self.assertEqual(get_id_list(UserStoriesRK().us32(fp)), ['F2'])
+        self.assertNotEqual(get_id_list(UserStoriesRK().us32(fp)), ['I01', 'F01'])
+
 
 if __name__ == '__main__':
     unittest.main()
