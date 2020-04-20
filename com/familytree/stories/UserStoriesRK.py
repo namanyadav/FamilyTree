@@ -114,9 +114,10 @@ class UserStoriesRK:
             dict1 = defaultdict(list)
             if len(sib_list) != 0:
                 for sib in sib_list:
-                    dict1[processed_tree.get(sib).get_age()].append(sib)
-                    lst1 = sorted(dict1.keys(), reverse=True)
-                    lst2 = []
+                    if processed_tree.get(sib).get_age():
+                        dict1[processed_tree.get(sib).get_age()].append(sib)
+                        lst1 = sorted(dict1.keys(), reverse=True)
+                        lst2 = []
                 for i in lst1:
                     lst2.extend(dict1[i])
                 hasrows = True
