@@ -6,7 +6,7 @@ from com.familytree.TreeUtils import TreeUtils
 
 class Family:
 
-    def __init__(self, id, src_file=None):
+    def __init__(self, id, src_file=None, line_num=None):
         self.id = self.get_clean_id(id)
         self.marr = None
         self.husb = None
@@ -17,6 +17,7 @@ class Family:
         self.err_list = []
         self.tag_name = TreeUtils.FAM
         self.src_file = src_file
+        self.line_num = line_num
 
     @staticmethod
     def get_clean_id(id):
