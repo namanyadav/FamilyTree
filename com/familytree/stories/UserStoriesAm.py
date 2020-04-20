@@ -135,7 +135,7 @@ class UserStoriesAm:
                 indi_list_us30.append(indi)
             else:
                 continue
-        print("Individuals Living Married\n",x)
+        print("US_30 : Individuals Living Married\n",x)
         return indi_list_us30 
 
     def us34(self, file_path=None):
@@ -159,7 +159,22 @@ class UserStoriesAm:
         print("US_34 : Couples who were married when the older spouse was twice as old as younger spouse\n",x)
         return fam_list_us34 
 
-
+    def us36(self, file_path=None):
+        """returns list of all the people who died in the last 30 days """ 
+        family_tree = TreeLine().process_data(file_path) 
+        indi_list_us36 = []
+        x = PrettyTable()
+        x.field_names = ["Name"]
+        indi_list = family_tree.get_sorted_list(UserStoriesAm.INDI_TAG) 
+        for indi in indi_list:
+            death_date = indi.get_death_date()
+            recent_death_date = datetime.today() - relativedelta(days = 30)
+            if death_date:       
+                if death_date <= datetime.today()  and death_date >= recent_death_date:
+                    x.add_row([indi.name])
+                    indi_list_us36.append(indi)
+        print("US_36 : List of people who died in last 30 days\n",x)
+        return indi_list_us36
     
 
     
