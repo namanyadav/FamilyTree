@@ -43,6 +43,16 @@ class UserStoriesMSKTest(unittest.TestCase):
         error_list = self.stories.us31(get_data_file_path('US31.ged'))
         self.assertEqual(['I1', 'I10', 'I6'], get_id_list(error_list))
 
+    def test_us38(self):
+        """ I1, I3 have failing criteria in US31.ged """
+        error_list = self.stories.us38(get_data_file_path('US38.ged'))
+        self.assertEqual(['I1', 'I3'], get_id_list(error_list))
+
+    def test_us39(self):
+        """ I2, I3, I4 and I5 have failing criteria in US31.ged """
+        error_list = self.stories.us39(get_data_file_path('US39.ged'))
+        self.assertEqual(['I2', 'I3', 'I4', 'I5'], get_id_list(error_list))
+
 
 if __name__ == "__main__":
     unittest.main()
