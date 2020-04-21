@@ -134,7 +134,6 @@ class UserStoriesRK:
         processed_tree = TreeLine().process_data(file_path)
         fam_list = processed_tree.get_sorted_list(UserStoriesRK.FAM_TAG)
         fam_list_us32 = []
-    
         for fam in fam_list:
             if len(fam.chil) >= 2:
                 cnt_dict = defaultdict(int)
@@ -166,7 +165,6 @@ class UserStoriesRK:
             husb_name  = processed_tree.get(fam.husb).name
             wife_name  = processed_tree.get(fam.wife).name
             mrg_dt = fam.get_marr_date(TreeUtils.OUTPUT_DATE_FORMAT)
-            print(mrg_dt)
             if husb_name and wife_name and mrg_dt:
                 husb_name = husb_name.replace('/', '')
                 wife_name = wife_name.replace('/', '')

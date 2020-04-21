@@ -6,7 +6,6 @@ from com.familytree.TreeUtils import TreeUtils, date_greater_than
 from com.familytree.TreeLine import TreeLine
 from com.familytree.Tree import Tree
 from collections import defaultdict
-from dateutil.relativedelta import relativedelta
 
 class UserStoriesDg:
 
