@@ -1,7 +1,3 @@
-import os
-import sys
-import traceback
-
 from com.familytree.Tree import Tree
 from com.familytree.TreeUtils import TreeUtils, get_data_file_path
 from com.familytree.stories.UserStoriesAm import UserStoriesAm
@@ -96,6 +92,8 @@ class Sprint:
         error_list.extend(usdg.us35(fp))
         error_list.extend(usrk.us32(fp))
         error_list.extend(usrk.us24(fp))
+        error_list.extend(usmsk.us38(fp))
+        error_list.extend(usmsk.us39(fp))
         usam.us34(fp)
         usam.us36(fp)
         TreeUtils.print_report('Sprint 4 Report', error_list)

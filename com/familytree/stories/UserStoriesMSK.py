@@ -1,12 +1,9 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from com.familytree.Tree import Tree
 from com.familytree.TreeError import TreeError
 from com.familytree.TreeLine import TreeLine
 from com.familytree.TreeUtils import TreeUtils
-import calendar
-from dateutil.relativedelta import relativedelta
-
 from com.familytree.TreeUtils import date_greater_than, add_to_date, get_data_file_path
 
 
@@ -28,8 +25,12 @@ class UserStoriesMSK:
         indi_list_us09_fail = []
         for indi in indi_list:
             birth_date = indi.get_birth_date()
-            mother_death_date = processed_tree.get(processed_tree.get(indi.famc).wife).get_death_date() if processed_tree.get(indi.famc) and processed_tree.get(processed_tree.get(indi.famc).wife) else None
-            father_death_date = processed_tree.get(processed_tree.get(indi.famc).wife).get_death_date() if processed_tree.get(indi.famc) and processed_tree.get(processed_tree.get(indi.famc).husb) else None
+            mother_death_date = processed_tree.get(
+                processed_tree.get(indi.famc).wife).get_death_date() if processed_tree.get(
+                indi.famc) and processed_tree.get(processed_tree.get(indi.famc).wife) else None
+            father_death_date = processed_tree.get(
+                processed_tree.get(indi.famc).wife).get_death_date() if processed_tree.get(
+                indi.famc) and processed_tree.get(processed_tree.get(indi.famc).husb) else None
 
             if date_greater_than(birth_date, mother_death_date):
                 warn_msg = f"Birthday {indi.get_birth_date(TreeUtils.OUTPUT_DATE_FORMAT)} occurs after mother's death date {mother_death_date.strftime(TreeUtils.OUTPUT_DATE_FORMAT)}"
@@ -39,7 +40,9 @@ class UserStoriesMSK:
                 warn_msg = f"Birthday {indi.get_birth_date(TreeUtils.OUTPUT_DATE_FORMAT)} occurs 9 months after father's death date {father_death_date.strftime(TreeUtils.OUTPUT_DATE_FORMAT)}"
                 indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US09', indi.id, warn_msg)
                 indi_list_us09_fail.append(indi)
-            elif date_greater_than(birth_date, mother_death_date) and date_greater_than(birth_date, add_to_date(father_death_date, months=9)):
+            elif date_greater_than(birth_date, mother_death_date) and date_greater_than(birth_date,
+                                                                                        add_to_date(father_death_date,
+                                                                                                    months=9)):
                 warn_msg = f"Birthday {indi.get_birth_date(TreeUtils.OUTPUT_DATE_FORMAT)} occurs after mother's death date {mother_death_date.strftime(TreeUtils.OUTPUT_DATE_FORMAT)} and 9 months after father's death date {father_death_date.strftime(TreeUtils.OUTPUT_DATE_FORMAT)}"
                 indi.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US09', indi.id, warn_msg)
                 indi_list_us09_fail.append(indi)
@@ -84,7 +87,7 @@ class UserStoriesMSK:
             husb_age = processed_tree.get(fam.husb).get_age(marriage_date) if processed_tree.get(fam.husb) else None
 
             if marriage_date:
-                if wife_age and husb_age and wife_age<14 and husb_age<14:
+                if wife_age and husb_age and wife_age < 14 and husb_age < 14:
                     warn_msg = f"Husband married before turning 14 and Wife married before turning 14"
                     fam.err = TreeError(TreeError.TYPE_ERROR, TreeError.ON_INDI, 'US10',
                                         processed_tree.get(fam.husb).id, warn_msg)
@@ -102,7 +105,6 @@ class UserStoriesMSK:
                     indi_list_us10_fail.append(fam)
                     # continue
         return indi_list_us10_fail
-
 
     def us17(self, file_path=None):
         """
@@ -203,3 +205,53 @@ class UserStoriesMSK:
                     indi.err = TreeError(TreeError.TYPE_ANOMALY, TreeError.ON_INDI, 'US31', indi.id, warn_msg)
                     us31_fail.append(indi)
         return us31_fail
+
+    def us38(self, file_path=None):
+        """"
+                         returns list of living individuals whose birthdays are in coming 30 days
+        """
+        file_path = file_path if file_path else get_data_file_path('US38.ged')
+        family_tree = Tree(file_path)
+        us38_fail = []
+        indi_list = family_tree.get_indi_list()
+        for indi in indi_list:
+            if indi and indi.is_alive():
+                current_date = datetime.today()
+                birth_date = indi.get_birth_date()
+                birth_date_this_year = datetime(current_date.year, birth_date.month, birth_date.day)
+                date_diff = (birth_date_this_year - current_date).days
+                if birth_date and 30 >= date_diff > 0:
+                    warn_msg = f'Individual {indi.name} birthday is in next 30 days'
+                    indi.err = TreeError(TreeError.TYPE_ANOMALY, TreeError.ON_INDI, 'US38', indi.id, warn_msg)
+                    us38_fail.append(indi)
+
+        return us38_fail
+
+    def us39(self, file_path=None):
+        """"
+                         returns list of living individuals whose anniversary is in coming 30 days
+        """
+        file_path = file_path if file_path else get_data_file_path('US39.ged')
+        family_tree = Tree(file_path)
+        us39_fail = []
+        indi_list = family_tree.get_indi_list()
+        fam_list = family_tree.get_fam_list()
+        for fam in fam_list:
+            current_date = datetime.today()
+            mar_date = fam.get_marr_date()
+            if mar_date:
+                mar_date_this_year = datetime(current_date.year, mar_date.month, mar_date.day)
+                date_diff = (mar_date_this_year - current_date).days
+                if mar_date and 30 >= date_diff > 0:
+                    husb = family_tree.get(fam.husb)
+                    wife = family_tree.get(fam.wife)
+                    # print(type(husb))
+                    if husb and wife and husb.is_alive and wife.is_alive:
+                        warn_msg_husb = f'Individual {husb.name} anniversary is in next 30 days'
+                        warn_msg_wife = f'Individual {wife.name} anniversary is in next 30 days'
+                        husb.err = TreeError(TreeError.TYPE_ANOMALY, TreeError.ON_INDI, 'US39', husb.id, warn_msg_husb)
+                        wife.err = TreeError(TreeError.TYPE_ANOMALY, TreeError.ON_INDI, 'US39', wife.id, warn_msg_wife)
+                        us39_fail.append(husb)
+                        us39_fail.append(wife)
+
+        return us39_fail
